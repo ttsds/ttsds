@@ -25,6 +25,8 @@ pip install ttsds
 
 Please set ``TTSDS_CACHE_DIR`` environment variable to a directory where you want to cache the downloaded models and data.
 
+[![Website](https://ttsdsbenchmark.com/logo-dark.png)](https://ttsdsbenchmark.com)
+
 ## License
 
 `ttsds` is distributed under the terms of the [MIT](https://spdx.org/licenses/MIT.html) license.
