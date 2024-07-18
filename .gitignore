@@ -7,4 +7,4 @@ examples/blizzard08/data
 examples/blizzard08/processed_data
 examples/blizzard13-ext/data
 examples/blizzard13-ext/processed_data
-src/ttsdb/data/original
+src/ttsds/data/original

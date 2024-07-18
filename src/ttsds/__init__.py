@@ -10,20 +10,20 @@ from transformers import logging
 import numpy as np
 from sklearn.decomposition import PCA
 
-from ttsdb.benchmarks.environment.voicefixer import VoiceFixerBenchmark
-from ttsdb.benchmarks.environment.wada_snr import WadaSNRBenchmark
-from ttsdb.benchmarks.general.hubert import HubertBenchmark
-from ttsdb.benchmarks.general.wav2vec2 import Wav2Vec2Benchmark
-from ttsdb.benchmarks.general.wavlm import WavLMBenchmark
-from ttsdb.benchmarks.intelligibility.w2v2_wer import Wav2Vec2WERBenchmark
-from ttsdb.benchmarks.intelligibility.whisper_wer import WhisperWERBenchmark
-from ttsdb.benchmarks.prosody.mpm import MPMBenchmark
-from ttsdb.benchmarks.prosody.pitch import PitchBenchmark
-from ttsdb.benchmarks.prosody.hubert_token import HubertTokenBenchmark
-from ttsdb.benchmarks.speaker.wespeaker import WeSpeakerBenchmark
-from ttsdb.benchmarks.speaker.dvector import DVectorBenchmark
-from ttsdb.benchmarks.benchmark import BenchmarkCategory, BenchmarkDimension
-from ttsdb.util.dataset import Dataset, TarDataset, DataDistribution, DEFAULT_BENCHMARKS
+from ttsds.benchmarks.environment.voicefixer import VoiceFixerBenchmark
+from ttsds.benchmarks.environment.wada_snr import WadaSNRBenchmark
+from ttsds.benchmarks.general.hubert import HubertBenchmark
+from ttsds.benchmarks.general.wav2vec2 import Wav2Vec2Benchmark
+from ttsds.benchmarks.general.wavlm import WavLMBenchmark
+from ttsds.benchmarks.intelligibility.w2v2_wer import Wav2Vec2WERBenchmark
+from ttsds.benchmarks.intelligibility.whisper_wer import WhisperWERBenchmark
+from ttsds.benchmarks.prosody.mpm import MPMBenchmark
+from ttsds.benchmarks.prosody.pitch import PitchBenchmark
+from ttsds.benchmarks.prosody.hubert_token import HubertTokenBenchmark
+from ttsds.benchmarks.speaker.wespeaker import WeSpeakerBenchmark
+from ttsds.benchmarks.speaker.dvector import DVectorBenchmark
+from ttsds.benchmarks.benchmark import BenchmarkCategory, BenchmarkDimension
+from ttsds.util.dataset import Dataset, TarDataset, DataDistribution, DEFAULT_BENCHMARKS
 
 # we do this to avoid "some weights of the model checkpoint at ... were not used when initializing" warnings
 logging.set_verbosity_error()
@@ -44,7 +44,7 @@ benchmark_dict = {
     "wada_snr": WadaSNRBenchmark,
 }
 
-with importlib.resources.path("ttsdb", "data") as data_path:
+with importlib.resources.path("ttsds", "data") as data_path:
     # check if the reference and noise distributions are already saved
     if not Path(f"{data_path}/reference_speech_blizzard2008.pkl.gz").exists():
         print("Creating reference distributions")

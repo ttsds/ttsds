@@ -9,9 +9,9 @@ import librosa
 from sklearn.cluster import KMeans
 import requests
 
-from ttsdb.benchmarks.benchmark import Benchmark, BenchmarkCategory, BenchmarkDimension
-from ttsdb.util.dataset import Dataset, TarDataset
-from ttsdb.util.cache import cache, load_cache, check_cache, hash_md5, CACHE_DIR
+from ttsds.benchmarks.benchmark import Benchmark, BenchmarkCategory, BenchmarkDimension
+from ttsds.util.dataset import Dataset, TarDataset
+from ttsds.util.cache import cache, load_cache, check_cache, hash_md5, CACHE_DIR
 
 TEST_DS_URL = "https://www.openslr.org/resources/60/test-clean.tar.gz"
 # download to cache

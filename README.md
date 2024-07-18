@@ -1,14 +1,9 @@
-# ttsdb
+# ttsds
 
-[![PyPI - Version](https://img.shields.io/pypi/v/ttsdb.svg)](https://pypi.org/project/ttsdb)
-[![PyPI - Python Version](https://img.shields.io/pypi/pyversions/ttsdb.svg)](https://pypi.org/project/ttsdb)
+[![PyPI - Version](https://img.shields.io/pypi/v/ttsds.svg)](https://pypi.org/project/ttsds)
+[![PyPI - Python Version](https://img.shields.io/pypi/pyversions/ttsds.svg)](https://pypi.org/project/ttsds)
 
------
-
-## Table of Contents
-
-- [Installation](#installation)
-- [License](#license)
+-----)
 
 ## Installation
 
@@ -20,9 +15,13 @@
 ### Pip
 
 ```console
-pip install ttsdb
+pip install ttsds
 ```
+
+### Caching
+
+Please set ``TTSDS_CACHE_DIR`` environment variable to a directory where you want to cache the downloaded models and data.
 
 ## License
 
-`ttsdb` is distributed under the terms of the [MIT](https://spdx.org/licenses/MIT.html) license.
+`ttsds` is distributed under the terms of the [MIT](https://spdx.org/licenses/MIT.html) license.

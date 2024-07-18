@@ -8,14 +8,14 @@ import pytorch_lightning as pl
 import torch
 import torch.nn as nn
 
-from ttsdb.benchmarks.external.utmos.model import (
+from ttsds.benchmarks.external.utmos.model import (
     load_ssl_model,
     PhonemeEncoder,
     DomainEmbedding,
     LDConditioner,
     Projection,
 )
-from ttsdb.util.cache import CACHE_DIR
+from ttsds.util.cache import CACHE_DIR
 
 
 class BaselineLightningModule(pl.LightningModule):

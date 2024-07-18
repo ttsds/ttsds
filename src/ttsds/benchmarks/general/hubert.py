@@ -6,8 +6,8 @@ from transformers import Wav2Vec2Processor, HubertModel
 from tqdm import tqdm
 import librosa
 
-from ttsdb.benchmarks.benchmark import Benchmark, BenchmarkCategory, BenchmarkDimension
-from ttsdb.util.dataset import Dataset
+from ttsds.benchmarks.benchmark import Benchmark, BenchmarkCategory, BenchmarkDimension
+from ttsds.util.dataset import Dataset
 
 
 class HubertBenchmark(Benchmark):

@@ -3,7 +3,7 @@ requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [project]
-name = "ttsdb"
+name = "ttsds"
 dynamic = ["version"]
 description = ''
 readme = "README.md"
@@ -47,12 +47,12 @@ dependencies = [
 ]
 
 [project.urls]
-Documentation = "https://github.com/MiniXC/ttsdb#readme"
-Issues = "https://github.com/MiniXC/ttsdb/issues"
-Source = "https://github.com/MiniXC/ttsdb"
+Documentation = "https://github.com/ttsds/ttsds#readme"
+Issues = "https://github.com/ttsds/ttsds/issues"
+Source = "https://github.com/ttsds/ttsds"
 
 [tool.hatch.version]
-path = "src/ttsdb/__about__.py"
+path = "src/ttsds/__about__.py"
 
 [tool.hatch.envs.types]
 extra-dependencies = [
@@ -61,19 +61,19 @@ extra-dependencies = [
   "streamlit>=1.0.0",
 ]
 [tool.hatch.envs.types.scripts]
-check = "mypy --install-types --non-interactive {args:src/ttsdb tests}"
+check = "mypy --install-types --non-interactive {args:src/ttsds tests}"
 
 [tool.coverage.run]
-source_pkgs = ["ttsdb", "tests"]
+source_pkgs = ["ttsds", "tests"]
 branch = true
 parallel = true
 omit = [
-  "src/ttsdb/__about__.py",
+  "src/ttsds/__about__.py",
 ]
 
 [tool.coverage.paths]
-ttsdb = ["src/ttsdb", "*/ttsdb/src/ttsdb"]
-tests = ["tests", "*/ttsdb/tests"]
+ttsds = ["src/ttsds", "*/ttsds/src/ttsds"]
+tests = ["tests", "*/ttsds/tests"]
 
 [tool.coverage.report]
 exclude_lines = [

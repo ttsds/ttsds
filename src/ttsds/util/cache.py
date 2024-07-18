@@ -4,7 +4,7 @@ from hashlib import md5
 
 import numpy as np
 
-CACHE_DIR = os.getenv("TTSDB_CACHE_DIR", os.path.expanduser("~/.cache/ttsdb"))
+CACHE_DIR = os.getenv("TTSDS_CACHE_DIR", os.path.expanduser("~/.cache/ttsds"))
 CACHE_DIR = Path(CACHE_DIR)
 if not CACHE_DIR.exists():
     CACHE_DIR.mkdir(parents=True, exist_ok=True)

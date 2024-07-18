@@ -13,9 +13,9 @@ from pathlib import Path
 
 import numpy as np
 
-from ttsdb.util.dataset import Dataset, DataDistribution
-from ttsdb.util.cache import cache, load_cache, check_cache, hash_md5
-from ttsdb.util.distances import wasserstein_distance, frechet_distance
+from ttsds.util.dataset import Dataset, DataDistribution
+from ttsds.util.cache import cache, load_cache, check_cache, hash_md5
+from ttsds.util.distances import wasserstein_distance, frechet_distance
 
 
 class BenchmarkCategory(Enum):

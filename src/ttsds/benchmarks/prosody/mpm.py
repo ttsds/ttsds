@@ -3,14 +3,14 @@ import numpy as np
 import librosa
 from tqdm import tqdm
 
-from ttsdb.util.mpm import MaskedProsodyModel
-from ttsdb.util.measures import (
+from ttsds.util.mpm import MaskedProsodyModel
+from ttsds.util.measures import (
     PitchMeasure,
     EnergyMeasure,
     VoiceActivityMeasure,
 )
-from ttsdb.benchmarks.benchmark import Benchmark, BenchmarkCategory, BenchmarkDimension
-from ttsdb.util.dataset import Dataset
+from ttsds.benchmarks.benchmark import Benchmark, BenchmarkCategory, BenchmarkDimension
+from ttsds.util.dataset import Dataset
 
 
 class MPMBenchmark(Benchmark):

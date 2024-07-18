@@ -7,8 +7,8 @@ import torch
 import numpy as np
 import librosa
 
-from ttsdb.benchmarks.benchmark import Benchmark, BenchmarkCategory, BenchmarkDimension
-from ttsdb.util.dataset import Dataset
+from ttsds.benchmarks.benchmark import Benchmark, BenchmarkCategory, BenchmarkDimension
+from ttsds.util.dataset import Dataset
 
 
 class Wav2Vec2WERBenchmark(Benchmark):

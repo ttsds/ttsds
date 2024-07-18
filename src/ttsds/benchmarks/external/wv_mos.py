@@ -4,8 +4,8 @@ import tempfile
 import soundfile as sf
 import numpy as np
 
-from ttsdb.benchmarks.benchmark import Benchmark, BenchmarkCategory, BenchmarkDimension
-from ttsdb.util.dataset import Dataset
+from ttsds.benchmarks.benchmark import Benchmark, BenchmarkCategory, BenchmarkDimension
+from ttsds.util.dataset import Dataset
 
 
 class WVMOSBenchmark(Benchmark):

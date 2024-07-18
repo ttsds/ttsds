@@ -1,9 +1,9 @@
 from tqdm import tqdm
 import numpy as np
 
-from ttsdb.util.measures import PitchMeasure
-from ttsdb.benchmarks.benchmark import Benchmark, BenchmarkCategory, BenchmarkDimension
-from ttsdb.util.dataset import Dataset
+from ttsds.util.measures import PitchMeasure
+from ttsds.benchmarks.benchmark import Benchmark, BenchmarkCategory, BenchmarkDimension
+from ttsds.util.dataset import Dataset
 
 
 class PitchBenchmark(Benchmark):

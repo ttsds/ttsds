@@ -9,8 +9,8 @@ import soundfile as sf
 from pyannote.audio import Model, Inference
 
 
-from ttsdb.benchmarks.benchmark import Benchmark, BenchmarkCategory, BenchmarkDimension
-from ttsdb.util.dataset import Dataset
+from ttsds.benchmarks.benchmark import Benchmark, BenchmarkCategory, BenchmarkDimension
+from ttsds.util.dataset import Dataset
 
 
 class WeSpeakerBenchmark(Benchmark):

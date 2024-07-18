@@ -9,12 +9,12 @@ import statsmodels.api as sm
 from scipy.stats import hmean
 import math
 
-from ttsdb import BenchmarkSuite
-from ttsdb.util.dataset import DirectoryDataset, TarDataset
-from ttsdb.benchmarks.external.pesq import PESQBenchmark
-from ttsdb.benchmarks.external.wv_mos import WVMOSBenchmark
-from ttsdb.benchmarks.external.utmos import UTMOSBenchmark
-from ttsdb.benchmarks.benchmark import Benchmark
+from ttsds import BenchmarkSuite
+from ttsds.util.dataset import DirectoryDataset, TarDataset
+from ttsds.benchmarks.external.pesq import PESQBenchmark
+from ttsds.benchmarks.external.wv_mos import WVMOSBenchmark
+from ttsds.benchmarks.external.utmos import UTMOSBenchmark
+from ttsds.benchmarks.benchmark import Benchmark
 
 datasets = sorted(list(Path("data").rglob("*.tar.gz")))
 datasets = [TarDataset(x) for x in datasets]
@@ -82,7 +82,7 @@ gt_score_df["score"] = (gt_score_df["score"] - gt_score_df["score"].min()) / (
 print(gt_score_df.sort_values("score"))
 
 # merge the dataframes
-df["benchmark_type"] = "ttsdb"
+df["benchmark_type"] = "ttsds"
 wvmos_df["benchmark_type"] = "external"
 utmos_df["benchmark_type"] = "external"
 gt_score_df["benchmark_type"] = "mos"
@@ -92,7 +92,7 @@ df = pd.concat([df, wvmos_df, utmos_df, gt_score_df])
 corrs = []
 
 # compute the correlations with statsmodels
-X = df[df["benchmark_type"] == "ttsdb"]
+X = df[df["benchmark_type"] == "ttsds"]
 X = X.pivot(index="dataset", columns="benchmark_category", values="score")
 X = X.sort_values("dataset")
 X = X.reset_index()

@@ -7,11 +7,11 @@ import requests
 import numpy as np
 from tqdm import tqdm
 
-import ttsdb.benchmarks.external.utmos.lightning_module
-from ttsdb.benchmarks.external.utmos.change_sample_rate import ChangeSampleRate
-from ttsdb.benchmarks.benchmark import Benchmark, BenchmarkCategory, BenchmarkDimension
-from ttsdb.util.dataset import Dataset
-from ttsdb.util.cache import CACHE_DIR
+import ttsds.benchmarks.external.utmos.lightning_module
+from ttsds.benchmarks.external.utmos.change_sample_rate import ChangeSampleRate
+from ttsds.benchmarks.benchmark import Benchmark, BenchmarkCategory, BenchmarkDimension
+from ttsds.util.dataset import Dataset
+from ttsds.util.cache import CACHE_DIR
 
 CHECKPOINT_URL = "https://huggingface.co/spaces/sarulab-speech/UTMOS-demo/resolve/main/epoch%3D3-step%3D7459.ckpt?download=true"
 CHECKPOINT_PATH = CACHE_DIR / "utmos.ckpt"

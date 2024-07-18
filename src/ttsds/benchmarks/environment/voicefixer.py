@@ -8,8 +8,8 @@ import soundfile as sf
 import librosa
 from tqdm import tqdm
 
-from ttsdb.benchmarks.benchmark import Benchmark, BenchmarkCategory, BenchmarkDimension
-from ttsdb.util.dataset import Dataset
+from ttsds.benchmarks.benchmark import Benchmark, BenchmarkCategory, BenchmarkDimension
+from ttsds.util.dataset import Dataset
 
 
 class VoiceFixerBenchmark(Benchmark):

@@ -14,7 +14,7 @@ import gzip
 import numpy as np
 import librosa
 
-from ttsdb.util.cache import cache, check_cache, load_cache, hash_md5
+from ttsds.util.cache import cache, check_cache, load_cache, hash_md5
 
 
 class Dataset(ABC):
