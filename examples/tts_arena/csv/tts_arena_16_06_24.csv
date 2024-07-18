@@ -1,0 +1,15 @@
+dataset,score,samples
+ElevenLabs,1345,9238
+Play.HT 2.0,1287,1970
+StyleTTS 2,1239,4458
+XTTSv2,1234,8825
+MetaVoice,1185,8692
+MeloTTS,1175,4090
+OpenVoice,1159,6456
+GPT-SoVITS,1154,2816
+WhisperSpeech,1149,6771
+Parler TTS,1142,2676
+Vokan TTS,1127,830
+OpenVoice V2,1123,1763
+VoiceCraft 2.0,1117,1913
+Pheme,1030,6293

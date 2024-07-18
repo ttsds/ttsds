@@ -1,0 +1,109 @@
+benchmark_name,benchmark_category,dataset,score,ci,time_taken,noise_dataset,reference_dataset
+Hubert,1,parler.tar.gz,94.5404390522361,1.0,124.59978604316711,noise_esc50,reference_speech_libritts_r_test
+Hubert,1,xttsv2.tar.gz,94.08640627299717,1.0,134.5800392627716,noise_esc50,reference_speech_libritts_test
+Hubert,1,pheme.tar.gz,93.80203663860142,1.0,119.1046781539917,noise_esc50,reference_speech_libritts_test
+Hubert,1,styletts_2.tar.gz,93.46137965802308,1.0,126.84944558143616,noise_esc50,reference_speech_libritts_test
+Hubert,1,openvoice.tar.gz,91.0851565807428,1.0,62.45856785774231,noise_esc50,reference_speech_libritts_test
+Hubert,1,openvoice_v2.tar.gz,89.997296870775,1.0,119.05289673805235,noise_esc50,reference_speech_libritts_test
+Hubert,1,whisper_speech.tar.gz,89.59650840370541,1.0,162.37666058540344,noise_esc50,reference_speech_libritts_test
+Hubert,1,vokan.tar.gz,88.07493504309956,1.0,141.8659520149231,noise_esc50,reference_speech_libritts_r_test
+Hubert,1,voicecraft2.tar.gz,85.69596873442636,1.0,159.47136187553406,noise_esc50,reference_speech_libritts_test
+Wav2Vec2,1,parler.tar.gz,94.090581399594,1.0,95.82865309715272,noise_esc50,reference_speech_libritts_r_test
+Wav2Vec2,1,xttsv2.tar.gz,93.23599890583226,1.0,95.01738715171814,noise_esc50,reference_speech_libritts_test
+Wav2Vec2,1,pheme.tar.gz,92.83390552297487,1.0,91.37873816490172,noise_esc50,reference_speech_libritts_test
+Wav2Vec2,1,styletts_2.tar.gz,92.30029645092324,1.0,101.73942303657532,noise_esc50,reference_speech_libritts_test
+Wav2Vec2,1,openvoice.tar.gz,90.83004861136868,1.0,111.23961687088013,noise_esc50,reference_speech_libritts_test
+Wav2Vec2,1,openvoice_v2.tar.gz,89.67547415210426,1.0,107.44602632522584,noise_esc50,reference_speech_libritts_test
+Wav2Vec2,1,whisper_speech.tar.gz,89.14695509253995,1.0,114.242844581604,noise_esc50,reference_speech_libritts_test
+Wav2Vec2,1,vokan.tar.gz,88.44469810366172,1.0,99.49274349212646,noise_esc50,reference_speech_libritts_test
+Wav2Vec2,1,voicecraft2.tar.gz,83.95199513473236,1.0,105.27433896064758,noise_esc50,reference_speech_libritts_test
+WavLM,1,xttsv2.tar.gz,95.58107958818624,1.0,95.93639731407166,noise_esc50,reference_speech_libritts_test
+WavLM,1,pheme.tar.gz,95.49563233161568,1.0,89.67045974731445,noise_esc50,reference_speech_libritts_test
+WavLM,1,parler.tar.gz,95.40641839128538,1.0,95.41197800636292,noise_esc50,reference_speech_libritts_r_test
+WavLM,1,styletts_2.tar.gz,95.39232290375028,1.0,102.22206473350523,noise_esc50,reference_speech_libritts_test
+WavLM,1,openvoice.tar.gz,93.25898952127667,1.0,92.68878555297852,noise_esc50,reference_speech_libritts_test
+WavLM,1,openvoice_v2.tar.gz,92.5644858456969,1.0,88.64464712142944,noise_esc50,reference_speech_libritts_test
+WavLM,1,whisper_speech.tar.gz,91.35187392741032,1.0,116.23487138748168,noise_esc50,reference_speech_libritts_test
+WavLM,1,vokan.tar.gz,89.19230764266868,1.0,99.75403094291688,noise_esc50,reference_speech_libritts_r_test
+WavLM,1,voicecraft2.tar.gz,86.62719485871455,1.0,106.71917581558228,noise_esc50,reference_speech_libritts_test
+Hubert Token,2,pheme.tar.gz,90.9843132180544,1.0,38.543118715286255,noise_noise_uniform_distribution,reference_speech_blizzard2013
+Hubert Token,2,openvoice.tar.gz,90.5654059699615,1.0,41.829068183898926,noise_noise_uniform_distribution,reference_speech_blizzard2013
+Hubert Token,2,styletts_2.tar.gz,86.46786623692262,1.0,54.19551610946655,noise_noise_uniform_distribution,reference_speech_lj_speech
+Hubert Token,2,openvoice_v2.tar.gz,83.69874370210594,1.0,37.23568344116211,noise_noise_uniform_distribution,reference_speech_blizzard2013
+Hubert Token,2,xttsv2.tar.gz,81.36422514825712,1.0,45.49807000160217,noise_noise_uniform_distribution,reference_speech_blizzard2013
+Hubert Token,2,vokan.tar.gz,77.67468881481302,1.0,51.2910361289978,noise_noise_uniform_distribution,reference_speech_libritts_test
+Hubert Token,2,parler.tar.gz,71.14273016287268,1.0,47.15288829803467,noise_esc50,reference_speech_libritts_test
+Hubert Token,2,whisper_speech.tar.gz,67.29526589938177,1.0,69.6829125881195,noise_esc50,reference_speech_common_voice
+Hubert Token,2,voicecraft2.tar.gz,53.72976539472917,1.0,58.81003403663635,noise_esc50,reference_speech_blizzard2013
+MPM,2,styletts_2.tar.gz,96.28148330410106,1.0,52.91341423988342,noise_esc50,reference_speech_libritts_test
+MPM,2,openvoice.tar.gz,94.65720616615896,1.0,43.34246110916138,noise_esc50,reference_speech_libritts_test
+MPM,2,openvoice_v2.tar.gz,93.15773558583058,1.0,39.98830366134644,noise_esc50,reference_speech_libritts_test
+MPM,2,parler.tar.gz,91.35469810471528,1.0,46.27796745300293,noise_esc50,reference_speech_libritts_r_test
+MPM,2,pheme.tar.gz,91.34017112105286,1.0,42.290961265563965,noise_esc50,reference_speech_libritts_test
+MPM,2,xttsv2.tar.gz,91.27897077788415,1.0,45.65868854522705,noise_esc50,reference_speech_libritts_r_test
+MPM,2,vokan.tar.gz,87.96453035599842,1.0,49.08404159545898,noise_esc50,reference_speech_libritts_test
+MPM,2,whisper_speech.tar.gz,87.1192911483034,1.0,63.58557319641113,noise_esc50,reference_speech_libritts_test
+MPM,2,voicecraft2.tar.gz,78.21044491906775,1.0,54.14320349693298,noise_esc50,reference_speech_lj_speech
+Pitch,2,openvoice.tar.gz,91.71901189782568,1.0,18.13708996772766,noise_noise_all_ones,reference_speech_vctk
+Pitch,2,xttsv2.tar.gz,90.76268957492144,1.0,19.80112147331237,noise_esc50,reference_speech_libritts_test
+Pitch,2,openvoice_v2.tar.gz,90.04147746044163,1.0,16.07070231437683,noise_esc50,reference_speech_libritts_r_test
+Pitch,2,vokan.tar.gz,89.26083299959306,1.0,22.239927768707275,noise_noise_all_ones,reference_speech_libritts_r_test
+Pitch,2,styletts_2.tar.gz,86.11435596493138,1.0,23.94259238243103,noise_noise_all_ones,reference_speech_libritts_r_test
+Pitch,2,whisper_speech.tar.gz,85.18244981499342,1.0,30.41292285919189,noise_esc50,reference_speech_vctk
+Pitch,2,parler.tar.gz,80.65108947909695,1.0,18.62288188934326,noise_esc50,reference_speech_blizzard2013
+Pitch,2,pheme.tar.gz,74.92151744188004,1.0,16.88358974456787,noise_noise_all_ones,reference_speech_vctk
+Pitch,2,voicecraft2.tar.gz,61.382905103235,1.0,26.58289647102356,noise_esc50,reference_speech_lj_speech
+VoiceFixer,3,openvoice.tar.gz,95.38493780032738,1.0,186.11724734306333,noise_noise_all_ones,reference_speech_blizzard2013
+VoiceFixer,3,vokan.tar.gz,93.40643860036052,1.0,175.76766729354858,noise_noise_all_ones,reference_speech_blizzard2013
+VoiceFixer,3,openvoice_v2.tar.gz,92.3373700440012,1.0,173.4297227859497,noise_noise_all_ones,reference_speech_blizzard2013
+VoiceFixer,3,pheme.tar.gz,90.8264529300255,1.0,174.33019375801086,noise_noise_all_ones,reference_speech_blizzard2013
+VoiceFixer,3,parler.tar.gz,89.22728811295433,1.0,172.3456585407257,noise_noise_all_ones,reference_speech_vctk
+VoiceFixer,3,xttsv2.tar.gz,89.08521695705429,1.0,170.33265447616577,noise_noise_all_ones,reference_speech_blizzard2013
+VoiceFixer,3,whisper_speech.tar.gz,87.84872612609668,1.0,178.3019859790802,noise_noise_all_ones,reference_speech_blizzard2013
+VoiceFixer,3,styletts_2.tar.gz,87.5073639335986,1.0,176.34673738479614,noise_noise_all_ones,reference_speech_lj_speech
+VoiceFixer,3,voicecraft2.tar.gz,66.34615348641842,1.0,180.95762538909912,noise_noise_all_ones,reference_speech_libritts_test
+Wada SNR,3,openvoice_v2.tar.gz,90.1427416170811,1.0,10.900976181030272,noise_esc50,reference_speech_lj_speech
+Wada SNR,3,styletts_2.tar.gz,81.95185663662924,1.0,17.79907989501953,noise_esc50,reference_speech_vctk
+Wada SNR,3,openvoice.tar.gz,81.81395640668867,1.0,13.08122992515564,noise_esc50,reference_speech_lj_speech
+Wada SNR,3,whisper_speech.tar.gz,80.01509029094143,1.0,23.027897596359253,noise_esc50,reference_speech_common_voice
+Wada SNR,3,vokan.tar.gz,76.75048509391759,1.0,16.736793279647827,noise_noise_all_zeros,reference_speech_libritts_r_test
+Wada SNR,3,pheme.tar.gz,72.98537305662066,1.0,11.035139560699465,noise_esc50,reference_speech_vctk
+Wada SNR,3,parler.tar.gz,72.27395284764681,1.0,12.90119171142578,noise_esc50,reference_speech_blizzard2013
+Wada SNR,3,xttsv2.tar.gz,69.49957801623174,1.0,14.548080682754517,noise_esc50,reference_speech_lj_speech
+Wada SNR,3,voicecraft2.tar.gz,61.12791144502604,1.0,21.89738178253174,noise_noise_all_zeros,reference_speech_libritts_r_test
+DVector,4,xttsv2.tar.gz,71.560259547529,1.0,26.41282844543457,noise_esc50,reference_speech_libritts_test
+DVector,4,parler.tar.gz,71.29507163986624,1.0,24.97851848602295,noise_esc50,reference_speech_libritts_r_test
+DVector,4,whisper_speech.tar.gz,71.28509808399106,1.0,37.12054371833801,noise_esc50,reference_speech_libritts_test
+DVector,4,styletts_2.tar.gz,70.71138142618565,1.0,30.437190055847168,noise_esc50,reference_speech_libritts_test
+DVector,4,openvoice.tar.gz,69.51257200674672,1.0,24.23476529121399,noise_esc50,reference_speech_libritts_test
+DVector,4,vokan.tar.gz,69.35518739527738,1.0,29.14098620414734,noise_esc50,reference_speech_libritts_test
+DVector,4,openvoice_v2.tar.gz,68.35390860117379,1.0,21.824361085891724,noise_esc50,reference_speech_libritts_test
+DVector,4,pheme.tar.gz,64.10471139795597,1.0,22.660944938659668,noise_esc50,reference_speech_libritts_test
+DVector,4,voicecraft2.tar.gz,48.50115453936135,1.0,34.438050746917725,noise_esc50,reference_speech_vctk
+WeSpeaker,4,parler.tar.gz,76.88813257452003,1.0,27.994462490081787,noise_esc50,reference_speech_libritts_r_test
+WeSpeaker,4,whisper_speech.tar.gz,73.60735344777885,1.0,45.16290283203125,noise_esc50,reference_speech_libritts_r_test
+WeSpeaker,4,xttsv2.tar.gz,73.5673215767236,1.0,30.17014646530152,noise_esc50,reference_speech_libritts_r_test
+WeSpeaker,4,styletts_2.tar.gz,72.38187066883906,1.0,32.920727491378784,noise_esc50,reference_speech_libritts_r_test
+WeSpeaker,4,openvoice_v2.tar.gz,68.9849951710889,1.0,30.21518111228943,noise_esc50,reference_speech_libritts_r_test
+WeSpeaker,4,vokan.tar.gz,68.78934301671737,1.0,33.98707461357117,noise_esc50,reference_speech_libritts_r_test
+WeSpeaker,4,pheme.tar.gz,68.12802163002668,1.0,25.29195094108581,noise_esc50,reference_speech_libritts_r_test
+WeSpeaker,4,openvoice.tar.gz,68.09089793516841,1.0,33.77435088157654,noise_esc50,reference_speech_libritts_r_test
+WeSpeaker,4,voicecraft2.tar.gz,58.64719162027049,1.0,39.34559106826782,noise_esc50,reference_speech_libritts_r_test
+Wav2Vec2 WER,6,openvoice_v2.tar.gz,98.12402858119475,1.0,25.35945439338684,noise_all_ones,reference_speech_lj_speech
+Wav2Vec2 WER,6,openvoice.tar.gz,98.10245105201965,1.0,31.218631505966187,noise_all_ones,reference_speech_lj_speech
+Wav2Vec2 WER,6,pheme.tar.gz,96.43797599716206,1.0,25.918951272964478,noise_all_ones,reference_speech_lj_speech
+Wav2Vec2 WER,6,voicecraft2.tar.gz,96.1995778330764,1.0,40.95238471031189,noise_all_ones,reference_speech_blizzard2013
+Wav2Vec2 WER,6,styletts_2.tar.gz,96.10618219265731,1.0,36.6831214427948,noise_all_ones,reference_speech_blizzard2013
+Wav2Vec2 WER,6,xttsv2.tar.gz,94.21111148710615,1.0,31.38028883934021,noise_all_ones,reference_speech_lj_speech
+Wav2Vec2 WER,6,vokan.tar.gz,93.78060002781454,1.0,34.56924915313721,noise_all_ones,reference_speech_lj_speech
+Wav2Vec2 WER,6,parler.tar.gz,92.87270271546396,1.0,32.12077188491821,noise_all_ones,reference_speech_vctk
+Wav2Vec2 WER,6,whisper_speech.tar.gz,91.17590960462115,1.0,47.73212695121765,noise_all_ones,reference_speech_vctk
+Whisper WER,6,styletts_2.tar.gz,98.38480781758865,1.0,101.16044330596924,noise_all_ones,reference_speech_lj_speech
+Whisper WER,6,voicecraft2.tar.gz,98.10316057112597,1.0,105.02966475486755,noise_all_ones,reference_speech_lj_speech
+Whisper WER,6,vokan.tar.gz,97.32023294270492,1.0,100.31066942214966,noise_all_ones,reference_speech_lj_speech
+Whisper WER,6,xttsv2.tar.gz,95.1560639884558,1.0,100.43997597694397,noise_all_ones,reference_speech_lj_speech
+Whisper WER,6,openvoice_v2.tar.gz,94.65618187108738,1.0,94.49474310874939,noise_all_ones,reference_speech_lj_speech
+Whisper WER,6,whisper_speech.tar.gz,94.50534935596615,1.0,106.15523386001587,noise_all_ones,reference_speech_common_voice
+Whisper WER,6,openvoice.tar.gz,93.35170970367761,1.0,97.47275042533875,noise_all_ones,reference_speech_vctk
+Whisper WER,6,parler.tar.gz,92.49510156479842,1.0,102.08325743675232,noise_all_ones,reference_speech_common_voice
+Whisper WER,6,pheme.tar.gz,91.03411860950621,1.0,96.20897006988525,noise_all_ones,reference_speech_lj_speech

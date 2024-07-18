@@ -1,0 +1,10 @@
+.pytest_cache
+__pycache__
+.DS_Store
+*.txt
+*.wav
+examples/blizzard08/data
+examples/blizzard08/processed_data
+examples/blizzard13-ext/data
+examples/blizzard13-ext/processed_data
+src/ttsdb/data/original
