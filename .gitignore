@@ -8,3 +8,4 @@ examples/blizzard08/processed_data
 examples/blizzard13-ext/data
 examples/blizzard13-ext/processed_data
 src/ttsds/data/original
+dist

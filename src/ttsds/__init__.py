@@ -4,6 +4,7 @@ from time import time
 from pathlib import Path
 import pickle
 import gzip
+import requests
 
 import pandas as pd
 from transformers import logging
@@ -45,6 +46,38 @@ benchmark_dict = {
 }
 
 with importlib.resources.path("ttsds", "data") as data_path:
+    # if they don't exist, download from github
+    for noise_name in [
+        "esc50",
+        "all_ones",
+        "all_zeros",
+        "normal_distribution",
+        "uniform_distribution",
+    ]:
+        if not Path(f"{data_path}/noise_{noise_name}.pkl.gz").exists():
+            print(f"Downloading noise_{noise_name}.pkl.gz")
+            url = f"https://github.com/ttsds/ttsds/raw/main/src/ttsds/data/noise_{noise_name}.pkl.gz"
+            r = requests.get(url)
+            with open(f"{data_path}/noise_{noise_name}.pkl.gz", "wb") as f:
+                f.write(r.content)
+
+    for speech_name in [
+        "blizzard2008",
+        "blizzard2013",
+        "common_voice",
+        "libritts_test",
+        "libritts_r_test",
+        "lj_speech",
+        "vctk",
+    ]:
+        if not Path(f"{data_path}/reference_speech_{speech_name}.pkl.gz").exists():
+            print(f"Downloading reference_speech_{speech_name}.pkl.gz")
+            url = f"https://github.com/ttsds/ttsds/raw/main/src/ttsds/data/reference_speech_{speech_name}.pkl.gz"
+            r = requests.get(url)
+            with open(f"{data_path}/reference_speech_{speech_name}.pkl.gz", "wb") as f:
+                f.write(r.content)
+
+
     # check if the reference and noise distributions are already saved
     if not Path(f"{data_path}/reference_speech_blizzard2008.pkl.gz").exists():
         print("Creating reference distributions")

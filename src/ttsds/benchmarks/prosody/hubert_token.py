@@ -13,20 +13,6 @@ from ttsds.benchmarks.benchmark import Benchmark, BenchmarkCategory, BenchmarkDi
 from ttsds.util.dataset import Dataset, TarDataset
 from ttsds.util.cache import cache, load_cache, check_cache, hash_md5, CACHE_DIR
 
-TEST_DS_URL = "https://www.openslr.org/resources/60/test-clean.tar.gz"
-# download to cache
-TEST_DS_PATH = CACHE_DIR / "test-clean.tar.gz"
-if not TEST_DS_PATH.exists():
-    print(f"downloading {TEST_DS_URL} to {TEST_DS_PATH} for HubertTokenBenchmark")
-    with open(TEST_DS_PATH, "wb") as f:
-        f.write(requests.get(TEST_DS_URL).content)
-
-TEST_DS = [
-    TarDataset(TEST_DS_PATH, text_suffix=".normalized.txt", path_prefix="./").sample(
-        100
-    )
-]
-
 
 class HubertTokenBenchmark(Benchmark):
     """
@@ -39,7 +25,7 @@ class HubertTokenBenchmark(Benchmark):
         hubert_layer: Union[int, str] = 7,
         cluster_num: int = 100,
         cluster_seed: int = 42,
-        cluster_datasets: List[Dataset] = TEST_DS,
+        cluster_datasets: List[Dataset] = None,
     ):
         super().__init__(
             name="Hubert Token",
@@ -52,6 +38,20 @@ class HubertTokenBenchmark(Benchmark):
             cluster_seed=cluster_seed,
             cluster_datasets=cluster_datasets,
         )
+        if cluster_datasets is None:
+            TEST_DS_URL = "https://www.openslr.org/resources/60/test-clean.tar.gz"
+            # download to cache
+            TEST_DS_PATH = CACHE_DIR / "test-clean.tar.gz"
+            if not TEST_DS_PATH.exists():
+                print(f"downloading {TEST_DS_URL} to {TEST_DS_PATH} for HubertTokenBenchmark")
+                with open(TEST_DS_PATH, "wb") as f:
+                    f.write(requests.get(TEST_DS_URL).content)
+
+            cluster_datasets = [
+                TarDataset(TEST_DS_PATH, text_suffix=".normalized.txt", path_prefix="./").sample(
+                    100
+                )
+            ]
         self.processor = Wav2Vec2Processor.from_pretrained(
             "facebook/hubert-large-ls960-ft"
         )
