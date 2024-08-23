@@ -2,6 +2,7 @@
 
 [![PyPI - Version](https://img.shields.io/pypi/v/ttsds.svg)](https://pypi.org/project/ttsds)
 [![PyPI - Python Version](https://img.shields.io/pypi/pyversions/ttsds.svg)](https://pypi.org/project/ttsds)
+[![Hugginface Space](https://img.shields.io/badge/%F0%9F%A4%97-ttsds%2Fbenchmark-blue)](https://huggingface.co/spaces/ttsds/benchmark)
 
 ## Installation
 
