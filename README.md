@@ -11,21 +11,17 @@ For other details, see our paper: https://arxiv.org/abs/2407.12707
 
 ## Installation
 
-### Requirements
-
-- Python 3.8+
-- System packages: ffmpeg, automake, autoconf, unzip, sox, gfortran, subversion, libtool
-- Simple_hifigan, wvmos and wespeaker are not available on PyPi, so you need to install them manually.
-    - https://github.com/wenet-e2e/wespeaker
-    - https://github.com/AndreevP/wvmos
-    - https://github.com/MiniXC/simple_hifigan
-- On some systems, the fairseq installation may fail due to conflicting dependencies. In this case, you can install this fork of fairseq https://github.com/MiniXC/fairseq-noconf
-
 ### Pip
 
 ```console
 pip install ttsds
 ```
+
+### Requirements
+
+- Python 3.8+
+- System packages: ffmpeg, automake, autoconf, unzip, sox, gfortran, subversion, libtool
+- On some systems, the fairseq installation may fail due to conflicting dependencies. In this case, you can install this fork of fairseq https://github.com/MiniXC/fairseq-noconf
 
 ### Caching
 
