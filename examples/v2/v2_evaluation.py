@@ -16,48 +16,6 @@ from ttsds.util.dataset import DirectoryDataset, TarDataset
 noise_datasets = sorted(list(Path("noise-reference").rglob("*.tar.gz")))
 noise_datasets = [TarDataset(x, text_suffix=".txt") for x in noise_datasets]
 
-# reference_datasets = [
-#     DirectoryDataset(
-#         "v2-evaluation/librilatest", text_suffix=".txt", name="LibriLatest"
-#     ),
-# ]
-
-# test_datasets = []
-
-# for directory in Path("v2-evaluation/tts").iterdir():
-#     if directory.is_dir():
-#         test_datasets.append(
-#             DirectoryDataset(
-#                 directory / "librilatest", text_suffix=".txt", name=directory.name
-#             )
-#         )
-
-# ttsds = BenchmarkSuite(
-#     test_datasets,
-#     noise_datasets,
-#     reference_datasets,
-#     write_to_file="results_librilatest_all.csv",
-# )
-
-# ttsds.run()
-
-reference_datasets = [
-    DirectoryDataset("v2-evaluation/myst/A", text_suffix=".txt", name="LibriTTSR A"),
-]
-
-test_datasets = [
-    DirectoryDataset("v2-evaluation/myst/B", text_suffix=".txt", name="LibriTTSR B"),
-]
-
-ttsds = BenchmarkSuite(
-    test_datasets,
-    noise_datasets,
-    reference_datasets,
-    write_to_file="results_myst_new.csv",
-)
-
-ttsds.run()
-
 
 def get_datasets(split: str) -> List[Union[DirectoryDataset]]:
     """
