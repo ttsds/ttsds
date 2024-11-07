@@ -20,17 +20,21 @@ from ttsds.benchmarks.intelligibility.w2v2_wer import Wav2Vec2WERBenchmark
 from ttsds.benchmarks.intelligibility.whisper_wer import WhisperWERBenchmark
 from ttsds.benchmarks.prosody.mpm import MPMBenchmark
 from ttsds.benchmarks.prosody.pitch import PitchBenchmark
-from ttsds.benchmarks.prosody.hubert_token import HubertTokenBenchmark
+from ttsds.benchmarks.prosody.hubert_token import (
+    HubertTokenBenchmark,
+    HubertTokenSRBenchmark,
+)
+from ttsds.benchmarks.prosody.allosaurus import AllosaurusBenchmark
 from ttsds.benchmarks.speaker.wespeaker import WeSpeakerBenchmark
 from ttsds.benchmarks.speaker.dvector import DVectorBenchmark
-from ttsds.benchmarks.benchmark import BenchmarkCategory, BenchmarkDimension
-from ttsds.util.dataset import Dataset, TarDataset, DataDistribution, DEFAULT_BENCHMARKS
+from ttsds.benchmarks.benchmark import BenchmarkCategory
+from ttsds.util.dataset import Dataset, DataDistribution
 
 # we do this to avoid "some weights of the model checkpoint at ... were not used when initializing" warnings
 logging.set_verbosity_error()
 
 
-benchmark_dict = {
+benchmark_dict_v1 = {
     "hubert": HubertBenchmark,
     "wav2vec2": Wav2Vec2Benchmark,
     "wavlm": WavLMBenchmark,
@@ -45,132 +49,39 @@ benchmark_dict = {
     "wada_snr": WadaSNRBenchmark,
 }
 
-with importlib.resources.path("ttsds", "data") as data_path:
-    # if they don't exist, download from github
-    for noise_name in [
-        "esc50",
-        "all_ones",
-        "all_zeros",
-        "normal_distribution",
-        "uniform_distribution",
-    ]:
-        if not Path(f"{data_path}/noise_{noise_name}.pkl.gz").exists():
-            print(f"Downloading noise_{noise_name}.pkl.gz")
-            url = f"https://github.com/ttsds/ttsds/raw/main/src/ttsds/data/noise_{noise_name}.pkl.gz"
-            r = requests.get(url)
-            with open(f"{data_path}/noise_{noise_name}.pkl.gz", "wb") as f:
-                f.write(r.content)
-
-    for speech_name in [
-        "blizzard2008",
-        "blizzard2013",
-        "common_voice",
-        "libritts_test",
-        "libritts_r_test",
-        "lj_speech",
-        "vctk",
-    ]:
-        if not Path(f"{data_path}/reference_speech_{speech_name}.pkl.gz").exists():
-            print(f"Downloading reference_speech_{speech_name}.pkl.gz")
-            url = f"https://github.com/ttsds/ttsds/raw/main/src/ttsds/data/reference_speech_{speech_name}.pkl.gz"
-            r = requests.get(url)
-            with open(f"{data_path}/reference_speech_{speech_name}.pkl.gz", "wb") as f:
-                f.write(r.content)
-
-
-    # check if the reference and noise distributions are already saved
-    if not Path(f"{data_path}/reference_speech_blizzard2008.pkl.gz").exists():
-        print("Creating reference distributions")
-        ref_benchmark_dict = {
-            k: v() for k, v in benchmark_dict.items()
-        }
-        REFERENCE_DISTS = [
-            DataDistribution(
-                TarDataset(data_path / "original" / f"speech_{name}.tar.gz"),
-                ref_benchmark_dict,
-                benchmarks=DEFAULT_BENCHMARKS,
-                name=f"speech_{name}",
-            )
-            for name in [
-                "blizzard2008",
-                "blizzard2013",
-                "common_voice",
-                "libritts_test",
-                "libritts_r_test",
-                "lj_speech",
-                "vctk",
-            ]
-        ]
-        # save the reference distributions
-        for dist in REFERENCE_DISTS:
-            dist.to_pickle(f"{data_path}/reference_{dist.name}.pkl.gz")
-
-    REFERENCE_DISTS = [
-        DataDistribution.from_pickle(f"{data_path}/reference_{name}.pkl.gz")
-        for name in [
-            "speech_blizzard2008",
-            "speech_blizzard2013",
-            "speech_common_voice",
-            "speech_libritts_test",
-            "speech_libritts_r_test",
-            "speech_lj_speech",
-            "speech_vctk",
-        ]
-    ]
-
-    if not Path(f"{data_path}/noise_esc50.pkl.gz").exists():
-        print("Creating noise distributions")
-        ref_benchmark_dict = {
-            k: v() for k, v in benchmark_dict.items()
-        }
-        NOISE_DISTS = [
-            DataDistribution(
-                TarDataset(data_path / "original" / f"noise_{name}.tar.gz"),
-                ref_benchmark_dict,
-                benchmarks=DEFAULT_BENCHMARKS,
-                name=name,
-            )
-            for name in [
-                "esc50",
-                "all_ones",
-                "all_zeros",
-                "normal_distribution",
-                "uniform_distribution",
-            ]
-        ]
-        # save the noise distributions
-        for dist in NOISE_DISTS:
-            dist.to_pickle(f"{data_path}/noise_{dist.name}.pkl.gz")
-
-    NOISE_DISTS = [
-        DataDistribution.from_pickle(f"{data_path}/noise_{name}.pkl.gz")
-        for name in [
-            "esc50",
-            "all_ones",
-            "all_zeros",
-            "normal_distribution",
-            "uniform_distribution",
-        ]
-    ]
+benchmark_dict_v2 = {
+    "allosaurus": AllosaurusBenchmark,
+    "hubert_token_sr": HubertTokenSRBenchmark,
+}
 
 
 class BenchmarkSuite:
+
     def __init__(
         self,
         datasets: List[Dataset],
-        benchmarks: List[str] = DEFAULT_BENCHMARKS,
+        noise_datasets: List[Dataset],
+        reference_datasets: List[Dataset],
+        benchmarks: List[str] = benchmark_dict.keys(),
         print_results: bool = True,
         skip_errors: bool = False,
-        noise_distributions: List[DataDistribution] = NOISE_DISTS,
-        reference_distributions: List[DataDistribution] = REFERENCE_DISTS,
         write_to_file: str = None,
+        benchmark_kwargs: dict = {},
     ):
+        if (
+            "hubert_token" not in benchmark_kwargs
+            or "cluster_datasets" not in benchmark_kwargs["hubert_token"]
+        ):
+            if "hubert_token" not in benchmark_kwargs:
+                benchmark_kwargs["hubert_token"] = {}
+            benchmark_kwargs["hubert_token"]["cluster_datasets"] = [
+                reference_datasets[0].sample(min(100, len(reference_datasets[0])))
+            ]
         self.benchmarks = benchmarks
-        self.benchmark_objects = [benchmark_dict[benchmark]() for benchmark in benchmarks]
-        # sort by category and then by name
-        self.benchmark_objects = sorted(
-            self.benchmark_objects, key=lambda x: (x.category.value, x.name)
-        )
+        self.benchmarks = {
+            benchmark: benchmark_dict[benchmark](**benchmark_kwargs.get(benchmark, {}))
+            for benchmark in benchmarks
+        }
         self.datasets = datasets
         self.datasets = sorted(self.datasets, key=lambda x: x.name)
         self.database = pd.DataFrame(
@@ -187,15 +98,32 @@ class BenchmarkSuite:
         )
         self.print_results = print_results
         self.skip_errors = skip_errors
-        self.noise_distributions = noise_distributions
-        self.reference_distributions = reference_distributions
+        self.noise_datasets = noise_datasets
+        self.reference_datasets = reference_datasets
+
+        self.noise_distributions = [
+            DataDistribution(
+                ds,
+                benchmarks=self.benchmarks,
+                name=f"speech_{ds.name}",
+            )
+            for ds in noise_datasets
+        ]
+        self.reference_distributions = [
+            DataDistribution(
+                ds,
+                benchmarks=self.benchmarks,
+                name=ds.name,
+            )
+            for ds in reference_datasets
+        ]
         self.write_to_file = write_to_file
         if Path(write_to_file).exists():
             self.database = pd.read_csv(write_to_file, index_col=0)
             self.database = self.database.reset_index()
 
     def run(self) -> pd.DataFrame:
-        for benchmark in self.benchmark_objects:
+        for benchmark in sorted(self.benchmarks.values(), key=lambda x: x.name):
             for dataset in self.datasets:
                 # empty lines for better readability
                 print("\n")
@@ -213,14 +141,6 @@ class BenchmarkSuite:
                         )
                         continue
                     start = time()
-                    if "WER".lower() in benchmark.name.lower():
-                        print([
-                            x.get_distribution(benchmark.key) for x in self.reference_distributions
-                        ])
-                        print([
-                            x.get_distribution(benchmark.key) for x in self.noise_distributions
-                        ])
-                        print(benchmark.get_distribution(dataset))
                     score = benchmark.compute_score(
                         dataset, self.reference_distributions, self.noise_distributions
                     )

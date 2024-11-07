@@ -79,8 +79,17 @@ class DirectoryDataset(Dataset):
     with wav files and corresponding text files.
     """
 
-    def __init__(self, root_dir: str = None, sample_rate: int = 22050):
-        super().__init__(Path(root_dir).name, sample_rate)
+    def __init__(
+        self,
+        root_dir: str = None,
+        sample_rate: int = 22050,
+        text_suffix: str = ".txt",
+        name: str = None,
+    ):
+        if name is not None:
+            super().__init__(name, sample_rate)
+        else:
+            super().__init__(Path(root_dir).name, sample_rate)
         if root_dir is None:
             raise ValueError("root_dir must be provided.")
         self.root_dir = Path(root_dir)
@@ -88,7 +97,7 @@ class DirectoryDataset(Dataset):
         wavs, texts = [], []
         for wav_file in Path(root_dir).rglob("*.wav"):
             wavs.append(wav_file)
-            text = wav_file.with_suffix(".txt")
+            text = wav_file.with_suffix(text_suffix)
             texts.append(text)
         self.wavs = wavs
         self.texts = texts
@@ -142,8 +151,12 @@ class TarDataset(Dataset):
         sample_rate: int = 22050,
         text_suffix: str = ".txt",
         path_prefix: str = None,
+        name: str = None,
     ):
-        super().__init__(Path(root_tar).name, sample_rate)
+        if name is not None:
+            super().__init__(name, sample_rate)
+        else:
+            super().__init__(Path(root_tar).name, sample_rate)
         if root_tar is None:
             raise ValueError("root_tar must be provided.")
         self.root_tar = root_tar
@@ -213,28 +226,11 @@ class TarDataset(Dataset):
         return f"({Path(self.root_tar).name})"
 
 
-DEFAULT_BENCHMARKS = [
-    "hubert",
-    "wav2vec2",
-    "wavlm",
-    "wav2vec2_wer",
-    "whisper_wer",
-    "mpm",
-    "pitch",
-    "wespeaker",
-    "dvector",
-    "hubert_token",
-    "voicefixer",
-    "wada_snr",
-]
-
-
 class DataDistribution:
     def __init__(
         self,
         dataset: Dataset = None,
-        benchmark_dict: Dict[str, "Benchmark"] = None,
-        benchmarks: List[str] = DEFAULT_BENCHMARKS,
+        benchmarks: Dict[str, "Benchmark"] = None,
         name: str = None,
     ):
         if name is not None:
@@ -242,19 +238,15 @@ class DataDistribution:
         elif dataset is not None:
             self.name = dataset.name
         self.benchmarks = benchmarks
-        if benchmark_dict is not None:
-            self.benchmark_objects = {
-                benchmark: benchmark_dict[benchmark] for benchmark in benchmarks
-            }
         self.benchmark_results = {}
         if dataset is not None:
             self.dataset = dataset
             self.run()
 
     def run(self):
-        for benchmark in self.benchmark_objects:
+        for benchmark in self.benchmarks:
             print(f"Running {benchmark} on {self.dataset.root_dir}")
-            bench = self.benchmark_objects[benchmark]
+            bench = self.benchmarks[benchmark]
             dist = bench.get_distribution(self.dataset)
             if bench.dimension.name == "N_DIMENSIONAL":
                 # compute mu and sigma and store as tuple

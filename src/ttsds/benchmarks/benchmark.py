@@ -7,7 +7,7 @@ from enum import Enum
 import hashlib
 import importlib.resources
 import json
-from typing import List, Union
+from typing import List, Union, Optional
 from functools import lru_cache
 from pathlib import Path
 
@@ -53,6 +53,7 @@ class Benchmark(ABC):
         category: BenchmarkCategory,
         dimension: BenchmarkDimension,
         description: str,
+        version: Optional[str] = None,
         **kwargs,
     ):
         self.name = name
@@ -60,6 +61,7 @@ class Benchmark(ABC):
         self.category = category
         self.dimension = dimension
         self.description = description
+        self.version = version
         self.kwargs = kwargs
 
     def get_distribution(self, dataset: Union[Dataset, DataDistribution]) -> np.ndarray:
@@ -80,12 +82,18 @@ class Benchmark(ABC):
             mu = load_cache(cache_name + "_mu")
             sig = load_cache(cache_name + "_sig")
             return (mu, sig)
-        if isinstance(dataset, DataDistribution) and self.dimension == BenchmarkDimension.N_DIMENSIONAL:
+        if (
+            isinstance(dataset, DataDistribution)
+            and self.dimension == BenchmarkDimension.N_DIMENSIONAL
+        ):
             mu, sig = dataset.get_distribution(self.key)
             cache(mu, cache_name + "_mu")
             cache(sig, cache_name + "_sig")
             return (mu, sig)
-        elif isinstance(dataset, DataDistribution) and self.dimension == BenchmarkDimension.ONE_DIMENSIONAL:
+        elif (
+            isinstance(dataset, DataDistribution)
+            and self.dimension == BenchmarkDimension.ONE_DIMENSIONAL
+        ):
             distribution = dataset.get_distribution(self.key)
             cache(distribution, cache_name)
             return distribution
@@ -112,6 +120,8 @@ class Benchmark(ABC):
         h.update(self.category.name.encode())
         h.update(self.dimension.name.encode())
         h.update(self.description.encode())
+        if self.version is not None:
+            h.update(self.version.encode())
         # convert the kwargs to strings
         kwargs_str = {
             k: str(v) if not isinstance(v, dict) else json.dumps(v, sort_keys=True)

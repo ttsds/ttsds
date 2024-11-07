@@ -56,25 +56,10 @@ class VoiceFixerBenchmark(Benchmark):
                     wav_out, _ = librosa.load(f_out.name, sr=16000)
             wav = wav / (np.max(np.abs(wav)) + 1e-5)
             wav_out = wav_out / np.max(np.abs(wav_out))
-            mel = self.synthesiser.wav_to_mel(wav, 16000)[0].T
-            mel_out = self.synthesiser.wav_to_mel(wav_out, 16000)[0].T
-            if mel_out.shape[0] > mel.shape[0]:
-                mel_out = mel_out[: mel.shape[0]]
-            elif mel_out.shape[0] < mel.shape[0]:
-                mel = mel[: mel_out.shape[0]]
-            mel_diff = mel_out
-            # check if there is any nan
-            if np.isnan(mel_diff).any():
-                print("nan found, skip")
-                continue
-            # convert back to wav
-            mel_diff = self.synthesiser(mel_diff.T)[0]
-            mel_diff = mel_diff / np.max(np.abs(mel_diff) + 1e-5)
-            mel_diff = librosa.resample(mel_diff, orig_sr=22050, target_sr=16000)
             # calculate the difference
             try:
-                mel_diff = pesq(16000, wav, mel_diff, "wb")
-                mel_diffs.append(mel_diff)
+                res = pesq(16000, wav, wav_out, "wb")
+                mel_diffs.append(res)
             except:
                 mel_diffs.append(0)
         return np.array(mel_diffs)
