@@ -69,6 +69,8 @@ class WhisperActivationsBenchmark(Benchmark):
                     audio = whisper.load_audio(f.name)
                     mel = whisper.log_mel_spectrogram(audio).to(self.device)
                     try:
+                        if fp16:
+                            mel = mel.half()
                         encoder_out = self.model.encoder(mel)
                     except:
                         print(mel.shape, "mel failed, retrying")
