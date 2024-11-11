@@ -31,6 +31,7 @@ class HubertTokenBenchmark(Benchmark):
             category=BenchmarkCategory.PROSODY,
             dimension=BenchmarkDimension.ONE_DIMENSIONAL,
             description="Hubert hidden states.",
+            version="0.0.1",
             hubert_model=hubert_model,
             hubert_layer=hubert_layer,
             cluster_num=cluster_num,
@@ -67,7 +68,6 @@ class HubertTokenBenchmark(Benchmark):
                 ]
             )
         embeddings = []
-        print(len(wavs))
         for wav in tqdm(wavs):
             embeddings.append(self.get_embedding(wav[0], wav[1]))
         embeddings = np.vstack(embeddings)
@@ -146,7 +146,7 @@ class HubertTokenSRBenchmark(Benchmark):
             category=BenchmarkCategory.PROSODY,
             dimension=BenchmarkDimension.ONE_DIMENSIONAL,
             description="Uses hubert tokens to calculate speaking rate.",
-            version="0.0.1",
+            version="0.0.2",
             hubert_model=hubert_model,
             hubert_layer=hubert_layer,
             cluster_num=cluster_num,
@@ -183,7 +183,6 @@ class HubertTokenSRBenchmark(Benchmark):
                 ]
             )
         embeddings = []
-        print(len(wavs))
         for wav in tqdm(wavs):
             embeddings.append(self.get_embedding(wav[0], wav[1]))
         embeddings = np.vstack(embeddings)

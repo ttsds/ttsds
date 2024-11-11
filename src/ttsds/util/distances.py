@@ -3,11 +3,7 @@ This module contains functions to calculate distribution distances.
 """
 import numpy as np
 
-try:
-    import jax.numpy as jnp
-except ImportError:
-    print("JAX is not installed. Using numpy instead, which may be slower.")
-    import numpy as jnp
+import numpy as np
 from scipy import linalg
 
 
@@ -24,7 +20,7 @@ def wasserstein_distance(x, y):
                 x = x[np.random.choice(x.shape[0], y.shape[0], replace=False)]
             else:
                 y = y[np.random.choice(y.shape[0], x.shape[0], replace=False)]
-        means.append(jnp.mean((jnp.sort(x) - jnp.sort(y)) ** 2) ** 0.5)
+        means.append(np.mean((np.sort(x) - np.sort(y)) ** 2) ** 0.5)
     return np.mean(means)
 
 
@@ -32,19 +28,19 @@ def frechet_distance(x, y, eps=1e-6):
     if isinstance(x, tuple):
         mu1, sigma1 = x
     else:
-        mu1 = jnp.mean(x, axis=0)
-        sigma1 = jnp.cov(x, rowvar=False)
+        mu1 = np.mean(x, axis=0)
+        sigma1 = np.cov(x, rowvar=False)
     if isinstance(y, tuple):
         mu2, sigma2 = y
     else:
-        mu2 = jnp.mean(y, axis=0)
-        sigma2 = jnp.cov(y, rowvar=False)
+        mu2 = np.mean(y, axis=0)
+        sigma2 = np.cov(y, rowvar=False)
 
-    mu1 = jnp.atleast_1d(mu1)
-    mu2 = jnp.atleast_1d(mu2)
+    mu1 = np.atleast_1d(mu1)
+    mu2 = np.atleast_1d(mu2)
 
-    sigma1 = jnp.atleast_2d(sigma1)
-    sigma2 = jnp.atleast_2d(sigma2)
+    sigma1 = np.atleast_2d(sigma1)
+    sigma2 = np.atleast_2d(sigma2)
 
     assert (
         mu1.shape == mu2.shape
@@ -57,24 +53,24 @@ def frechet_distance(x, y, eps=1e-6):
 
     # Product might be almost singular
     covmean, _ = linalg.sqrtm(sigma1.dot(sigma2).astype(complex), disp=False)
-    if not jnp.isfinite(covmean).all():
+    if not np.isfinite(covmean).all():
         msg = (
             "fid calculation produces singular product; "
             "adding %s to diagonal of cov estimates"
         ) % eps
         print(msg)
-        offset = jnp.eye(sigma1.shape[0]) * eps
+        offset = np.eye(sigma1.shape[0]) * eps
         covmean = linalg.sqrtm((sigma1 + offset).dot(sigma2 + offset).astype(complex))
 
     # Numerical error might give slight imaginary component
-    if jnp.iscomplexobj(covmean):
-        if not jnp.allclose(jnp.diagonal(covmean).imag, 0, atol=1e-2):
-            m = jnp.max(jnp.abs(covmean.imag))
+    if np.iscomplexobj(covmean):
+        if not np.allclose(np.diagonal(covmean).imag, 0, atol=1e-2):
+            m = np.max(np.abs(covmean.imag))
             print(f"Warning: Imaginary component {m}")
         covmean = covmean.real
 
-    tr_covmean = jnp.trace(covmean)
+    tr_covmean = np.trace(covmean)
 
-    result = diff.dot(diff) + jnp.trace(sigma1) + jnp.trace(sigma2) - 2 * tr_covmean
+    result = diff.dot(diff) + np.trace(sigma1) + np.trace(sigma2) - 2 * tr_covmean
 
     return result

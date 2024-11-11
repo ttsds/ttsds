@@ -1,6 +1,7 @@
 import os
 from pathlib import Path
 from hashlib import md5
+import multiprocessing
 
 import numpy as np
 
@@ -9,6 +10,8 @@ CACHE_DIR = Path(CACHE_DIR)
 if not CACHE_DIR.exists():
     CACHE_DIR.mkdir(parents=True, exist_ok=True)
 
+m = multiprocessing.Manager()
+lock = m.Lock()
 
 def hash_md5(obj) -> str:
     """
@@ -52,8 +55,9 @@ def load_cache(name: str) -> np.ndarray:
     Returns:
         np.ndarray: The cached numpy array.
     """
-    cache_file = CACHE_DIR / f"{name}.npy"
-    return np.load(cache_file)
+    with lock:
+        cache_file = CACHE_DIR / f"{name}.npy"
+        return np.load(cache_file)
 
 
 def check_cache(name: str) -> bool:

@@ -13,10 +13,10 @@ import gzip
 
 import numpy as np
 import librosa
+from multiprocessing import cpu_count
+from concurrent.futures import ThreadPoolExecutor
 
 from ttsds.util.cache import cache, check_cache, load_cache, hash_md5
-
-
 class Dataset(ABC):
     """
     Abstract class for a dataset.
@@ -114,15 +114,20 @@ class DirectoryDataset(Dataset):
         str_root = hash_md5(str(self.root_dir)) + "_" + hash_md5(str(wav))
         wav_str = f"{str_root}_{sr}"
         if check_cache(wav_str):
-            audio = load_cache(wav_str)
+            try:
+                audio = load_cache(wav_str)
+            except Exception as e:
+                print(f"Error loading cache for {wav_str}: {e}")
+                audio, _ = librosa.load(wav, sr=self.sample_rate)
+                cache(audio, wav_str)
         else:
             audio, _ = librosa.load(wav, sr=self.sample_rate)
             cache(audio, wav_str)
         with open(self.texts[idx], "r", encoding="utf-8") as f:
             text = f.read().replace("\n", "")
-        if audio.shape[0] == 0:
-            print(f"Empty audio file: {wav}, padding with zeros.")
-            audio = np.zeros(16000)
+        if audio.shape[0] < 16000:
+            print(f"(Almost) Empty audio file: {wav}, padding with zeros.")
+            audio = np.pad(audio, (0, 16000 - audio.shape[0]))
         audio = audio / (np.max(np.abs(audio)) + 1e-6)
         return audio, text
 
@@ -226,12 +231,68 @@ class TarDataset(Dataset):
         return f"({Path(self.root_tar).name})"
 
 
+class WavListDataset(Dataset):
+    """
+    A dataset class for a list of wav files and corresponding text files.
+    """
+
+    def __init__(
+        self,
+        wavs: List[str],
+        texts: List[str],
+        sample_rate: int = 22050,
+        name: str = None,
+    ):
+        if name is not None:
+            super().__init__(name, sample_rate)
+        else:
+            super().__init__("WavListDataset", sample_rate)
+        self.wavs = wavs
+        self.texts = texts
+
+
+    def __len__(self) -> int:
+        if self.indices is not None:
+            return len(self.indices)
+        return len(self.wavs)
+
+    def __getitem__(self, idx: int) -> Tuple[np.ndarray, str]:
+        if self.indices is not None:
+            idx = self.indices[idx]
+        wav, sr = self.wavs[idx], self.sample_rate
+        wav_str = f"{wav}_{sr}"
+        if check_cache(wav_str):
+            audio = load_cache(wav_str)
+        else:
+            audio, _ = librosa.load(wav, sr=self.sample_rate)
+            cache(audio, wav_str)
+        with open(self.texts[idx], "r", encoding="utf-8") as f:
+            text = f.read().replace("\n", "")
+        if audio.shape[0] == 0:
+            print(f"Empty audio file: {wav}, padding with zeros.")
+            audio = np.zeros(16000)
+        audio = audio / (np.max(np.abs(audio)) + 1e-6)
+        return audio, text
+
+    def __hash__(self) -> int:
+        h = hashlib.md5()
+        h.update(str(self.__class__).encode())
+        h.update(str(self.sample_params["n"]).encode())
+        h.update(str(self.sample_params["seed"]).encode())
+        h.update(str(True).encode())
+        return int(h.hexdigest(), 16)
+
+    def __repr__(self) -> str:
+        return f"({self.name})"
+
 class DataDistribution:
     def __init__(
         self,
         dataset: Dataset = None,
         benchmarks: Dict[str, "Benchmark"] = None,
         name: str = None,
+        multiprocessing: bool = False,
+        n_processes: int = 1,
     ):
         if name is not None:
             self.name = name
@@ -239,21 +300,42 @@ class DataDistribution:
             self.name = dataset.name
         self.benchmarks = benchmarks
         self.benchmark_results = {}
+        self.multiprocessing = multiprocessing
+        self.n_processes = n_processes
         if dataset is not None:
             self.dataset = dataset
             self.run()
 
     def run(self):
-        for benchmark in self.benchmarks:
-            print(f"Running {benchmark} on {self.dataset.root_dir}")
-            bench = self.benchmarks[benchmark]
-            dist = bench.get_distribution(self.dataset)
-            if bench.dimension.name == "N_DIMENSIONAL":
-                # compute mu and sigma and store as tuple
-                mu = np.mean(dist, axis=0)
-                sigma = np.cov(dist, rowvar=False)
-                dist = (mu, sigma)
-            self.benchmark_results[benchmark] = dist
+        if not self.multiprocessing:
+            for benchmark in self.benchmarks:
+                print(f"Running {benchmark} on {self.dataset.root_dir}")
+                bench = self.benchmarks[benchmark]
+                dist = bench.get_distribution(self.dataset)
+                if bench.dimension.name == "N_DIMENSIONAL":
+                    # compute mu and sigma and store as tuple
+                    mu = np.mean(dist, axis=0)
+                    sigma = np.cov(dist, rowvar=False)
+                    dist = (mu, sigma)
+                self.benchmark_results[benchmark] = dist
+        else:
+            benchmark_key_values = list(self.benchmarks.items())
+            values = list(self.benchmarks.values())
+            keys = list(self.benchmarks.keys())
+            print (f"Running {len(values)} benchmarks on {self.dataset.root_dir} using {self.n_processes} processes")
+            with ThreadPoolExecutor(max_workers=self.n_processes) as executor:
+                results = list(executor.map(self._run_benchmark, values))
+            for i, benchmark in enumerate(keys):
+                self.benchmark_results[benchmark] = results[i]
+
+    def _run_benchmark(self, benchmark: "Benchmark"):
+        dist = benchmark.get_distribution(self.dataset)
+        if benchmark.dimension.name == "N_DIMENSIONAL":
+            # compute mu and sigma and store as tuple
+            mu = np.mean(dist, axis=0)
+            sigma = np.cov(dist, rowvar=False)
+            dist = (mu, sigma)
+        return dist
 
     def get_distribution(self, benchmark_name: str) -> np.ndarray:
         if benchmark_name not in self.benchmark_results:

@@ -1,0 +1,19 @@
+benchmark_name,benchmark_category,dataset,score,ci,time_taken,noise_dataset,reference_dataset
+Allosaurus,2,emilia Test,96.90007224214311,1.0,0.14578461647033691,noise_uniform_distribution.tar.gz,emilia Reference
+Allosaurus,2,metavoice,94.94727867032373,1.0,0.14087986946105957,noise_uniform_distribution.tar.gz,emilia Reference
+Allosaurus,2,hierspeechpp,93.4749843033893,1.0,0.14611434936523438,noise_uniform_distribution.tar.gz,emilia Reference
+Allosaurus,2,parlertts,92.4426039265771,1.0,0.14314508438110352,noise_uniform_distribution.tar.gz,emilia Reference
+Allosaurus,2,speecht5,89.74797386104659,1.0,0.1443159580230713,noise_uniform_distribution.tar.gz,emilia Reference
+Allosaurus,2,e2,89.71302054982276,1.0,0.13496708869934082,noise_uniform_distribution.tar.gz,emilia Reference
+Allosaurus,2,f5,89.45636023828598,1.0,0.1302318572998047,noise_uniform_distribution.tar.gz,emilia Reference
+Allosaurus,2,fish,88.84966750834873,1.0,0.13420581817626953,noise_uniform_distribution.tar.gz,emilia Reference
+Allosaurus,2,pheme,88.61653241492307,1.0,0.14354372024536133,noise_uniform_distribution.tar.gz,emilia Reference
+Allosaurus,2,tortoise,88.1926232164839,1.0,0.14604902267456055,noise_uniform_distribution.tar.gz,emilia Reference
+Allosaurus,2,styletts2,87.47937898080636,1.0,0.15350842475891113,noise_uniform_distribution.tar.gz,emilia Reference
+Allosaurus,2,whisperspeech,86.15899971536393,1.0,0.14466595649719238,noise_uniform_distribution.tar.gz,emilia Reference
+Allosaurus,2,amphion_valle,84.84739602748209,1.0,0.061341285705566406,noise_uniform_distribution.tar.gz,emilia Reference
+Allosaurus,2,gpt-sovits,84.12251791282422,1.0,0.14673781394958496,noise_uniform_distribution.tar.gz,emilia Reference
+Allosaurus,2,bark,78.6292296060935,1.0,0.14646577835083008,noise_uniform_distribution.tar.gz,emilia Reference
+Allosaurus,2,voicecraft,78.1305970273357,1.0,0.14103007316589355,noise_uniform_distribution.tar.gz,emilia Reference
+Allosaurus,2,amphion_ns2,77.54375593098054,1.0,0.13018417358398438,noise_uniform_distribution.tar.gz,emilia Reference
+Allosaurus,2,openvoice,77.34688491510575,1.0,0.1452171802520752,noise_uniform_distribution.tar.gz,emilia Reference

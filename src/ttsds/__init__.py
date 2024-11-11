@@ -1,4 +1,4 @@
-from typing import List, Optional
+from typing import List, Optional, Dict
 import importlib.resources
 from time import time
 from pathlib import Path
@@ -10,14 +10,19 @@ import pandas as pd
 from transformers import logging
 import numpy as np
 from sklearn.decomposition import PCA
+from multiprocessing import cpu_count
+from concurrent.futures import ThreadPoolExecutor
 
+from ttsds.benchmarks.benchmark import DeviceSupport
 from ttsds.benchmarks.environment.voicefixer import VoiceFixerBenchmark
 from ttsds.benchmarks.environment.wada_snr import WadaSNRBenchmark
 from ttsds.benchmarks.general.hubert import HubertBenchmark
 from ttsds.benchmarks.general.wav2vec2 import Wav2Vec2Benchmark
 from ttsds.benchmarks.general.wavlm import WavLMBenchmark
 from ttsds.benchmarks.intelligibility.w2v2_wer import Wav2Vec2WERBenchmark
+from ttsds.benchmarks.intelligibility.w2v2_activations import Wav2Vec2ActivationsBenchmark
 from ttsds.benchmarks.intelligibility.whisper_wer import WhisperWERBenchmark
+from ttsds.benchmarks.intelligibility.whisper_activations import WhisperActivationsBenchmark
 from ttsds.benchmarks.prosody.mpm import MPMBenchmark
 from ttsds.benchmarks.prosody.pitch import PitchBenchmark
 from ttsds.benchmarks.prosody.hubert_token import (
@@ -34,12 +39,14 @@ from ttsds.util.dataset import Dataset, DataDistribution
 logging.set_verbosity_error()
 
 
-benchmark_dict_v1 = {
+BENCHMARKS_V1 = {
     "hubert": HubertBenchmark,
     "wav2vec2": Wav2Vec2Benchmark,
     "wavlm": WavLMBenchmark,
     "wav2vec2_wer": Wav2Vec2WERBenchmark,
+    "wav2vec2_activations": Wav2Vec2ActivationsBenchmark,
     "whisper_wer": WhisperWERBenchmark,
+    "whisper_activations": WhisperActivationsBenchmark,
     "mpm": MPMBenchmark,
     "pitch": PitchBenchmark,
     "wespeaker": WeSpeakerBenchmark,
@@ -49,7 +56,7 @@ benchmark_dict_v1 = {
     "wada_snr": WadaSNRBenchmark,
 }
 
-benchmark_dict_v2 = {
+BENCHMARKS_V2 = {
     "allosaurus": AllosaurusBenchmark,
     "hubert_token_sr": HubertTokenSRBenchmark,
 }
@@ -62,11 +69,14 @@ class BenchmarkSuite:
         datasets: List[Dataset],
         noise_datasets: List[Dataset],
         reference_datasets: List[Dataset],
-        benchmarks: List[str] = benchmark_dict.keys(),
+        benchmarks: Dict[str, "Benchmark"] = BENCHMARKS_V1,
         print_results: bool = True,
         skip_errors: bool = False,
         write_to_file: str = None,
+        multiprocessing: bool = False,
+        n_processes: int = cpu_count(),
         benchmark_kwargs: dict = {},
+        device: str = "cpu",
     ):
         if (
             "hubert_token" not in benchmark_kwargs
@@ -77,11 +87,23 @@ class BenchmarkSuite:
             benchmark_kwargs["hubert_token"]["cluster_datasets"] = [
                 reference_datasets[0].sample(min(100, len(reference_datasets[0])))
             ]
-        self.benchmarks = benchmarks
+        if (
+            "hubert_token_sr" not in benchmark_kwargs
+            or "cluster_datasets" not in benchmark_kwargs["hubert_token_sr"]
+        ):
+            if "hubert_token_sr" not in benchmark_kwargs:
+                benchmark_kwargs["hubert_token_sr"] = {}
+            benchmark_kwargs["hubert_token_sr"]["cluster_datasets"] = [
+                reference_datasets[0].sample(min(100, len(reference_datasets[0])))
+            ]
         self.benchmarks = {
-            benchmark: benchmark_dict[benchmark](**benchmark_kwargs.get(benchmark, {}))
-            for benchmark in benchmarks
+            k: v(**benchmark_kwargs.get(k, {}))
+            for k, v in benchmarks.items()
         }
+        # if gpu is available, move the benchmarks that support it to the gpu
+        for benchmark in self.benchmarks.values():
+            if DeviceSupport.GPU in benchmark.supported_devices and device == "cuda":
+                benchmark.to_device(device)
         self.datasets = datasets
         self.datasets = sorted(self.datasets, key=lambda x: x.name)
         self.database = pd.DataFrame(
@@ -100,84 +122,135 @@ class BenchmarkSuite:
         self.skip_errors = skip_errors
         self.noise_datasets = noise_datasets
         self.reference_datasets = reference_datasets
+        self.multiprocessing = multiprocessing
+        self.n_processes = n_processes
 
-        self.noise_distributions = [
-            DataDistribution(
-                ds,
-                benchmarks=self.benchmarks,
-                name=f"speech_{ds.name}",
-            )
-            for ds in noise_datasets
-        ]
-        self.reference_distributions = [
-            DataDistribution(
-                ds,
-                benchmarks=self.benchmarks,
-                name=ds.name,
-            )
-            for ds in reference_datasets
-        ]
+        if not self.multiprocessing:
+            if len(benchmarks) > len(noise_datasets) + len(reference_datasets):
+                print(
+                    f"Running benchmarks without multiprocessing"
+                )
+                self.noise_distributions = [
+                    DataDistribution(
+                        ds,
+                        benchmarks=self.benchmarks,
+                        name=f"speech_{ds.name}",
+                        multiprocessing=self.multiprocessing,
+                        n_processes=self.n_processes,
+                    )
+                    for ds in noise_datasets
+                ]
+                self.reference_distributions = [
+                    DataDistribution(
+                        ds,
+                        benchmarks=self.benchmarks,
+                        name=ds.name,
+                        multiprocessing=self.multiprocessing,
+                        n_processes=self.n_processes,
+                    )
+                    for ds in reference_datasets
+                ]
+            else:
+                print(f"Running benchmarks with multiprocessing with {self.n_processes} processes and {len(noise_datasets) + len(reference_datasets)} datasets")
+                tasks = [d for d in noise_datasets + reference_datasets]
+                with ThreadPoolExecutor(max_workers=self.n_processes) as executor:
+                    results = list(
+                        executor.map(
+                            lambda x: self.get_data_distribution(x, self.benchmarks),
+                            tasks,
+                        )
+                    )
+                self.noise_distributions = results[: len(noise_datasets)]
+                self.reference_distributions = results[len(noise_datasets) :]
         self.write_to_file = write_to_file
         if Path(write_to_file).exists():
             self.database = pd.read_csv(write_to_file, index_col=0)
             self.database = self.database.reset_index()
 
+    def get_data_distribution(self, dataset: Dataset, benchmarks: Dict[str, "Benchmark"]) -> DataDistribution:
+        return DataDistribution(
+            dataset,
+            benchmarks=benchmarks,
+            name=dataset.name,
+            multiprocessing=False,
+        )
+
+    def _get_distribution(self, benchmark: "Benchmark", dataset: Dataset) -> np.ndarray:
+        return benchmark.get_distribution(dataset)
+
+    def _run_benchmark(self, benchmark: "Benchmark", dataset: Dataset) -> dict:
+        # empty lines for better readability
+        print("\n")
+        print(f"{'='*80}")
+        print(f"Benchmark Category: {benchmark.category.name}")
+        print(f"Running {benchmark.name} on {dataset.root_dir}")
+        try:
+            start = time()
+            score = benchmark.compute_score(
+                dataset, self.reference_distributions, self.noise_distributions
+            )
+            time_taken = time() - start
+        except Exception as e:
+            if self.skip_errors:
+                print(f"Error: {e}")
+                score = (np.nan, np.nan)
+                time_taken = np.nan
+            else:
+                raise e
+        result = {
+            "benchmark_name": [benchmark.name],
+            "benchmark_category": [benchmark.category.value],
+            "dataset": [dataset.name],
+            "score": [score[0]],
+            "ci": [score[1]],
+            "time_taken": [time_taken],
+            "noise_dataset": [score[2][0]],
+            "reference_dataset": [score[2][1]],
+        }
+        return result
+
     def run(self) -> pd.DataFrame:
+        tasks = []
         for benchmark in sorted(self.benchmarks.values(), key=lambda x: x.name):
             for dataset in self.datasets:
-                # empty lines for better readability
-                print("\n")
-                print(f"{'='*80}")
-                print(f"Benchmark Category: {benchmark.category.name}")
-                print(f"Running {benchmark.name} on {dataset.root_dir}")
-                try:
-                    # check if it's in the database
-                    if (
-                        (self.database["benchmark_name"] == benchmark.name)
-                        & (self.database["dataset"] == dataset.name)
-                    ).any():
-                        print(
-                            f"Skipping {benchmark.name} on {dataset.name} as it's already in the database"
-                        )
-                        continue
-                    start = time()
-                    score = benchmark.compute_score(
-                        dataset, self.reference_distributions, self.noise_distributions
+                if (
+                    (self.database["benchmark_name"] == benchmark.name)
+                    & (self.database["dataset"] == dataset.name)
+                ).any():
+                    print(
+                        f"Skipping {benchmark.name} on {dataset.name} as it's already in the database"
                     )
-                    time_taken = time() - start
-                except Exception as e:
-                    if self.skip_errors:
-                        print(f"Error: {e}")
-                        score = (np.nan, np.nan)
-                        time_taken = np.nan
-                    else:
-                        raise e
-                result = {
-                    "benchmark_name": [benchmark.name],
-                    "benchmark_category": [benchmark.category.value],
-                    "dataset": [dataset.name],
-                    "score": [score[0]],
-                    "ci": [score[1]],
-                    "time_taken": [time_taken],
-                    "noise_dataset": [score[2][0]],
-                    "reference_dataset": [score[2][1]],
-                }
-                if self.print_results:
-                    print(result)
-                self.database = pd.concat(
-                    [
-                        self.database,
-                        pd.DataFrame(result),
-                    ],
-                    ignore_index=True,
+                    continue
+                tasks.append((benchmark, dataset))
+        if self.multiprocessing:
+            print(f"Running benchmarks with {self.n_processes} processes")
+            with ThreadPoolExecutor(max_workers=self.n_processes) as executor:
+                results = list(executor.map(lambda x: self._get_distribution(*x), tasks))
+        results = []
+        if not self.multiprocessing:
+            for benchmark, dataset in tasks:
+                result = self._run_benchmark(benchmark, dataset)
+                results.append(result)
+        else:
+            with ThreadPoolExecutor(max_workers=self.n_processes) as executor:
+                results = list(executor.map(lambda x: self._run_benchmark(*x), tasks))
+        for result in results:
+            if self.print_results:
+                print(result)
+            self.database = pd.concat(
+                [
+                    self.database,
+                    pd.DataFrame(result),
+                ],
+                ignore_index=True,
+            )
+            if self.write_to_file is not None:
+                self.database["score"] = self.database["score"].astype(float)
+                self.database = self.database.sort_values(
+                    ["benchmark_category", "benchmark_name", "score"],
+                    ascending=[True, True, False],
                 )
-                if self.write_to_file is not None:
-                    self.database["score"] = self.database["score"].astype(float)
-                    self.database = self.database.sort_values(
-                        ["benchmark_category", "benchmark_name", "score"],
-                        ascending=[True, True, False],
-                    )
-                    self.database.to_csv(self.write_to_file, index=False)
+                self.database.to_csv(self.write_to_file, index=False)
         return self.database
 
     @staticmethod

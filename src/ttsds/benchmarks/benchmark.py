@@ -12,6 +12,7 @@ from functools import lru_cache
 from pathlib import Path
 
 import numpy as np
+from tqdm.contrib.concurrent import process_map
 
 from ttsds.util.dataset import Dataset, DataDistribution
 from ttsds.util.cache import cache, load_cache, check_cache, hash_md5
@@ -41,6 +42,14 @@ class BenchmarkDimension(Enum):
     ONE_DIMENSIONAL = 1
     N_DIMENSIONAL = 2
 
+class DeviceSupport(Enum):
+    """
+    Enum class for the different device support of benchmarks.
+    """
+
+    CPU = 1
+    GPU = 2
+
 
 class Benchmark(ABC):
     """
@@ -54,6 +63,7 @@ class Benchmark(ABC):
         dimension: BenchmarkDimension,
         description: str,
         version: Optional[str] = None,
+        supported_devices: List[DeviceSupport] = [DeviceSupport.CPU],
         **kwargs,
     ):
         self.name = name
@@ -63,6 +73,7 @@ class Benchmark(ABC):
         self.description = description
         self.version = version
         self.kwargs = kwargs
+        self.supported_devices = supported_devices
 
     def get_distribution(self, dataset: Union[Dataset, DataDistribution]) -> np.ndarray:
         """
@@ -105,6 +116,23 @@ class Benchmark(ABC):
     def _get_distribution(self, dataset: Dataset) -> np.ndarray:
         """
         Abstract method to get the distribution of the benchmark.
+        """
+        raise NotImplementedError
+
+    def to_device(self, device: str):
+        """
+        Move the benchmark to a device.
+        """
+        if device not in ["cpu", "cuda"]:
+            raise ValueError("Invalid device")
+        if self.supported_devices == [DeviceSupport.CPU]:
+            if device == "cuda":
+                raise ValueError("Benchmark does not support CUDA")
+        self._to_device(device)
+
+    def _to_device(self, device: str):
+        """
+        Abstract method to move the benchmark to a device.
         """
         raise NotImplementedError
 

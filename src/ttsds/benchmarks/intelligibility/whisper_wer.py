@@ -1,6 +1,7 @@
 import re
 import tempfile
 
+import torch
 import whisper
 from tqdm import tqdm
 from jiwer import wer
@@ -11,6 +12,7 @@ import soundfile as sf
 
 from ttsds.benchmarks.benchmark import Benchmark, BenchmarkCategory, BenchmarkDimension
 from ttsds.util.dataset import Dataset
+from ttsds.util.cache import hash_md5
 
 
 class WhisperWERBenchmark(Benchmark):
@@ -30,6 +32,17 @@ class WhisperWERBenchmark(Benchmark):
             whisper_model=whisper_model,
         )
         self.model = whisper.load_model(whisper_model)
+        self.device = "cpu"
+
+    def _to_device(self, device: str):
+        """
+        Move the model to the given device.
+
+        Args:
+            device (str): The device to move the model to.
+        """
+        self.model.to(device)
+        self.device = device
 
     def _get_distribution(self, dataset: Dataset) -> np.ndarray:
         """
@@ -49,7 +62,15 @@ class WhisperWERBenchmark(Benchmark):
                 )
             with tempfile.NamedTemporaryFile(suffix=".wav") as f:
                 sf.write(f.name, wav, 16000)
-                pred_transcript = self.model.transcribe(f.name)["text"]
+                if self.device == 'cpu':
+                    fp16 = False
+                else:
+                    fp16 = True
+                try:
+                    pred_transcript = self.model.transcribe(f.name, fp16=fp16)["text"]
+                except Exception as e:
+                    print(wav.shape, "failed, retrying")
+                    pred_transcript = self.model.transcribe(f.name, fp16=fp16)["text"]
             pred_transcript = re.sub(r"[^\w\s]", "", pred_transcript)
             gt_transcript = re.sub(r"[^\w\s]", "", gt_transcript)
             pred_transcript = re.sub(r"\s+", " ", pred_transcript)
