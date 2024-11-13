@@ -20,7 +20,7 @@ pip install ttsds
 ### Requirements
 
 - Python 3.9+
-- System packages: ffmpeg, automake, autoconf, unzip, sox, gfortran, subversion, libtool
+- System packages: ``ffmpeg automake autoconf unzip sox gfortran subversion libtool``
 - On some systems, the fairseq installation may fail due to conflicting dependencies. In this case, you can install this fork of fairseq https://github.com/MiniXC/fairseq-noconf
 
 ### Caching
