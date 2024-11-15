@@ -1,0 +1,37 @@
+benchmark_name,benchmark_category,dataset,score,ci,time_taken,noise_dataset,reference_dataset
+Wav2Vec2 Activations,6,whisperspeech,97.21479338966527,1.0,9792.40542459488,noise_uniform_distribution.tar.gz,librilatest Reference
+Wav2Vec2 Activations,6,librilatest Test,97.18019801938209,1.0,9792.804480314255,noise_uniform_distribution.tar.gz,librilatest Reference
+Wav2Vec2 Activations,6,pheme,97.16194013540834,1.0,9756.828617334366,noise_uniform_distribution.tar.gz,librilatest Reference
+Wav2Vec2 Activations,6,tortoise,97.06906809588244,1.0,9690.701731920242,noise_uniform_distribution.tar.gz,librilatest Reference
+Wav2Vec2 Activations,6,fish,97.0672277374851,1.0,9792.791883707047,noise_uniform_distribution.tar.gz,librilatest Reference
+Wav2Vec2 Activations,6,speecht5,97.03856580285002,1.0,9302.802249908447,noise_uniform_distribution.tar.gz,librilatest Reference
+Wav2Vec2 Activations,6,e2,96.50707883715212,1.0,9792.608631134033,noise_uniform_distribution.tar.gz,librilatest Reference
+Wav2Vec2 Activations,6,f5,96.22092054032316,1.0,9576.595984697342,noise_uniform_distribution.tar.gz,librilatest Reference
+Wav2Vec2 Activations,6,styletts2,96.13493483388625,1.0,9792.794142246246,noise_uniform_distribution.tar.gz,librilatest Reference
+Wav2Vec2 Activations,6,openvoice,95.97660242587105,1.0,9303.99727845192,noise_uniform_distribution.tar.gz,librilatest Reference
+Wav2Vec2 Activations,6,parlertts,95.91254870877246,1.0,10139.994368314743,noise_uniform_distribution.tar.gz,librilatest Reference
+Wav2Vec2 Activations,6,hierspeechpp,95.50639064158989,1.0,9304.200765371323,noise_uniform_distribution.tar.gz,librilatest Reference
+Wav2Vec2 Activations,6,gpt-sovits,95.42169790267148,1.0,9792.496779441833,noise_uniform_distribution.tar.gz,librilatest Reference
+Wav2Vec2 Activations,6,bark,94.98766073959003,1.0,9792.950615167618,noise_uniform_distribution.tar.gz,librilatest Reference
+Wav2Vec2 Activations,6,metavoice,90.91077440787497,1.0,9690.703150510788,noise_uniform_distribution.tar.gz,librilatest Reference
+Wav2Vec2 Activations,6,voicecraft,87.77846751031461,1.0,9791.39185833931,noise_uniform_distribution.tar.gz,librilatest Reference
+Wav2Vec2 Activations,6,amphion_ns2,83.10573039526665,1.0,10240.806413412094,noise_uniform_distribution.tar.gz,librilatest Reference
+Wav2Vec2 Activations,6,amphion_valle,71.56753449744156,1.0,9792.753230333328,noise_uniform_distribution.tar.gz,librilatest Reference
+Whisper Activations,6,librilatest Test,87.13598319195079,1.0,10193.901393175125,noise_normal_distribution.tar.gz,librilatest Reference
+Whisper Activations,6,styletts2,86.4887614401502,1.0,967.9948155879974,noise_normal_distribution.tar.gz,librilatest Reference
+Whisper Activations,6,whisperspeech,85.2363802833992,1.0,965.8157958984375,noise_normal_distribution.tar.gz,librilatest Reference
+Whisper Activations,6,speecht5,84.60330076828815,1.0,9731.805478334427,noise_normal_distribution.tar.gz,librilatest Reference
+Whisper Activations,6,gpt-sovits,84.53802036083871,1.0,9759.500970602036,noise_normal_distribution.tar.gz,librilatest Reference
+Whisper Activations,6,tortoise,84.30738214746502,1.0,966.7003026008606,noise_normal_distribution.tar.gz,librilatest Reference
+Whisper Activations,6,hierspeechpp,84.26151126008591,1.0,9731.599596977234,noise_normal_distribution.tar.gz,librilatest Reference
+Whisper Activations,6,pheme,84.239568852827,1.0,9731.701959371567,noise_normal_distribution.tar.gz,librilatest Reference
+Whisper Activations,6,fish,83.9033614463693,1.0,9303.605694532394,noise_normal_distribution.tar.gz,librilatest Reference
+Whisper Activations,6,e2,83.88537498970065,1.0,9792.50015592575,noise_normal_distribution.tar.gz,librilatest Reference
+Whisper Activations,6,openvoice,83.59563225437832,1.0,9938.692575454712,noise_normal_distribution.tar.gz,librilatest Reference
+Whisper Activations,6,metavoice,83.42316562857614,1.0,9303.500575780869,noise_normal_distribution.tar.gz,librilatest Reference
+Whisper Activations,6,f5,82.57013279653486,1.0,9304.492050886154,noise_normal_distribution.tar.gz,librilatest Reference
+Whisper Activations,6,parlertts,81.5264424735518,1.0,9752.497279167175,noise_normal_distribution.tar.gz,librilatest Reference
+Whisper Activations,6,bark,79.79982886236046,1.0,9578.395563364029,noise_normal_distribution.tar.gz,librilatest Reference
+Whisper Activations,6,amphion_ns2,75.36852290868363,1.0,9304.290501356125,noise_normal_distribution.tar.gz,librilatest Reference
+Whisper Activations,6,voicecraft,70.9484614956486,1.0,965.3035697937012,noise_normal_distribution.tar.gz,librilatest Reference
+Whisper Activations,6,amphion_valle,66.291070261238,1.0,9792.007049560547,noise_normal_distribution.tar.gz,librilatest Reference

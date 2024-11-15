@@ -2,7 +2,7 @@ import re
 import tempfile
 
 import torch
-import whisper
+from transformers import WhisperProcessor, WhisperForConditionalGeneration
 from tqdm import tqdm
 from jiwer import wer
 import torch
@@ -10,7 +10,7 @@ import numpy as np
 import librosa
 import soundfile as sf
 
-from ttsds.benchmarks.benchmark import Benchmark, BenchmarkCategory, BenchmarkDimension
+from ttsds.benchmarks.benchmark import Benchmark, BenchmarkCategory, BenchmarkDimension, DeviceSupport
 from ttsds.util.dataset import Dataset
 from ttsds.util.cache import hash_md5
 
@@ -30,8 +30,10 @@ class WhisperWERBenchmark(Benchmark):
             dimension=BenchmarkDimension.ONE_DIMENSIONAL,
             description="The Word Error Rate (WER) of Whisper.",
             whisper_model=whisper_model,
+            supported_devices=[DeviceSupport.CPU, DeviceSupport.GPU],
         )
-        self.model = whisper.load_model(whisper_model)
+        self.processor = WhisperProcessor.from_pretrained("openai/whisper-small.en")
+        self.model = WhisperForConditionalGeneration.from_pretrained("openai/whisper-small.en")
         self.device = "cpu"
 
     def _to_device(self, device: str):
@@ -57,20 +59,11 @@ class WhisperWERBenchmark(Benchmark):
         wers = []
         for wav, gt_transcript in tqdm(dataset, desc=f"computing WER for {self.name}"):
             if dataset.sample_rate != 16000:
-                wav = librosa.resample(
-                    wav, orig_sr=dataset.sample_rate, target_sr=16000
-                )
-            with tempfile.NamedTemporaryFile(suffix=".wav") as f:
-                sf.write(f.name, wav, 16000)
-                if self.device == 'cpu':
-                    fp16 = False
-                else:
-                    fp16 = True
-                try:
-                    pred_transcript = self.model.transcribe(f.name, fp16=fp16)["text"]
-                except Exception as e:
-                    print(wav.shape, "failed, retrying")
-                    pred_transcript = self.model.transcribe(f.name, fp16=fp16)["text"]
+                wav = librosa.resample(wav, orig_sr=dataset.sample_rate, target_sr=16000)
+            input_features = self.processor(wav, sampling_rate=16000, return_tensors="pt").input_features
+            input_features = input_features.to(self.device)
+            predicted_ids = self.model.generate(input_features)
+            pred_transcript = self.processor.batch_decode(predicted_ids, skip_special_tokens=True)[0]
             pred_transcript = re.sub(r"[^\w\s]", "", pred_transcript)
             gt_transcript = re.sub(r"[^\w\s]", "", gt_transcript)
             pred_transcript = re.sub(r"\s+", " ", pred_transcript)

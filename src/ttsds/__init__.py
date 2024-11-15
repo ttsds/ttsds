@@ -125,7 +125,7 @@ class BenchmarkSuite:
         self.multiprocessing = multiprocessing
         self.n_processes = n_processes
 
-        if not self.multiprocessing:
+        if self.multiprocessing:
             if len(benchmarks) > len(noise_datasets) + len(reference_datasets):
                 print(
                     f"Running benchmarks without multiprocessing"
@@ -162,6 +162,15 @@ class BenchmarkSuite:
                     )
                 self.noise_distributions = results[: len(noise_datasets)]
                 self.reference_distributions = results[len(noise_datasets) :]
+        else:
+            self.noise_distributions = [
+                self.get_data_distribution(ds, self.benchmarks)
+                for ds in noise_datasets
+            ]
+            self.reference_distributions = [
+                self.get_data_distribution(ds, self.benchmarks)
+                for ds in reference_datasets
+            ]
         self.write_to_file = write_to_file
         if Path(write_to_file).exists():
             self.database = pd.read_csv(write_to_file, index_col=0)

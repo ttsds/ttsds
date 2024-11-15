@@ -1,0 +1,37 @@
+benchmark_name,benchmark_category,dataset,score,ci,time_taken,noise_dataset,reference_dataset
+Whisper Activations,6,librittsr Test,93.50068582620943,1.0,7312.39269733429,noise_normal_distribution.tar.gz,librittsr Reference
+Whisper Activations,6,styletts2,89.78230313256755,1.0,7231.285448551178,noise_normal_distribution.tar.gz,librittsr Reference
+Whisper Activations,6,speecht5,88.81848833107617,1.0,7177.597064256668,noise_normal_distribution.tar.gz,librittsr Reference
+Whisper Activations,6,openvoice,87.53522404561933,1.0,7312.001517295837,noise_normal_distribution.tar.gz,librittsr Reference
+Whisper Activations,6,gpt-sovits,87.17892338321631,1.0,6901.8876757621765,noise_normal_distribution.tar.gz,librittsr Reference
+Whisper Activations,6,e2,86.9763727238781,1.0,7231.400700807571,noise_normal_distribution.tar.gz,librittsr Reference
+Whisper Activations,6,f5,86.85828799837817,1.0,7231.497028589249,noise_normal_distribution.tar.gz,librittsr Reference
+Whisper Activations,6,fish,86.44788006795629,1.0,7176.613866567612,noise_normal_distribution.tar.gz,librittsr Reference
+Whisper Activations,6,whisperspeech,85.19770340438323,1.0,7231.69603061676,noise_normal_distribution.tar.gz,librittsr Reference
+Whisper Activations,6,pheme,85.03517737789225,1.0,6901.7010316848755,noise_normal_distribution.tar.gz,librittsr Reference
+Whisper Activations,6,hierspeechpp,83.86675382986287,1.0,7231.720176458359,noise_normal_distribution.tar.gz,librittsr Reference
+Whisper Activations,6,amphion_ns2,82.78704155033384,1.0,7178.227259397507,noise_normal_distribution.tar.gz,librittsr Reference
+Whisper Activations,6,parlertts,82.46710759417867,1.0,7231.714028120041,noise_normal_distribution.tar.gz,librittsr Reference
+Whisper Activations,6,tortoise,81.41669349771566,1.0,7312.62119102478,noise_normal_distribution.tar.gz,librittsr Reference
+Whisper Activations,6,bark,80.361519122543,1.0,7231.621008634567,noise_normal_distribution.tar.gz,librittsr Reference
+Whisper Activations,6,metavoice,78.25714713515174,1.0,7177.100246429443,noise_normal_distribution.tar.gz,librittsr Reference
+Whisper Activations,6,voicecraft,70.39685851539828,1.0,7142.83597779274,noise_normal_distribution.tar.gz,librittsr Reference
+Whisper Activations,6,amphion_valle,60.31842673806613,1.0,7231.723531961441,noise_normal_distribution.tar.gz,librittsr Reference
+Whisper WER,6,f5,94.88491195193585,1.0,2734.9040157794952,noise_all_ones.tar.gz,librittsr Reference
+Whisper WER,6,speecht5,92.89556911153015,1.0,2734.9986956119537,noise_all_ones.tar.gz,librittsr Reference
+Whisper WER,6,librittsr Test,91.51559422749666,1.0,2734.995260953903,noise_all_ones.tar.gz,librittsr Reference
+Whisper WER,6,pheme,91.27709066876643,1.0,2405.601116657257,noise_all_ones.tar.gz,librittsr Reference
+Whisper WER,6,openvoice,90.585399046827,1.0,2565.3942234516144,noise_all_ones.tar.gz,librittsr Reference
+Whisper WER,6,gpt-sovits,90.44990427033423,1.0,2735.180068731308,noise_all_ones.tar.gz,librittsr Reference
+Whisper WER,6,e2,90.31287263333486,1.0,2734.8951263427734,noise_all_ones.tar.gz,librittsr Reference
+Whisper WER,6,tortoise,89.60932730390384,1.0,3.697730779647827,noise_all_ones.tar.gz,librittsr Reference
+Whisper WER,6,styletts2,88.76645026139668,1.0,1558.4011807441711,noise_all_ones.tar.gz,librittsr Reference
+Whisper WER,6,fish,88.02808191748387,1.0,2734.892240524292,noise_all_ones.tar.gz,librittsr Reference
+Whisper WER,6,whisperspeech,87.24840557108705,1.0,4.196606636047363,noise_all_ones.tar.gz,librittsr Reference
+Whisper WER,6,amphion_ns2,86.21198971578264,1.0,2734.888523340225,noise_all_ones.tar.gz,librittsr Reference
+Whisper WER,6,metavoice,83.6690679875958,1.0,1179.0848126411438,noise_all_ones.tar.gz,librittsr Reference
+Whisper WER,6,parlertts,83.57857610915138,1.0,2734.7900941371918,noise_all_ones.tar.gz,librittsr Reference
+Whisper WER,6,bark,83.20969156443752,1.0,2405.3070430755615,noise_all_ones.tar.gz,librittsr Reference
+Whisper WER,6,hierspeechpp,75.94898243225533,1.0,2734.9892823696136,noise_all_ones.tar.gz,librittsr Reference
+Whisper WER,6,voicecraft,61.04414713825521,1.0,4.494542360305786,noise_all_ones.tar.gz,librittsr Reference
+Whisper WER,6,amphion_valle,45.44640966976061,1.0,2735.0003645420074,noise_all_ones.tar.gz,librittsr Reference

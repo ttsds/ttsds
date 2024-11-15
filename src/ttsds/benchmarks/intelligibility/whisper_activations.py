@@ -2,13 +2,13 @@ import re
 import tempfile
 
 import torch
-import whisper
+from transformers import WhisperProcessor, WhisperModel
 from tqdm import tqdm
 import numpy as np
 import librosa
 import soundfile as sf
 
-from ttsds.benchmarks.benchmark import Benchmark, BenchmarkCategory, BenchmarkDimension
+from ttsds.benchmarks.benchmark import Benchmark, BenchmarkCategory, BenchmarkDimension, DeviceSupport
 from ttsds.util.dataset import Dataset
 
 
@@ -27,9 +27,12 @@ class WhisperActivationsBenchmark(Benchmark):
             dimension=BenchmarkDimension.N_DIMENSIONAL,
             description="Extracted feature activations from the Whisper model.",
             whisper_model=whisper_model,
+            supported_devices=[DeviceSupport.CPU, DeviceSupport.GPU],
         )
-        self.model = whisper.load_model(whisper_model)
+        self.processor = WhisperProcessor.from_pretrained("openai/whisper-small.en")
+        self.model = WhisperModel.from_pretrained("openai/whisper-small.en")
         self.device = "cpu"
+        self.model.to(self.device)
 
     def _to_device(self, device: str):
         """
@@ -55,27 +58,18 @@ class WhisperActivationsBenchmark(Benchmark):
         activations = []
         for wav, _ in tqdm(dataset, desc=f"Extracting activations for {self.name}"):
             if dataset.sample_rate != 16000:
-                wav = librosa.resample(
-                    wav, orig_sr=dataset.sample_rate, target_sr=16000
-                )
-            with tempfile.NamedTemporaryFile(suffix=".wav") as f:
-                sf.write(f.name, wav, 16000)
-                if self.device == 'cpu':
-                    fp16 = False
-                else:
-                    fp16 = True
-                with torch.no_grad():
-                    # Extract the encoder outputs (activations) directly
-                    audio = whisper.load_audio(f.name)
-                    mel = whisper.log_mel_spectrogram(audio).to(self.device)
-                    try:
-                        if fp16:
-                            mel = mel.half()
-                        encoder_out = self.model.encoder(mel)
-                    except:
-                        print(mel.shape, "mel failed, retrying")
-                        encoder_out = self.model.encoder(mel)
-                    # Pooling across the time dimension (e.g., mean pooling)
-                    pooled_features = encoder_out.mean(dim=1).cpu().numpy()
-                activations.append(pooled_features.squeeze())
-        return np.stack(activations)
+                wav = librosa.resample(wav, orig_sr=dataset.sample_rate, target_sr=16000)
+            input_features = self.processor(
+                wav, 
+                sampling_rate=16000,
+                return_tensors="pt"
+            ).input_features 
+            input_features = input_features.to(self.device)
+            decoder_input_ids = torch.tensor([[1, 1]]) * self.model.config.decoder_start_token_id
+            decoder_input_ids = decoder_input_ids.to(self.device)
+            with torch.no_grad():
+                # Extract the encoder outputs (activations) directly
+                outputs = self.model(input_features, decoder_input_ids=decoder_input_ids)
+                pooled_features = outputs.last_hidden_state[0].mean(dim=0)
+            activations.append(pooled_features.cpu().numpy())
+        return np.vstack(activations)

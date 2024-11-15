@@ -30,6 +30,17 @@ class Wav2Vec2ActivationsBenchmark(Benchmark):
         self.processor = Wav2Vec2Processor.from_pretrained(wav2vec2_model)
         self.model = Wav2Vec2Model.from_pretrained(wav2vec2_model)
         self.model.eval()
+        self.device = "cpu"
+
+    def _to_device(self, device: str):
+        """
+        Move the model to the given device.
+
+        Args:
+            device (str): The device to move the model to.
+        """
+        self.model.to(device)
+        self.device = device
 
     def _get_distribution(self, dataset: Dataset) -> np.ndarray:
         """
@@ -51,11 +62,12 @@ class Wav2Vec2ActivationsBenchmark(Benchmark):
             input_values = self.processor(
                 wav, return_tensors="pt", sampling_rate=16000
             ).input_values
+            input_values = input_values.to(self.device)
             with torch.no_grad():
                 outputs = self.model(input_values)
                 # Extract the last hidden state
                 features = outputs.last_hidden_state
                 # Pool across the time dimension (e.g., mean pooling)
-                pooled_features = features.mean(dim=1).squeeze(0).numpy()
+                pooled_features = features.mean(dim=1).squeeze().cpu().numpy()
             activations.append(pooled_features)
         return np.stack(activations)
