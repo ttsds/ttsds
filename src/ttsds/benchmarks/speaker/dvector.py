@@ -9,12 +9,8 @@ from torchaudio.transforms import MelSpectrogram
 from tqdm import tqdm
 import numpy as np
 
-with importlib.resources.path("ttsds", "data") as dp:
-    dvector_pt = dp / "dvector" / "dvector.pt"
-
-# wav_tensor, sample_rate = torchaudio.load("example.wav")
-# mel_tensor = wav2mel(wav_tensor, sample_rate)  # shape: (frames, mel_dim)
-# emb_tensor = dvector.embed_utterance(mel_tensor)  # shape: (emb_dim)
+with importlib.resources.files("ttsds") as dp:
+    dvector_pt = dp / "data" / "dvector" / "dvector.pt"
 
 from ttsds.benchmarks.benchmark import Benchmark, BenchmarkCategory, BenchmarkDimension
 from ttsds.util.dataset import Dataset

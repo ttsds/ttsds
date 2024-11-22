@@ -45,7 +45,8 @@ benchmark_dict = {
     "wada_snr": WadaSNRBenchmark,
 }
 
-with importlib.resources.path("ttsds", "data") as data_path:
+with importlib.resources.files("ttsds") as data_path:
+    data_path = data_path / "data"
     # if they don't exist, download from github
     for noise_name in [
         "esc50",
