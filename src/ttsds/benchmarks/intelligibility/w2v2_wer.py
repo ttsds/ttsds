@@ -58,5 +58,8 @@ class Wav2Vec2WERBenchmark(Benchmark):
             gt_transcript = re.sub(r"[^\w\s]", "", gt_transcript)
             pred_transcript = re.sub(r"\s+", " ", pred_transcript).lower()
             gt_transcript = re.sub(r"\s+", " ", gt_transcript).lower()
-            wers.append(wer(gt_transcript, pred_transcript))
+            try:
+                wers.append(wer(gt_transcript, pred_transcript))
+            except:
+                wers.append(1.0)
         return np.array(wers)

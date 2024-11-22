@@ -57,7 +57,11 @@ def load_cache(name: str) -> np.ndarray:
     """
     with lock:
         cache_file = CACHE_DIR / f"{name}.npy"
-        return np.load(cache_file)
+        try:
+            return np.load(cache_file)
+        except Exception as e:
+            print(f"Failed to load cache {cache_file}: {e}")
+            return None
 
 
 def check_cache(name: str) -> bool:

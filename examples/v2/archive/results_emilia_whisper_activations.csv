@@ -1,0 +1,20 @@
+benchmark_name,benchmark_category,dataset,score,ci,time_taken,noise_dataset,reference_dataset
+Whisper Activations,6,emilia Test,80.19649261790973,1.0,161.6135642528534,noise_normal_distribution.tar.gz,emilia Reference
+Whisper Activations,6,hierspeechpp,77.83782493917167,1.0,162.62231254577637,noise_normal_distribution.tar.gz,emilia Reference
+Whisper Activations,6,bark,77.18114980885365,1.0,162.14209604263306,noise_normal_distribution.tar.gz,emilia Reference
+Whisper Activations,6,e2,76.1499239179735,1.0,160.9887776374817,noise_normal_distribution.tar.gz,emilia Reference
+Whisper Activations,6,pheme,75.65904536588324,1.0,161.32553458213806,noise_normal_distribution.tar.gz,emilia Reference
+Whisper Activations,6,metavoice,75.63988977406574,1.0,152.18574166297913,noise_normal_distribution.tar.gz,emilia Reference
+Whisper Activations,6,f5,75.29183840352023,1.0,165.1919686794281,noise_normal_distribution.tar.gz,emilia Reference
+Whisper Activations,6,styletts2,75.00851918396391,1.0,156.75729823112488,noise_normal_distribution.tar.gz,emilia Reference
+Whisper Activations,6,fish,74.60635444465892,1.0,159.72671461105347,noise_normal_distribution.tar.gz,emilia Reference
+Whisper Activations,6,whisperspeech,74.04795646164835,1.0,162.44177389144897,noise_normal_distribution.tar.gz,emilia Reference
+Whisper Activations,6,parlertts,72.9154475515108,1.0,159.94307947158813,noise_normal_distribution.tar.gz,emilia Reference
+Whisper Activations,6,xtts,72.75588565295176,1.0,162.89090275764465,noise_normal_distribution.tar.gz,emilia Reference
+Whisper Activations,6,tortoise,72.67187903593242,1.0,159.1004695892334,noise_normal_distribution.tar.gz,emilia Reference
+Whisper Activations,6,speecht5,72.14986020474717,1.0,160.31160473823547,noise_uniform_distribution.tar.gz,emilia Reference
+Whisper Activations,6,gpt-sovits,69.64657676216116,1.0,161.0177218914032,noise_normal_distribution.tar.gz,emilia Reference
+Whisper Activations,6,openvoice,67.06171484935602,1.0,151.8205828666687,noise_normal_distribution.tar.gz,emilia Reference
+Whisper Activations,6,amphion_ns2,66.78892696821806,1.0,165.86836695671082,noise_normal_distribution.tar.gz,emilia Reference
+Whisper Activations,6,voicecraft,54.02563064830132,1.0,160.1555302143097,noise_normal_distribution.tar.gz,emilia Reference
+Whisper Activations,6,amphion_valle,37.63418359973664,1.0,148.96083855628967,noise_normal_distribution.tar.gz,emilia Reference

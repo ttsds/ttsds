@@ -30,6 +30,7 @@ class MPMBenchmark(Benchmark):
             description="The hidden states of the Masked Prosody Model (MPM).",
             mpm_model=mpm_model,
             mpm_layer=mpm_layer,
+            version="1.0.1",
         )
         self.model = MaskedProsodyModel.from_pretrained(mpm_model)
         self.model_layer = mpm_layer

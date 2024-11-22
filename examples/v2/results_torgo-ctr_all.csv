@@ -1,0 +1,286 @@
+benchmark_name,benchmark_category,dataset,score,ci,time_taken,noise_dataset,reference_dataset
+Hubert,1,Torgo Test,95.56833155369394,1.0,116.62044739723206,noise_uniform_distribution.tar.gz,Torgo Reference
+Hubert,1,amphion_ns2 (Control),78.13018009479687,1.0,99.67110800743103,noise_uniform_distribution.tar.gz,Torgo Reference
+Hubert,1,amphion_valle (Control),78.13018009479687,1.0,54.17828416824341,noise_uniform_distribution.tar.gz,Torgo Reference
+Hubert,1,bark (Control),78.13018009479687,1.0,48.5028190612793,noise_uniform_distribution.tar.gz,Torgo Reference
+Hubert,1,e2 (Control),78.13018009479687,1.0,56.963862895965576,noise_uniform_distribution.tar.gz,Torgo Reference
+Hubert,1,f5 (Control),78.13018009479687,1.0,34.08957123756409,noise_uniform_distribution.tar.gz,Torgo Reference
+Hubert,1,fish (Control),78.13018009479687,1.0,63.68693923950195,noise_uniform_distribution.tar.gz,Torgo Reference
+Hubert,1,gpt-sovits (Control),78.13018009479687,1.0,122.27928161621094,noise_uniform_distribution.tar.gz,Torgo Reference
+Hubert,1,hierspeechpp (Control),78.13018009479687,1.0,227.31236362457275,noise_uniform_distribution.tar.gz,Torgo Reference
+Hubert,1,metavoice (Control),78.13018009479687,1.0,188.57477116584778,noise_uniform_distribution.tar.gz,Torgo Reference
+Hubert,1,openvoice (Control),78.13018009479687,1.0,42.62933301925659,noise_uniform_distribution.tar.gz,Torgo Reference
+Hubert,1,parlertts (Control),78.13018009479687,1.0,47.29650568962097,noise_uniform_distribution.tar.gz,Torgo Reference
+Hubert,1,pheme (Control),78.13018009479687,1.0,39.94912075996399,noise_uniform_distribution.tar.gz,Torgo Reference
+Hubert,1,speecht5 (Control),78.13018009479687,1.0,38.14804720878601,noise_uniform_distribution.tar.gz,Torgo Reference
+Hubert,1,styletts2 (Control),78.13018009479687,1.0,126.44975209236145,noise_uniform_distribution.tar.gz,Torgo Reference
+Hubert,1,tortoise (Control),78.13018009479687,1.0,147.1792712211609,noise_uniform_distribution.tar.gz,Torgo Reference
+Hubert,1,voicecraft (Control),78.13018009479687,1.0,149.656485080719,noise_uniform_distribution.tar.gz,Torgo Reference
+Hubert,1,whisperspeech (Control),78.13018009479687,1.0,142.41363906860352,noise_uniform_distribution.tar.gz,Torgo Reference
+Hubert,1,xtts (Control),78.13018009479687,1.0,144.5583257675171,noise_uniform_distribution.tar.gz,Torgo Reference
+Wav2Vec2,1,Torgo Test,94.97648508737906,1.0,200.2920389175415,noise_normal_distribution.tar.gz,Torgo Reference
+Wav2Vec2,1,amphion_ns2 (Control),74.59987374290796,1.0,69.80407857894897,noise_normal_distribution.tar.gz,Torgo Reference
+Wav2Vec2,1,amphion_valle (Control),74.59987374290796,1.0,48.67666816711426,noise_normal_distribution.tar.gz,Torgo Reference
+Wav2Vec2,1,bark (Control),74.59987374290796,1.0,43.76376938819885,noise_normal_distribution.tar.gz,Torgo Reference
+Wav2Vec2,1,e2 (Control),74.59987374290796,1.0,46.66392755508423,noise_normal_distribution.tar.gz,Torgo Reference
+Wav2Vec2,1,f5 (Control),74.59987374290796,1.0,39.52506971359253,noise_normal_distribution.tar.gz,Torgo Reference
+Wav2Vec2,1,fish (Control),74.59987374290796,1.0,37.84909510612488,noise_normal_distribution.tar.gz,Torgo Reference
+Wav2Vec2,1,gpt-sovits (Control),74.59987374290796,1.0,41.76950550079346,noise_normal_distribution.tar.gz,Torgo Reference
+Wav2Vec2,1,hierspeechpp (Control),74.59987374290796,1.0,30.62126398086548,noise_normal_distribution.tar.gz,Torgo Reference
+Wav2Vec2,1,metavoice (Control),74.59987374290796,1.0,39.3918993473053,noise_normal_distribution.tar.gz,Torgo Reference
+Wav2Vec2,1,openvoice (Control),74.59987374290796,1.0,42.58947515487671,noise_normal_distribution.tar.gz,Torgo Reference
+Wav2Vec2,1,parlertts (Control),74.59987374290796,1.0,45.911723136901855,noise_normal_distribution.tar.gz,Torgo Reference
+Wav2Vec2,1,pheme (Control),74.59987374290796,1.0,32.04364013671875,noise_normal_distribution.tar.gz,Torgo Reference
+Wav2Vec2,1,speecht5 (Control),74.59987374290796,1.0,41.1521418094635,noise_normal_distribution.tar.gz,Torgo Reference
+Wav2Vec2,1,styletts2 (Control),74.59987374290796,1.0,159.83555459976196,noise_normal_distribution.tar.gz,Torgo Reference
+Wav2Vec2,1,tortoise (Control),74.59987374290796,1.0,136.73089814186096,noise_normal_distribution.tar.gz,Torgo Reference
+Wav2Vec2,1,voicecraft (Control),74.59987374290796,1.0,127.26856231689453,noise_normal_distribution.tar.gz,Torgo Reference
+Wav2Vec2,1,whisperspeech (Control),74.59987374290796,1.0,119.6567440032959,noise_normal_distribution.tar.gz,Torgo Reference
+Wav2Vec2,1,xtts (Control),74.59987374290796,1.0,107.35331702232361,noise_normal_distribution.tar.gz,Torgo Reference
+WavLM,1,Torgo Test,96.87863023674034,1.0,257.2789468765259,noise_all_ones.tar.gz,Torgo Reference
+WavLM,1,amphion_ns2 (Control),78.42734126724145,1.0,148.62797117233276,noise_uniform_distribution.tar.gz,Torgo Reference
+WavLM,1,amphion_valle (Control),78.42734126724145,1.0,104.00374126434326,noise_uniform_distribution.tar.gz,Torgo Reference
+WavLM,1,bark (Control),78.42734126724145,1.0,116.1465744972229,noise_uniform_distribution.tar.gz,Torgo Reference
+WavLM,1,e2 (Control),78.42734126724145,1.0,169.601092338562,noise_uniform_distribution.tar.gz,Torgo Reference
+WavLM,1,f5 (Control),78.42734126724145,1.0,142.29038095474243,noise_uniform_distribution.tar.gz,Torgo Reference
+WavLM,1,fish (Control),78.42734126724145,1.0,141.17570042610168,noise_uniform_distribution.tar.gz,Torgo Reference
+WavLM,1,gpt-sovits (Control),78.42734126724145,1.0,94.19460797309875,noise_uniform_distribution.tar.gz,Torgo Reference
+WavLM,1,hierspeechpp (Control),78.42734126724145,1.0,152.1943109035492,noise_uniform_distribution.tar.gz,Torgo Reference
+WavLM,1,metavoice (Control),78.42734126724145,1.0,89.14390516281128,noise_uniform_distribution.tar.gz,Torgo Reference
+WavLM,1,openvoice (Control),78.42734126724145,1.0,54.23733568191528,noise_uniform_distribution.tar.gz,Torgo Reference
+WavLM,1,parlertts (Control),78.42734126724145,1.0,43.30517601966858,noise_uniform_distribution.tar.gz,Torgo Reference
+WavLM,1,pheme (Control),78.42734126724145,1.0,31.89144206047058,noise_uniform_distribution.tar.gz,Torgo Reference
+WavLM,1,speecht5 (Control),78.42734126724145,1.0,57.5098659992218,noise_uniform_distribution.tar.gz,Torgo Reference
+WavLM,1,styletts2 (Control),78.42734126724145,1.0,55.26893210411072,noise_uniform_distribution.tar.gz,Torgo Reference
+WavLM,1,tortoise (Control),78.42734126724145,1.0,56.92136740684509,noise_uniform_distribution.tar.gz,Torgo Reference
+WavLM,1,voicecraft (Control),78.42734126724145,1.0,71.98352408409119,noise_uniform_distribution.tar.gz,Torgo Reference
+WavLM,1,whisperspeech (Control),78.42734126724145,1.0,142.6286177635193,noise_uniform_distribution.tar.gz,Torgo Reference
+WavLM,1,xtts (Control),78.42734126724145,1.0,153.4174427986145,noise_uniform_distribution.tar.gz,Torgo Reference
+Allosaurus,2,Torgo Test,94.49301976953157,1.0,12.720293521881104,noise_uniform_distribution.tar.gz,Torgo Reference
+Allosaurus,2,amphion_ns2 (Control),68.49364259460178,1.0,7.144028663635254,noise_uniform_distribution.tar.gz,Torgo Reference
+Allosaurus,2,amphion_valle (Control),68.49364259460178,1.0,0.0033168792724609375,noise_uniform_distribution.tar.gz,Torgo Reference
+Allosaurus,2,bark (Control),68.49364259460178,1.0,0.0032079219818115234,noise_uniform_distribution.tar.gz,Torgo Reference
+Allosaurus,2,e2 (Control),68.49364259460178,1.0,0.003344297409057617,noise_uniform_distribution.tar.gz,Torgo Reference
+Allosaurus,2,f5 (Control),68.49364259460178,1.0,0.0035979747772216797,noise_uniform_distribution.tar.gz,Torgo Reference
+Allosaurus,2,fish (Control),68.49364259460178,1.0,0.003670930862426758,noise_uniform_distribution.tar.gz,Torgo Reference
+Allosaurus,2,gpt-sovits (Control),68.49364259460178,1.0,0.003608226776123047,noise_uniform_distribution.tar.gz,Torgo Reference
+Allosaurus,2,hierspeechpp (Control),68.49364259460178,1.0,0.0035860538482666016,noise_uniform_distribution.tar.gz,Torgo Reference
+Allosaurus,2,metavoice (Control),68.49364259460178,1.0,0.003538846969604492,noise_uniform_distribution.tar.gz,Torgo Reference
+Allosaurus,2,openvoice (Control),68.49364259460178,1.0,0.0034935474395751953,noise_uniform_distribution.tar.gz,Torgo Reference
+Allosaurus,2,parlertts (Control),68.49364259460178,1.0,0.003503084182739258,noise_uniform_distribution.tar.gz,Torgo Reference
+Allosaurus,2,pheme (Control),68.49364259460178,1.0,0.003619670867919922,noise_uniform_distribution.tar.gz,Torgo Reference
+Allosaurus,2,speecht5 (Control),68.49364259460178,1.0,0.0034770965576171875,noise_uniform_distribution.tar.gz,Torgo Reference
+Allosaurus,2,styletts2 (Control),68.49364259460178,1.0,0.0035190582275390625,noise_uniform_distribution.tar.gz,Torgo Reference
+Allosaurus,2,tortoise (Control),68.49364259460178,1.0,0.0035865306854248047,noise_uniform_distribution.tar.gz,Torgo Reference
+Allosaurus,2,voicecraft (Control),68.49364259460178,1.0,0.003603696823120117,noise_uniform_distribution.tar.gz,Torgo Reference
+Allosaurus,2,whisperspeech (Control),68.49364259460178,1.0,0.003627300262451172,noise_uniform_distribution.tar.gz,Torgo Reference
+Allosaurus,2,xtts (Control),68.49364259460178,1.0,0.0036156177520751953,noise_uniform_distribution.tar.gz,Torgo Reference
+Hubert Token,2,Torgo Test,59.82823002522058,1.0,80.528555393219,noise_normal_distribution.tar.gz,Torgo Reference
+Hubert Token,2,amphion_ns2 (Control),39.291008230740594,1.0,43.193379402160645,noise_uniform_distribution.tar.gz,Torgo Reference
+Hubert Token,2,amphion_valle (Control),39.291008230740594,1.0,0.009109973907470703,noise_uniform_distribution.tar.gz,Torgo Reference
+Hubert Token,2,bark (Control),39.291008230740594,1.0,0.008997917175292969,noise_uniform_distribution.tar.gz,Torgo Reference
+Hubert Token,2,e2 (Control),39.291008230740594,1.0,0.008487939834594727,noise_uniform_distribution.tar.gz,Torgo Reference
+Hubert Token,2,f5 (Control),39.291008230740594,1.0,0.009070396423339844,noise_uniform_distribution.tar.gz,Torgo Reference
+Hubert Token,2,fish (Control),39.291008230740594,1.0,0.008507490158081055,noise_uniform_distribution.tar.gz,Torgo Reference
+Hubert Token,2,gpt-sovits (Control),39.291008230740594,1.0,0.009154796600341797,noise_uniform_distribution.tar.gz,Torgo Reference
+Hubert Token,2,hierspeechpp (Control),39.291008230740594,1.0,0.009202241897583008,noise_uniform_distribution.tar.gz,Torgo Reference
+Hubert Token,2,metavoice (Control),39.291008230740594,1.0,0.008421897888183594,noise_uniform_distribution.tar.gz,Torgo Reference
+Hubert Token,2,openvoice (Control),39.291008230740594,1.0,0.009063482284545898,noise_uniform_distribution.tar.gz,Torgo Reference
+Hubert Token,2,parlertts (Control),39.291008230740594,1.0,0.00854349136352539,noise_uniform_distribution.tar.gz,Torgo Reference
+Hubert Token,2,pheme (Control),39.291008230740594,1.0,0.008911609649658203,noise_uniform_distribution.tar.gz,Torgo Reference
+Hubert Token,2,speecht5 (Control),39.291008230740594,1.0,0.0086212158203125,noise_uniform_distribution.tar.gz,Torgo Reference
+Hubert Token,2,styletts2 (Control),39.291008230740594,1.0,0.009047508239746094,noise_uniform_distribution.tar.gz,Torgo Reference
+Hubert Token,2,tortoise (Control),39.291008230740594,1.0,0.008728265762329102,noise_uniform_distribution.tar.gz,Torgo Reference
+Hubert Token,2,voicecraft (Control),39.291008230740594,1.0,0.00931096076965332,noise_uniform_distribution.tar.gz,Torgo Reference
+Hubert Token,2,whisperspeech (Control),39.291008230740594,1.0,0.00840449333190918,noise_uniform_distribution.tar.gz,Torgo Reference
+Hubert Token,2,xtts (Control),39.291008230740594,1.0,0.009108304977416992,noise_uniform_distribution.tar.gz,Torgo Reference
+Hubert Token SR,2,Torgo Test,74.37786934400064,1.0,83.58307361602783,noise_normal_distribution.tar.gz,Torgo Reference
+Hubert Token SR,2,amphion_ns2 (Control),46.98648169218666,1.0,43.0375452041626,noise_uniform_distribution.tar.gz,Torgo Reference
+Hubert Token SR,2,amphion_valle (Control),46.98648169218666,1.0,0.0038604736328125,noise_uniform_distribution.tar.gz,Torgo Reference
+Hubert Token SR,2,bark (Control),46.98648169218666,1.0,0.0035555362701416016,noise_uniform_distribution.tar.gz,Torgo Reference
+Hubert Token SR,2,e2 (Control),46.98648169218666,1.0,0.00351715087890625,noise_uniform_distribution.tar.gz,Torgo Reference
+Hubert Token SR,2,f5 (Control),46.98648169218666,1.0,0.0035686492919921875,noise_uniform_distribution.tar.gz,Torgo Reference
+Hubert Token SR,2,fish (Control),46.98648169218666,1.0,0.004487752914428711,noise_uniform_distribution.tar.gz,Torgo Reference
+Hubert Token SR,2,gpt-sovits (Control),46.98648169218666,1.0,0.0035881996154785156,noise_uniform_distribution.tar.gz,Torgo Reference
+Hubert Token SR,2,hierspeechpp (Control),46.98648169218666,1.0,0.003732919692993164,noise_uniform_distribution.tar.gz,Torgo Reference
+Hubert Token SR,2,metavoice (Control),46.98648169218666,1.0,0.0036962032318115234,noise_uniform_distribution.tar.gz,Torgo Reference
+Hubert Token SR,2,openvoice (Control),46.98648169218666,1.0,0.003844022750854492,noise_uniform_distribution.tar.gz,Torgo Reference
+Hubert Token SR,2,parlertts (Control),46.98648169218666,1.0,0.0034613609313964844,noise_uniform_distribution.tar.gz,Torgo Reference
+Hubert Token SR,2,pheme (Control),46.98648169218666,1.0,0.0034034252166748047,noise_uniform_distribution.tar.gz,Torgo Reference
+Hubert Token SR,2,speecht5 (Control),46.98648169218666,1.0,0.0034017562866210938,noise_uniform_distribution.tar.gz,Torgo Reference
+Hubert Token SR,2,styletts2 (Control),46.98648169218666,1.0,0.003412008285522461,noise_uniform_distribution.tar.gz,Torgo Reference
+Hubert Token SR,2,tortoise (Control),46.98648169218666,1.0,0.0036034584045410156,noise_uniform_distribution.tar.gz,Torgo Reference
+Hubert Token SR,2,voicecraft (Control),46.98648169218666,1.0,0.0036134719848632812,noise_uniform_distribution.tar.gz,Torgo Reference
+Hubert Token SR,2,whisperspeech (Control),46.98648169218666,1.0,0.003723621368408203,noise_uniform_distribution.tar.gz,Torgo Reference
+Hubert Token SR,2,xtts (Control),46.98648169218666,1.0,0.0036225318908691406,noise_uniform_distribution.tar.gz,Torgo Reference
+MPM,2,Torgo Test,96.14058801759226,1.0,53.402406215667725,noise_normal_distribution.tar.gz,Torgo Reference
+MPM,2,amphion_ns2 (Control),81.7479886828284,1.0,20.39408802986145,noise_normal_distribution.tar.gz,Torgo Reference
+MPM,2,amphion_valle (Control),81.7479886828284,1.0,40.189399003982544,noise_normal_distribution.tar.gz,Torgo Reference
+MPM,2,bark (Control),81.7479886828284,1.0,22.80330538749695,noise_normal_distribution.tar.gz,Torgo Reference
+MPM,2,e2 (Control),81.7479886828284,1.0,21.328704357147217,noise_normal_distribution.tar.gz,Torgo Reference
+MPM,2,f5 (Control),81.7479886828284,1.0,1.9988036155700684,noise_normal_distribution.tar.gz,Torgo Reference
+MPM,2,fish (Control),81.7479886828284,1.0,33.649129152297974,noise_normal_distribution.tar.gz,Torgo Reference
+MPM,2,gpt-sovits (Control),81.7479886828284,1.0,23.129124879837036,noise_normal_distribution.tar.gz,Torgo Reference
+MPM,2,hierspeechpp (Control),81.7479886828284,1.0,29.547167539596558,noise_normal_distribution.tar.gz,Torgo Reference
+MPM,2,metavoice (Control),81.7479886828284,1.0,34.29926919937134,noise_normal_distribution.tar.gz,Torgo Reference
+MPM,2,openvoice (Control),81.7479886828284,1.0,26.34849786758423,noise_normal_distribution.tar.gz,Torgo Reference
+MPM,2,parlertts (Control),81.7479886828284,1.0,25.558866262435913,noise_normal_distribution.tar.gz,Torgo Reference
+MPM,2,pheme (Control),81.7479886828284,1.0,31.377643585205078,noise_normal_distribution.tar.gz,Torgo Reference
+MPM,2,speecht5 (Control),81.7479886828284,1.0,36.555949687957764,noise_normal_distribution.tar.gz,Torgo Reference
+MPM,2,styletts2 (Control),81.7479886828284,1.0,37.09268021583557,noise_normal_distribution.tar.gz,Torgo Reference
+MPM,2,tortoise (Control),81.7479886828284,1.0,34.46405506134033,noise_normal_distribution.tar.gz,Torgo Reference
+MPM,2,voicecraft (Control),81.7479886828284,1.0,10.019585132598877,noise_normal_distribution.tar.gz,Torgo Reference
+MPM,2,whisperspeech (Control),81.7479886828284,1.0,29.67491126060486,noise_normal_distribution.tar.gz,Torgo Reference
+MPM,2,xtts (Control),81.7479886828284,1.0,30.72790288925171,noise_normal_distribution.tar.gz,Torgo Reference
+Pitch,2,Torgo Test,94.69921437235406,1.0,2.6984987258911133,noise_all_ones.tar.gz,Torgo Reference
+Pitch,2,amphion_ns2 (Control),76.3219295677285,1.0,0.8576545715332031,noise_all_ones.tar.gz,Torgo Reference
+Pitch,2,amphion_valle (Control),76.3219295677285,1.0,0.03394365310668945,noise_all_ones.tar.gz,Torgo Reference
+Pitch,2,bark (Control),76.3219295677285,1.0,0.03353285789489746,noise_all_ones.tar.gz,Torgo Reference
+Pitch,2,e2 (Control),76.3219295677285,1.0,0.03365945816040039,noise_all_ones.tar.gz,Torgo Reference
+Pitch,2,f5 (Control),76.3219295677285,1.0,0.033976078033447266,noise_all_ones.tar.gz,Torgo Reference
+Pitch,2,fish (Control),76.3219295677285,1.0,0.03342294692993164,noise_all_ones.tar.gz,Torgo Reference
+Pitch,2,gpt-sovits (Control),76.3219295677285,1.0,0.033486127853393555,noise_all_ones.tar.gz,Torgo Reference
+Pitch,2,hierspeechpp (Control),76.3219295677285,1.0,0.033983707427978516,noise_all_ones.tar.gz,Torgo Reference
+Pitch,2,metavoice (Control),76.3219295677285,1.0,0.03361320495605469,noise_all_ones.tar.gz,Torgo Reference
+Pitch,2,openvoice (Control),76.3219295677285,1.0,0.03363204002380371,noise_all_ones.tar.gz,Torgo Reference
+Pitch,2,parlertts (Control),76.3219295677285,1.0,0.03427481651306152,noise_all_ones.tar.gz,Torgo Reference
+Pitch,2,pheme (Control),76.3219295677285,1.0,0.03378915786743164,noise_all_ones.tar.gz,Torgo Reference
+Pitch,2,speecht5 (Control),76.3219295677285,1.0,0.03404092788696289,noise_all_ones.tar.gz,Torgo Reference
+Pitch,2,styletts2 (Control),76.3219295677285,1.0,0.03394341468811035,noise_all_ones.tar.gz,Torgo Reference
+Pitch,2,tortoise (Control),76.3219295677285,1.0,0.03329801559448242,noise_all_ones.tar.gz,Torgo Reference
+Pitch,2,voicecraft (Control),76.3219295677285,1.0,0.03335261344909668,noise_all_ones.tar.gz,Torgo Reference
+Pitch,2,whisperspeech (Control),76.3219295677285,1.0,0.03404855728149414,noise_all_ones.tar.gz,Torgo Reference
+Pitch,2,xtts (Control),76.3219295677285,1.0,0.03352713584899902,noise_all_ones.tar.gz,Torgo Reference
+VoiceFixer,3,amphion_ns2 (Control),48.839179363605,1.0,224.58650755882263,noise_normal_distribution.tar.gz,Torgo Reference
+VoiceFixer,3,amphion_valle (Control),48.839179363605,1.0,0.003736257553100586,noise_normal_distribution.tar.gz,Torgo Reference
+VoiceFixer,3,bark (Control),48.839179363605,1.0,0.003870248794555664,noise_normal_distribution.tar.gz,Torgo Reference
+VoiceFixer,3,e2 (Control),48.839179363605,1.0,0.0040361881256103516,noise_normal_distribution.tar.gz,Torgo Reference
+VoiceFixer,3,f5 (Control),48.839179363605,1.0,0.004649162292480469,noise_normal_distribution.tar.gz,Torgo Reference
+VoiceFixer,3,fish (Control),48.839179363605,1.0,0.003606081008911133,noise_normal_distribution.tar.gz,Torgo Reference
+VoiceFixer,3,gpt-sovits (Control),48.839179363605,1.0,0.004291057586669922,noise_normal_distribution.tar.gz,Torgo Reference
+VoiceFixer,3,hierspeechpp (Control),48.839179363605,1.0,0.0037839412689208984,noise_normal_distribution.tar.gz,Torgo Reference
+VoiceFixer,3,metavoice (Control),48.839179363605,1.0,0.003496885299682617,noise_normal_distribution.tar.gz,Torgo Reference
+VoiceFixer,3,openvoice (Control),48.839179363605,1.0,0.0036096572875976562,noise_normal_distribution.tar.gz,Torgo Reference
+VoiceFixer,3,parlertts (Control),48.839179363605,1.0,0.0035321712493896484,noise_normal_distribution.tar.gz,Torgo Reference
+VoiceFixer,3,pheme (Control),48.839179363605,1.0,0.0035398006439208984,noise_normal_distribution.tar.gz,Torgo Reference
+VoiceFixer,3,speecht5 (Control),48.839179363605,1.0,0.003552675247192383,noise_normal_distribution.tar.gz,Torgo Reference
+VoiceFixer,3,styletts2 (Control),48.839179363605,1.0,0.00354766845703125,noise_normal_distribution.tar.gz,Torgo Reference
+VoiceFixer,3,tortoise (Control),48.839179363605,1.0,0.0036699771881103516,noise_normal_distribution.tar.gz,Torgo Reference
+VoiceFixer,3,voicecraft (Control),48.839179363605,1.0,0.003523588180541992,noise_normal_distribution.tar.gz,Torgo Reference
+VoiceFixer,3,whisperspeech (Control),48.839179363605,1.0,0.003724336624145508,noise_normal_distribution.tar.gz,Torgo Reference
+VoiceFixer,3,xtts (Control),48.839179363605,1.0,0.003565073013305664,noise_normal_distribution.tar.gz,Torgo Reference
+VoiceFixer,3,Torgo Test,46.92734198224198,1.0,323.806028842926,noise_normal_distribution.tar.gz,Torgo Reference
+Wada SNR,3,Torgo Test,84.74326615553849,1.0,0.7402167320251465,noise_all_zeros.tar.gz,Torgo Reference
+Wada SNR,3,amphion_ns2 (Control),29.920244406660746,1.0,0.06957006454467773,noise_all_zeros.tar.gz,Torgo Reference
+Wada SNR,3,amphion_valle (Control),29.920244406660746,1.0,0.0035638809204101562,noise_all_zeros.tar.gz,Torgo Reference
+Wada SNR,3,bark (Control),29.920244406660746,1.0,0.0034966468811035156,noise_all_zeros.tar.gz,Torgo Reference
+Wada SNR,3,e2 (Control),29.920244406660746,1.0,0.003635406494140625,noise_all_zeros.tar.gz,Torgo Reference
+Wada SNR,3,f5 (Control),29.920244406660746,1.0,0.00360107421875,noise_all_zeros.tar.gz,Torgo Reference
+Wada SNR,3,fish (Control),29.920244406660746,1.0,0.003573894500732422,noise_all_zeros.tar.gz,Torgo Reference
+Wada SNR,3,gpt-sovits (Control),29.920244406660746,1.0,0.0034935474395751953,noise_all_zeros.tar.gz,Torgo Reference
+Wada SNR,3,hierspeechpp (Control),29.920244406660746,1.0,0.0035598278045654297,noise_all_zeros.tar.gz,Torgo Reference
+Wada SNR,3,metavoice (Control),29.920244406660746,1.0,0.003576993942260742,noise_all_zeros.tar.gz,Torgo Reference
+Wada SNR,3,openvoice (Control),29.920244406660746,1.0,0.0035829544067382812,noise_all_zeros.tar.gz,Torgo Reference
+Wada SNR,3,parlertts (Control),29.920244406660746,1.0,0.0036563873291015625,noise_all_zeros.tar.gz,Torgo Reference
+Wada SNR,3,pheme (Control),29.920244406660746,1.0,0.0035033226013183594,noise_all_zeros.tar.gz,Torgo Reference
+Wada SNR,3,speecht5 (Control),29.920244406660746,1.0,0.0034918785095214844,noise_all_zeros.tar.gz,Torgo Reference
+Wada SNR,3,styletts2 (Control),29.920244406660746,1.0,0.0035238265991210938,noise_all_zeros.tar.gz,Torgo Reference
+Wada SNR,3,tortoise (Control),29.920244406660746,1.0,0.003508329391479492,noise_all_zeros.tar.gz,Torgo Reference
+Wada SNR,3,voicecraft (Control),29.920244406660746,1.0,0.0035178661346435547,noise_all_zeros.tar.gz,Torgo Reference
+Wada SNR,3,whisperspeech (Control),29.920244406660746,1.0,0.003674745559692383,noise_all_zeros.tar.gz,Torgo Reference
+Wada SNR,3,xtts (Control),29.920244406660746,1.0,0.0035505294799804688,noise_all_zeros.tar.gz,Torgo Reference
+DVector,4,Torgo Test,96.69595111840867,1.0,14.21021318435669,noise_all_ones.tar.gz,Torgo Reference
+DVector,4,amphion_ns2 (Control),74.00802845974259,1.0,14.168150186538696,noise_all_zeros.tar.gz,Torgo Reference
+DVector,4,amphion_valle (Control),74.00802845974259,1.0,5.194868564605713,noise_all_zeros.tar.gz,Torgo Reference
+DVector,4,bark (Control),74.00802845974259,1.0,5.9087324142456055,noise_all_zeros.tar.gz,Torgo Reference
+DVector,4,e2 (Control),74.00802845974259,1.0,9.90910291671753,noise_all_zeros.tar.gz,Torgo Reference
+DVector,4,f5 (Control),74.00802845974259,1.0,15.371651411056519,noise_all_zeros.tar.gz,Torgo Reference
+DVector,4,fish (Control),74.00802845974259,1.0,11.421987056732178,noise_all_zeros.tar.gz,Torgo Reference
+DVector,4,gpt-sovits (Control),74.00802845974259,1.0,18.56600594520569,noise_all_zeros.tar.gz,Torgo Reference
+DVector,4,hierspeechpp (Control),74.00802845974259,1.0,18.34591245651245,noise_all_zeros.tar.gz,Torgo Reference
+DVector,4,metavoice (Control),74.00802845974259,1.0,10.151847124099731,noise_all_zeros.tar.gz,Torgo Reference
+DVector,4,openvoice (Control),74.00802845974259,1.0,7.117181777954102,noise_all_zeros.tar.gz,Torgo Reference
+DVector,4,parlertts (Control),74.00802845974259,1.0,2.413271188735962,noise_all_zeros.tar.gz,Torgo Reference
+DVector,4,pheme (Control),74.00802845974259,1.0,2.9359800815582275,noise_all_zeros.tar.gz,Torgo Reference
+DVector,4,speecht5 (Control),74.00802845974259,1.0,11.052057981491089,noise_all_zeros.tar.gz,Torgo Reference
+DVector,4,styletts2 (Control),74.00802845974259,1.0,5.37045431137085,noise_all_zeros.tar.gz,Torgo Reference
+DVector,4,tortoise (Control),74.00802845974259,1.0,7.714146852493286,noise_all_zeros.tar.gz,Torgo Reference
+DVector,4,voicecraft (Control),74.00802845974259,1.0,9.071629047393799,noise_all_zeros.tar.gz,Torgo Reference
+DVector,4,whisperspeech (Control),74.00802845974259,1.0,4.16300630569458,noise_all_zeros.tar.gz,Torgo Reference
+DVector,4,xtts (Control),74.00802845974259,1.0,8.100023031234741,noise_all_zeros.tar.gz,Torgo Reference
+WeSpeaker,4,Torgo Test,79.6329981247,1.0,81.95022058486938,noise_normal_distribution.tar.gz,Torgo Reference
+WeSpeaker,4,amphion_ns2 (Control),54.58939709797703,1.0,28.491705894470215,noise_uniform_distribution.tar.gz,Torgo Reference
+WeSpeaker,4,amphion_valle (Control),54.58939709797703,1.0,36.12900757789612,noise_uniform_distribution.tar.gz,Torgo Reference
+WeSpeaker,4,bark (Control),54.58939709797703,1.0,31.568859100341797,noise_uniform_distribution.tar.gz,Torgo Reference
+WeSpeaker,4,e2 (Control),54.58939709797703,1.0,24.028576135635376,noise_uniform_distribution.tar.gz,Torgo Reference
+WeSpeaker,4,f5 (Control),54.58939709797703,1.0,30.99225878715515,noise_uniform_distribution.tar.gz,Torgo Reference
+WeSpeaker,4,fish (Control),54.58939709797703,1.0,35.91833710670471,noise_uniform_distribution.tar.gz,Torgo Reference
+WeSpeaker,4,gpt-sovits (Control),54.58939709797703,1.0,32.04433012008667,noise_uniform_distribution.tar.gz,Torgo Reference
+WeSpeaker,4,hierspeechpp (Control),54.58939709797703,1.0,32.693559885025024,noise_uniform_distribution.tar.gz,Torgo Reference
+WeSpeaker,4,metavoice (Control),54.58939709797703,1.0,36.40262770652771,noise_uniform_distribution.tar.gz,Torgo Reference
+WeSpeaker,4,openvoice (Control),54.58939709797703,1.0,34.4872100353241,noise_uniform_distribution.tar.gz,Torgo Reference
+WeSpeaker,4,parlertts (Control),54.58939709797703,1.0,18.93343496322632,noise_uniform_distribution.tar.gz,Torgo Reference
+WeSpeaker,4,pheme (Control),54.58939709797703,1.0,33.55494809150696,noise_uniform_distribution.tar.gz,Torgo Reference
+WeSpeaker,4,speecht5 (Control),54.58939709797703,1.0,33.15563178062439,noise_uniform_distribution.tar.gz,Torgo Reference
+WeSpeaker,4,styletts2 (Control),54.58939709797703,1.0,28.752765417099,noise_uniform_distribution.tar.gz,Torgo Reference
+WeSpeaker,4,tortoise (Control),54.58939709797703,1.0,17.400493621826172,noise_uniform_distribution.tar.gz,Torgo Reference
+WeSpeaker,4,voicecraft (Control),54.58939709797703,1.0,15.025561094284058,noise_uniform_distribution.tar.gz,Torgo Reference
+WeSpeaker,4,whisperspeech (Control),54.58939709797703,1.0,25.123838663101196,noise_uniform_distribution.tar.gz,Torgo Reference
+WeSpeaker,4,xtts (Control),54.58939709797703,1.0,38.73985719680786,noise_uniform_distribution.tar.gz,Torgo Reference
+Wav2Vec2 Activations,6,Torgo Test,97.09152826551589,1.0,124.64451050758362,noise_uniform_distribution.tar.gz,Torgo Reference
+Wav2Vec2 Activations,6,amphion_ns2 (Control),67.14966748143073,1.0,157.82808375358582,noise_uniform_distribution.tar.gz,Torgo Reference
+Wav2Vec2 Activations,6,amphion_valle (Control),67.14966748143073,1.0,127.95931315422058,noise_uniform_distribution.tar.gz,Torgo Reference
+Wav2Vec2 Activations,6,bark (Control),67.14966748143073,1.0,91.87007904052734,noise_uniform_distribution.tar.gz,Torgo Reference
+Wav2Vec2 Activations,6,e2 (Control),67.14966748143073,1.0,114.98750495910645,noise_uniform_distribution.tar.gz,Torgo Reference
+Wav2Vec2 Activations,6,f5 (Control),67.14966748143073,1.0,94.77031469345093,noise_uniform_distribution.tar.gz,Torgo Reference
+Wav2Vec2 Activations,6,fish (Control),67.14966748143073,1.0,165.75960087776184,noise_uniform_distribution.tar.gz,Torgo Reference
+Wav2Vec2 Activations,6,gpt-sovits (Control),67.14966748143073,1.0,150.38102793693542,noise_uniform_distribution.tar.gz,Torgo Reference
+Wav2Vec2 Activations,6,hierspeechpp (Control),67.14966748143073,1.0,96.99280738830566,noise_uniform_distribution.tar.gz,Torgo Reference
+Wav2Vec2 Activations,6,metavoice (Control),67.14966748143073,1.0,133.267724275589,noise_uniform_distribution.tar.gz,Torgo Reference
+Wav2Vec2 Activations,6,openvoice (Control),67.14966748143073,1.0,125.06596398353577,noise_uniform_distribution.tar.gz,Torgo Reference
+Wav2Vec2 Activations,6,parlertts (Control),67.14966748143073,1.0,101.59558629989624,noise_uniform_distribution.tar.gz,Torgo Reference
+Wav2Vec2 Activations,6,pheme (Control),67.14966748143073,1.0,125.7397243976593,noise_uniform_distribution.tar.gz,Torgo Reference
+Wav2Vec2 Activations,6,speecht5 (Control),67.14966748143073,1.0,106.42158699035645,noise_uniform_distribution.tar.gz,Torgo Reference
+Wav2Vec2 Activations,6,styletts2 (Control),67.14966748143073,1.0,138.0015640258789,noise_uniform_distribution.tar.gz,Torgo Reference
+Wav2Vec2 Activations,6,tortoise (Control),67.14966748143073,1.0,133.69734835624695,noise_uniform_distribution.tar.gz,Torgo Reference
+Wav2Vec2 Activations,6,voicecraft (Control),67.14966748143073,1.0,151.75790691375732,noise_uniform_distribution.tar.gz,Torgo Reference
+Wav2Vec2 Activations,6,whisperspeech (Control),67.14966748143073,1.0,170.6282250881195,noise_uniform_distribution.tar.gz,Torgo Reference
+Wav2Vec2 Activations,6,xtts (Control),67.14966748143073,1.0,132.71071577072144,noise_uniform_distribution.tar.gz,Torgo Reference
+Wav2Vec2 WER,6,Torgo Test,92.45894009792612,1.0,82.66960263252258,noise_all_ones.tar.gz,Torgo Reference
+Wav2Vec2 WER,6,amphion_ns2 (Control),71.60133436175511,1.0,43.50558662414551,noise_all_ones.tar.gz,Torgo Reference
+Wav2Vec2 WER,6,amphion_valle (Control),71.60133436175511,1.0,0.003448486328125,noise_all_ones.tar.gz,Torgo Reference
+Wav2Vec2 WER,6,bark (Control),71.60133436175511,1.0,0.0035746097564697266,noise_all_ones.tar.gz,Torgo Reference
+Wav2Vec2 WER,6,e2 (Control),71.60133436175511,1.0,0.003528118133544922,noise_all_ones.tar.gz,Torgo Reference
+Wav2Vec2 WER,6,f5 (Control),71.60133436175511,1.0,0.0035123825073242188,noise_all_ones.tar.gz,Torgo Reference
+Wav2Vec2 WER,6,fish (Control),71.60133436175511,1.0,0.0035974979400634766,noise_all_ones.tar.gz,Torgo Reference
+Wav2Vec2 WER,6,gpt-sovits (Control),71.60133436175511,1.0,0.0034592151641845703,noise_all_ones.tar.gz,Torgo Reference
+Wav2Vec2 WER,6,hierspeechpp (Control),71.60133436175511,1.0,0.0034835338592529297,noise_all_ones.tar.gz,Torgo Reference
+Wav2Vec2 WER,6,metavoice (Control),71.60133436175511,1.0,0.0035555362701416016,noise_all_ones.tar.gz,Torgo Reference
+Wav2Vec2 WER,6,openvoice (Control),71.60133436175511,1.0,0.0034971237182617188,noise_all_ones.tar.gz,Torgo Reference
+Wav2Vec2 WER,6,parlertts (Control),71.60133436175511,1.0,0.0035109519958496094,noise_all_ones.tar.gz,Torgo Reference
+Wav2Vec2 WER,6,pheme (Control),71.60133436175511,1.0,0.0036690235137939453,noise_all_ones.tar.gz,Torgo Reference
+Wav2Vec2 WER,6,speecht5 (Control),71.60133436175511,1.0,0.0035240650177001953,noise_all_ones.tar.gz,Torgo Reference
+Wav2Vec2 WER,6,styletts2 (Control),71.60133436175511,1.0,0.0037195682525634766,noise_all_ones.tar.gz,Torgo Reference
+Wav2Vec2 WER,6,tortoise (Control),71.60133436175511,1.0,0.003753662109375,noise_all_ones.tar.gz,Torgo Reference
+Wav2Vec2 WER,6,voicecraft (Control),71.60133436175511,1.0,0.0036284923553466797,noise_all_ones.tar.gz,Torgo Reference
+Wav2Vec2 WER,6,whisperspeech (Control),71.60133436175511,1.0,0.003715038299560547,noise_all_ones.tar.gz,Torgo Reference
+Wav2Vec2 WER,6,xtts (Control),71.60133436175511,1.0,0.0037355422973632812,noise_all_ones.tar.gz,Torgo Reference
+Whisper WER,6,Torgo Test,96.16096652313296,1.0,10.412739276885986,noise_all_ones.tar.gz,Torgo Reference
+Whisper WER,6,amphion_ns2 (Control),91.94852808696064,1.0,10.423386096954346,noise_all_ones.tar.gz,Torgo Reference
+Whisper WER,6,amphion_valle (Control),91.94852808696064,1.0,0.005745887756347656,noise_all_ones.tar.gz,Torgo Reference
+Whisper WER,6,bark (Control),91.94852808696064,1.0,0.004821062088012695,noise_all_ones.tar.gz,Torgo Reference
+Whisper WER,6,e2 (Control),91.94852808696064,1.0,0.004662036895751953,noise_all_ones.tar.gz,Torgo Reference
+Whisper WER,6,f5 (Control),91.94852808696064,1.0,0.004467010498046875,noise_all_ones.tar.gz,Torgo Reference
+Whisper WER,6,fish (Control),91.94852808696064,1.0,0.004675149917602539,noise_all_ones.tar.gz,Torgo Reference
+Whisper WER,6,gpt-sovits (Control),91.94852808696064,1.0,0.006507158279418945,noise_all_ones.tar.gz,Torgo Reference
+Whisper WER,6,hierspeechpp (Control),91.94852808696064,1.0,0.004653453826904297,noise_all_ones.tar.gz,Torgo Reference
+Whisper WER,6,metavoice (Control),91.94852808696064,1.0,0.0045318603515625,noise_all_ones.tar.gz,Torgo Reference
+Whisper WER,6,openvoice (Control),91.94852808696064,1.0,0.004674434661865234,noise_all_ones.tar.gz,Torgo Reference
+Whisper WER,6,parlertts (Control),91.94852808696064,1.0,0.0044116973876953125,noise_all_ones.tar.gz,Torgo Reference
+Whisper WER,6,pheme (Control),91.94852808696064,1.0,0.004641532897949219,noise_all_ones.tar.gz,Torgo Reference
+Whisper WER,6,speecht5 (Control),91.94852808696064,1.0,0.005005359649658203,noise_all_ones.tar.gz,Torgo Reference
+Whisper WER,6,styletts2 (Control),91.94852808696064,1.0,0.004712581634521484,noise_all_ones.tar.gz,Torgo Reference
+Whisper WER,6,tortoise (Control),91.94852808696064,1.0,0.006455183029174805,noise_all_ones.tar.gz,Torgo Reference
+Whisper WER,6,voicecraft (Control),91.94852808696064,1.0,0.004843950271606445,noise_all_ones.tar.gz,Torgo Reference
+Whisper WER,6,whisperspeech (Control),91.94852808696064,1.0,0.004556894302368164,noise_all_ones.tar.gz,Torgo Reference
+Whisper WER,6,xtts (Control),91.94852808696064,1.0,0.0046215057373046875,noise_all_ones.tar.gz,Torgo Reference

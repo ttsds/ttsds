@@ -2,7 +2,7 @@ import re
 import tempfile
 
 import torch
-from transformers import WhisperProcessor, WhisperModel
+from transformers import WhisperProcessor, WhisperForConditionalGeneration
 from tqdm import tqdm
 import numpy as np
 import librosa
@@ -28,9 +28,10 @@ class WhisperActivationsBenchmark(Benchmark):
             description="Extracted feature activations from the Whisper model.",
             whisper_model=whisper_model,
             supported_devices=[DeviceSupport.CPU, DeviceSupport.GPU],
+            version="1.3.0",
         )
         self.processor = WhisperProcessor.from_pretrained("openai/whisper-small.en")
-        self.model = WhisperModel.from_pretrained("openai/whisper-small.en")
+        self.model = WhisperForConditionalGeneration.from_pretrained("openai/whisper-small.en")
         self.device = "cpu"
         self.model.to(self.device)
 
@@ -65,11 +66,12 @@ class WhisperActivationsBenchmark(Benchmark):
                 return_tensors="pt"
             ).input_features 
             input_features = input_features.to(self.device)
-            decoder_input_ids = torch.tensor([[1, 1]]) * self.model.config.decoder_start_token_id
-            decoder_input_ids = decoder_input_ids.to(self.device)
             with torch.no_grad():
                 # Extract the encoder outputs (activations) directly
-                outputs = self.model(input_features, decoder_input_ids=decoder_input_ids)
-                pooled_features = outputs.last_hidden_state[0].mean(dim=0)
+                outputs = self.model.generate(input_features=input_features, return_dict_in_generate=True, output_hidden_states=True)
+                outputs = [x[-1].mean(dim=1) for x in outputs.encoder_hidden_states]
+                outputs = torch.stack(outputs)
+                outputs = outputs.squeeze(1).squeeze(1)
+                pooled_features = outputs.mean(dim=0).squeeze(0)
             activations.append(pooled_features.cpu().numpy())
         return np.vstack(activations)

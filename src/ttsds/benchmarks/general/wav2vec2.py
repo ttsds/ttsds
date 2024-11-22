@@ -27,6 +27,7 @@ class Wav2Vec2Benchmark(Benchmark):
             description="Wav2Vec2 hidden states.",
             wav2vec2_model=wav2vec2_model,
             wav2vec2_layer=wav2vec2_layer,
+            version="1.0.0",
         )
         self.processor = Wav2Vec2Processor.from_pretrained(
             "facebook/wav2vec2-base-960h"

@@ -238,7 +238,7 @@ class WavListDataset(Dataset):
 
     def __init__(
         self,
-        wavs: List[str],
+        wavs: List[Path],
         texts: List[str],
         sample_rate: int = 22050,
         name: str = None,
@@ -247,7 +247,7 @@ class WavListDataset(Dataset):
             super().__init__(name, sample_rate)
         else:
             super().__init__("WavListDataset", sample_rate)
-        self.wavs = wavs
+        self.wavs = [w.resolve() for w in wavs]
         self.texts = texts
 
 

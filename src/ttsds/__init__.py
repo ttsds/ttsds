@@ -46,7 +46,7 @@ BENCHMARKS_V1 = {
     "wav2vec2_wer": Wav2Vec2WERBenchmark,
     "wav2vec2_activations": Wav2Vec2ActivationsBenchmark,
     "whisper_wer": WhisperWERBenchmark,
-    "whisper_activations": WhisperActivationsBenchmark,
+    # "whisper_activations": WhisperActivationsBenchmark,
     "mpm": MPMBenchmark,
     "pitch": PitchBenchmark,
     "wespeaker": WeSpeakerBenchmark,
@@ -192,7 +192,10 @@ class BenchmarkSuite:
         print("\n")
         print(f"{'='*80}")
         print(f"Benchmark Category: {benchmark.category.name}")
-        print(f"Running {benchmark.name} on {dataset.root_dir}")
+        if hasattr(dataset, "root_dir"):
+            print(f"Running {benchmark.name} on {dataset.root_dir}")
+        else:
+            print(f"Running {benchmark.name} on {dataset.name}")
         try:
             start = time()
             score = benchmark.compute_score(

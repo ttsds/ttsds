@@ -60,14 +60,14 @@ if __name__ == "__main__":
                 ]
                 for directory in Path("v2-evaluation/tts").iterdir():
                     for subdirectory in directory.iterdir():
-                        if subdirectory.is_dir() and dataset in subdirectory.name:
+                        if subdirectory.is_dir() and _dataset in subdirectory.name:
                             ctr_wavs = [
                                 file for file in subdirectory.rglob("*.wav") if int(file.name[:3]) >= 54
                             ]
                             ctr_txts = [
                                 file.with_suffix(".txt") for file in ctr_wavs
                             ]
-                            test_datasets.append(WavListDataset(ctr_wavs, ctr_txts, name="Torgo CTR"))
+                            test_datasets.append(WavListDataset(ctr_wavs, ctr_txts, name=directory.name +" (Control)"))
             elif "dys" in dataset:
                 reference_datasets = [
                     DirectoryDataset(f"v2-evaluation/{_dataset}/A/dys", text_suffix=".txt", name="Torgo Reference"),
@@ -77,14 +77,14 @@ if __name__ == "__main__":
                 ]
                 for directory in Path("v2-evaluation/tts").iterdir():
                     for subdirectory in directory.iterdir():
-                        if subdirectory.is_dir() and dataset in subdirectory.name:
+                        if subdirectory.is_dir() and _dataset in subdirectory.name:
                             dys_wavs = [
                                 file for file in subdirectory.rglob("*.wav") if int(file.name[:3]) < 54
                             ]
                             dys_txts = [
                                 file.with_suffix(".txt") for file in dys_wavs
                             ]
-                            test_datasets.append(WavListDataset(dys_wavs, dys_txts, name="Torgo DYS"))
+                            test_datasets.append(WavListDataset(dys_wavs, dys_txts, name=directory.name +" (Dysarthric)"))
         else:
             reference_datasets = [
                 DirectoryDataset(f"v2-evaluation/{dataset}/A", text_suffix=".txt", name=f"{dataset} Reference"),

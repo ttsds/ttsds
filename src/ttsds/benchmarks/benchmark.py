@@ -88,11 +88,14 @@ class Benchmark(ABC):
         benchmark_hash = hash_md5(self)
         cache_name = f"benchmarks/{self.name}/{ds_hash}_{benchmark_hash}"
         if check_cache(cache_name):
-            return load_cache(cache_name)
+            result = load_cache(cache_name)
+            if result is not None:
+                return result
         if check_cache(cache_name + "_mu") and check_cache(cache_name + "_sig"):
             mu = load_cache(cache_name + "_mu")
             sig = load_cache(cache_name + "_sig")
-            return (mu, sig)
+            if mu is not None and sig is not None:
+                return (mu, sig)
         if (
             isinstance(dataset, DataDistribution)
             and self.dimension == BenchmarkDimension.N_DIMENSIONAL
