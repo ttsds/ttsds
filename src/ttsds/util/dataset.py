@@ -248,6 +248,8 @@ class WavListDataset(Dataset):
         else:
             super().__init__("WavListDataset", sample_rate)
         self.wavs = [w.resolve() for w in wavs]
+        # sort
+        self.wavs = sorted(self.wavs)
         self.texts = texts
 
 
@@ -280,6 +282,7 @@ class WavListDataset(Dataset):
         h.update(str(self.sample_params["n"]).encode())
         h.update(str(self.sample_params["seed"]).encode())
         h.update(str(True).encode())
+        h.update(str(self.wavs).encode())
         return int(h.hexdigest(), 16)
 
     def __repr__(self) -> str:
