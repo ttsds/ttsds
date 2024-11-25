@@ -10,8 +10,8 @@ CACHE_DIR = Path(CACHE_DIR)
 if not CACHE_DIR.exists():
     CACHE_DIR.mkdir(parents=True, exist_ok=True)
 
-m = multiprocessing.Manager()
-lock = m.Lock()
+lock = None
+
 
 def hash_md5(obj) -> str:
     """
@@ -55,6 +55,10 @@ def load_cache(name: str) -> np.ndarray:
     Returns:
         np.ndarray: The cached numpy array.
     """
+    global lock
+    if lock is None:
+        m = multiprocessing.Manager()
+        lock = m.Lock()
     with lock:
         cache_file = CACHE_DIR / f"{name}.npy"
         try:

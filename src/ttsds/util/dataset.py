@@ -7,7 +7,7 @@ from copy import deepcopy
 import hashlib
 from pathlib import Path
 import tarfile
-from typing import Tuple, List, Dict
+from typing import Tuple, List, Dict, Union
 import pickle
 import gzip
 
@@ -17,15 +17,19 @@ from multiprocessing import cpu_count
 from concurrent.futures import ThreadPoolExecutor
 
 from ttsds.util.cache import cache, check_cache, load_cache, hash_md5
+
+
 class Dataset(ABC):
     """
     Abstract class for a dataset.
     """
 
-    def __init__(self, name, sample_rate: int = 22050):
+    def __init__(self, name, sample_rate: int = 22050, has_text: bool = True):
         self.sample_rate = sample_rate
         self.wavs = []
-        self.texts = []
+        self.has_text = has_text
+        if has_text:
+            self.texts = []
         self.sample_params = {
             "n": None,
             "seed": None,
@@ -44,7 +48,7 @@ class Dataset(ABC):
         raise NotImplementedError
 
     @abstractmethod
-    def __getitem__(self, idx: int) -> Tuple[np.ndarray, str]:
+    def __getitem__(self, idx: int) -> Union[Tuple[np.ndarray, str], np.ndarray]:
         """
         Get a sample from the dataset.
 
@@ -52,7 +56,8 @@ class Dataset(ABC):
             idx (int): The index of the sample.
 
         Returns:
-            Tuple[Path, Path, str]: A tuple containing the wav file and text file.
+            Tuple[np.ndarray, str]: The audio and text of the sample.
+            np.ndarray: The audio of the sample, if the dataset does not have text.
         """
         raise NotImplementedError
 
@@ -83,13 +88,14 @@ class DirectoryDataset(Dataset):
         self,
         root_dir: str = None,
         sample_rate: int = 22050,
+        has_text: bool = True,
         text_suffix: str = ".txt",
         name: str = None,
     ):
         if name is not None:
-            super().__init__(name, sample_rate)
+            super().__init__(name, sample_rate, has_text)
         else:
-            super().__init__(Path(root_dir).name, sample_rate)
+            super().__init__(Path(root_dir).name, sample_rate, has_text)
         if root_dir is None:
             raise ValueError("root_dir must be provided.")
         self.root_dir = Path(root_dir)
@@ -97,10 +103,12 @@ class DirectoryDataset(Dataset):
         wavs, texts = [], []
         for wav_file in Path(root_dir).rglob("*.wav"):
             wavs.append(wav_file)
-            text = wav_file.with_suffix(text_suffix)
-            texts.append(text)
+            if has_text:
+                text = wav_file.with_suffix(text_suffix)
+                texts.append(text)
         self.wavs = wavs
-        self.texts = texts
+        if has_text:
+            self.texts = texts
 
     def __len__(self) -> int:
         if self.indices is not None:
@@ -123,13 +131,16 @@ class DirectoryDataset(Dataset):
         else:
             audio, _ = librosa.load(wav, sr=self.sample_rate)
             cache(audio, wav_str)
-        with open(self.texts[idx], "r", encoding="utf-8") as f:
-            text = f.read().replace("\n", "")
+        if self.has_text:
+            with open(self.texts[idx], "r", encoding="utf-8") as f:
+                text = f.read().replace("\n", "")
         if audio.shape[0] < 16000:
             print(f"(Almost) Empty audio file: {wav}, padding with zeros.")
             audio = np.pad(audio, (0, 16000 - audio.shape[0]))
         audio = audio / (np.max(np.abs(audio)) + 1e-6)
-        return audio, text
+        if self.has_text:
+            return audio, text
+        return audio
 
     def __hash__(self) -> int:
         h = hashlib.md5()
@@ -137,7 +148,7 @@ class DirectoryDataset(Dataset):
         h.update(str(self.root_dir).encode())
         h.update(str(self.sample_params["n"]).encode())
         h.update(str(self.sample_params["seed"]).encode())
-        h.update(str(True).encode())
+        h.update(str(self.has_text).encode())
         return int(h.hexdigest(), 16)
 
     def __repr__(self) -> str:
@@ -154,14 +165,15 @@ class TarDataset(Dataset):
         self,
         root_tar: str = None,
         sample_rate: int = 22050,
+        has_text: bool = True,
         text_suffix: str = ".txt",
         path_prefix: str = None,
         name: str = None,
     ):
         if name is not None:
-            super().__init__(name, sample_rate)
+            super().__init__(name, sample_rate, has_text)
         else:
-            super().__init__(Path(root_tar).name, sample_rate)
+            super().__init__(Path(root_tar).name, sample_rate, has_text)
         if root_tar is None:
             raise ValueError("root_tar must be provided.")
         self.root_tar = root_tar
@@ -172,10 +184,12 @@ class TarDataset(Dataset):
             if member.name.endswith(".wav"):
                 wav_file = Path(member.name)
                 wavs.append(wav_file)
+            if has_text:
                 text_file = Path(member.name).with_suffix(text_suffix)
                 texts.append(text_file)
         self.wavs = wavs
-        self.texts = texts
+        if has_text:
+            self.texts = texts
         self.path_prefix = path_prefix
 
     def __len__(self) -> int:
@@ -200,23 +214,26 @@ class TarDataset(Dataset):
             wav_file = self.tar.extractfile(wav)
             audio, _ = librosa.load(wav_file, sr=self.sample_rate)
             cache(audio, wav_str)
-        if self.path_prefix is not None:
-            text_f = self.path_prefix + str(self.texts[idx])
-        else:
-            text_f = str(self.texts[idx])
-        text_file = self.tar.extractfile(text_f)
-        try:
-            text = text_file.read().decode("utf-8")
-        except UnicodeDecodeError:
-            text = ""
-            print(f"Error reading text file: {text_f}")
+        if self.has_text:
+            if self.path_prefix is not None:
+                text_f = self.path_prefix + str(self.texts[idx])
+            else:
+                text_f = str(self.texts[idx])
+            text_file = self.tar.extractfile(text_f)
+            try:
+                text = text_file.read().decode("utf-8")
+            except UnicodeDecodeError:
+                text = ""
+                print(f"Error reading text file: {text_f}")
         if audio.shape[0] == 0:
             print(f"Empty audio file: {wav}, padding with zeros.")
             audio = np.zeros(16000)
         else:
             # remove silence at beginning and end
             audio, _ = librosa.effects.trim(audio)
-        return audio, text
+        if self.has_text:
+            return audio, text
+        return audio
 
     def __hash__(self) -> int:
         h = hashlib.md5()
@@ -224,7 +241,7 @@ class TarDataset(Dataset):
         h.update(str(self.root_tar).encode())
         h.update(str(self.sample_params["n"]).encode())
         h.update(str(self.sample_params["seed"]).encode())
-        h.update(str(True).encode())
+        h.update(str(self.path_prefix).encode())
         return int(h.hexdigest(), 16)
 
     def __repr__(self) -> str:
@@ -238,9 +255,10 @@ class WavListDataset(Dataset):
 
     def __init__(
         self,
-        wavs: List[Path],
-        texts: List[str],
         sample_rate: int = 22050,
+        has_text: bool = True,
+        wavs: List[Path] = None,
+        texts: List[Path] = None,
         name: str = None,
     ):
         if name is not None:
@@ -249,9 +267,11 @@ class WavListDataset(Dataset):
             super().__init__("WavListDataset", sample_rate)
         self.wavs = [w.resolve() for w in wavs]
         # sort
-        self.wavs = sorted(self.wavs)
-        self.texts = texts
-
+        idx = np.argsort([str(w) for w in self.wavs])
+        self.wavs = [self.wavs[i] for i in idx]
+        if has_text:
+            self.texts = [t.resolve() for t in texts]
+            self.texts = [self.texts[i] for i in idx]
 
     def __len__(self) -> int:
         if self.indices is not None:
@@ -268,25 +288,30 @@ class WavListDataset(Dataset):
         else:
             audio, _ = librosa.load(wav, sr=self.sample_rate)
             cache(audio, wav_str)
-        with open(self.texts[idx], "r", encoding="utf-8") as f:
-            text = f.read().replace("\n", "")
+        if self.has_text:
+            with open(self.texts[idx], "r", encoding="utf-8") as f:
+                text = f.read().replace("\n", "")
         if audio.shape[0] == 0:
             print(f"Empty audio file: {wav}, padding with zeros.")
             audio = np.zeros(16000)
         audio = audio / (np.max(np.abs(audio)) + 1e-6)
-        return audio, text
+        if self.has_text:
+            return audio, text
+        return audio
 
     def __hash__(self) -> int:
         h = hashlib.md5()
         h.update(str(self.__class__).encode())
         h.update(str(self.sample_params["n"]).encode())
         h.update(str(self.sample_params["seed"]).encode())
-        h.update(str(True).encode())
         h.update(str(self.wavs).encode())
+        h.update(str(self.texts).encode())
+        h.update(str(self.has_text).encode())
         return int(h.hexdigest(), 16)
 
     def __repr__(self) -> str:
         return f"({self.name})"
+
 
 class DataDistribution:
     def __init__(
@@ -325,7 +350,9 @@ class DataDistribution:
             benchmark_key_values = list(self.benchmarks.items())
             values = list(self.benchmarks.values())
             keys = list(self.benchmarks.keys())
-            print (f"Running {len(values)} benchmarks on {self.dataset.root_dir} using {self.n_processes} processes")
+            print(
+                f"Running {len(values)} benchmarks on {self.dataset.root_dir} using {self.n_processes} processes"
+            )
             with ThreadPoolExecutor(max_workers=self.n_processes) as executor:
                 results = list(executor.map(self._run_benchmark, values))
             for i, benchmark in enumerate(keys):
