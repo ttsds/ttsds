@@ -67,7 +67,7 @@ if __name__ == "__main__":
                             ctr_txts = [
                                 file.with_suffix(".txt") for file in ctr_wavs
                             ]
-                            test_datasets.append(WavListDataset(ctr_wavs, ctr_txts, name=directory.name +" (Control)"))
+                            test_datasets.append(WavListDataset(wavs=ctr_wavs, texts=ctr_txts, name=directory.name +" (Control)"))
             elif "dys" in dataset:
                 reference_datasets = [
                     DirectoryDataset(f"v2-evaluation/{_dataset}/A/dys", text_suffix=".txt", name="Torgo Reference"),
@@ -84,7 +84,7 @@ if __name__ == "__main__":
                             dys_txts = [
                                 file.with_suffix(".txt") for file in dys_wavs
                             ]
-                            test_datasets.append(WavListDataset(dys_wavs, dys_txts, name=directory.name +" (Dysarthric)"))
+                            test_datasets.append(WavListDataset(wavs=dys_wavs, texts=dys_txts, name=directory.name +" (Dysarthric)"))
         else:
             reference_datasets = [
                 DirectoryDataset(f"v2-evaluation/{dataset}/A", text_suffix=".txt", name=f"{dataset} Reference"),

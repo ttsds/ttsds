@@ -1,0 +1,286 @@
+benchmark_name,benchmark_category,dataset,score,ci,time_taken,noise_dataset,reference_dataset
+Hubert,1,Torgo Test,96.67720960843677,1.0,275.4353151321411,speech_noise_uniform_distribution.tar.gz,Torgo Reference
+Hubert,1,e2 (Dysarthric),90.40344895885951,1.0,276.44947600364685,speech_noise_uniform_distribution.tar.gz,Torgo Reference
+Hubert,1,f5 (Dysarthric),90.11571358037979,1.0,269.26856541633606,speech_noise_uniform_distribution.tar.gz,Torgo Reference
+Hubert,1,voicecraft (Dysarthric),89.52039094786313,1.0,175.24395179748535,speech_noise_uniform_distribution.tar.gz,Torgo Reference
+Hubert,1,parlertts (Dysarthric),86.56939394272756,1.0,249.6161971092224,speech_noise_uniform_distribution.tar.gz,Torgo Reference
+Hubert,1,metavoice (Dysarthric),85.60879930268402,1.0,244.7609190940857,speech_noise_uniform_distribution.tar.gz,Torgo Reference
+Hubert,1,fish (Dysarthric),85.00986608345951,1.0,270.8351230621338,speech_noise_uniform_distribution.tar.gz,Torgo Reference
+Hubert,1,pheme (Dysarthric),83.78521902432495,1.0,248.17395496368408,speech_noise_uniform_distribution.tar.gz,Torgo Reference
+Hubert,1,amphion_valle (Dysarthric),83.77606391201837,1.0,243.5922532081604,speech_noise_uniform_distribution.tar.gz,Torgo Reference
+Hubert,1,speecht5 (Dysarthric),82.57830289852717,1.0,239.99212384223938,speech_noise_uniform_distribution.tar.gz,Torgo Reference
+Hubert,1,xtts (Dysarthric),81.49987670009456,1.0,174.34281182289124,speech_noise_uniform_distribution.tar.gz,Torgo Reference
+Hubert,1,hierspeechpp (Dysarthric),80.61334399905887,1.0,223.9176824092865,speech_noise_uniform_distribution.tar.gz,Torgo Reference
+Hubert,1,tortoise (Dysarthric),79.69789613464864,1.0,192.25443625450134,speech_noise_uniform_distribution.tar.gz,Torgo Reference
+Hubert,1,whisperspeech (Dysarthric),79.5603555456216,1.0,190.44075989723206,speech_noise_uniform_distribution.tar.gz,Torgo Reference
+Hubert,1,bark (Dysarthric),79.2653172887379,1.0,267.68442726135254,speech_noise_uniform_distribution.tar.gz,Torgo Reference
+Hubert,1,styletts2 (Dysarthric),76.73555365981616,1.0,237.71716856956482,speech_noise_uniform_distribution.tar.gz,Torgo Reference
+Hubert,1,amphion_ns2 (Dysarthric),76.58947452918225,1.0,226.48308086395264,speech_noise_uniform_distribution.tar.gz,Torgo Reference
+Hubert,1,openvoice (Dysarthric),74.06585397968529,1.0,255.76653695106506,speech_noise_uniform_distribution.tar.gz,Torgo Reference
+Hubert,1,gpt-sovits (Dysarthric),73.98546929481259,1.0,224.5915651321411,speech_noise_uniform_distribution.tar.gz,Torgo Reference
+Wav2Vec2,1,Torgo Test,96.52021907995156,1.0,192.2935230731964,speech_noise_normal_distribution.tar.gz,Torgo Reference
+Wav2Vec2,1,voicecraft (Dysarthric),90.09415678457583,1.0,148.9345338344574,speech_noise_normal_distribution.tar.gz,Torgo Reference
+Wav2Vec2,1,e2 (Dysarthric),90.04684037744187,1.0,221.6993224620819,speech_noise_normal_distribution.tar.gz,Torgo Reference
+Wav2Vec2,1,f5 (Dysarthric),89.38186379747866,1.0,218.99037861824036,speech_noise_normal_distribution.tar.gz,Torgo Reference
+Wav2Vec2,1,fish (Dysarthric),84.27217283989738,1.0,221.67813515663147,speech_noise_normal_distribution.tar.gz,Torgo Reference
+Wav2Vec2,1,parlertts (Dysarthric),84.05668589484685,1.0,201.82461071014404,speech_noise_normal_distribution.tar.gz,Torgo Reference
+Wav2Vec2,1,amphion_valle (Dysarthric),82.58321385939487,1.0,189.93204045295715,speech_noise_normal_distribution.tar.gz,Torgo Reference
+Wav2Vec2,1,bark (Dysarthric),81.17197507341298,1.0,190.1019766330719,speech_noise_normal_distribution.tar.gz,Torgo Reference
+Wav2Vec2,1,speecht5 (Dysarthric),80.8201547158665,1.0,144.20134091377258,speech_noise_normal_distribution.tar.gz,Torgo Reference
+Wav2Vec2,1,pheme (Dysarthric),80.47182603998773,1.0,195.9822895526886,speech_noise_normal_distribution.tar.gz,Torgo Reference
+Wav2Vec2,1,metavoice (Dysarthric),77.88138299428687,1.0,219.4918508529663,speech_noise_normal_distribution.tar.gz,Torgo Reference
+Wav2Vec2,1,tortoise (Dysarthric),76.09374784489138,1.0,159.729572057724,speech_noise_normal_distribution.tar.gz,Torgo Reference
+Wav2Vec2,1,hierspeechpp (Dysarthric),75.53766785359282,1.0,190.04831051826477,speech_noise_all_zeros.tar.gz,Torgo Reference
+Wav2Vec2,1,xtts (Dysarthric),74.97157420256079,1.0,148.2098033428192,speech_noise_all_zeros.tar.gz,Torgo Reference
+Wav2Vec2,1,whisperspeech (Dysarthric),74.95188208712187,1.0,148.74667024612427,speech_noise_normal_distribution.tar.gz,Torgo Reference
+Wav2Vec2,1,styletts2 (Dysarthric),74.39713417917527,1.0,143.3296663761139,speech_noise_normal_distribution.tar.gz,Torgo Reference
+Wav2Vec2,1,gpt-sovits (Dysarthric),73.9509691291432,1.0,221.17568588256836,speech_noise_normal_distribution.tar.gz,Torgo Reference
+Wav2Vec2,1,amphion_ns2 (Dysarthric),73.30174805424056,1.0,192.27524399757385,speech_noise_normal_distribution.tar.gz,Torgo Reference
+Wav2Vec2,1,openvoice (Dysarthric),70.31168575031325,1.0,213.33226251602173,speech_noise_normal_distribution.tar.gz,Torgo Reference
+WavLM,1,Torgo Test,98.11477504510964,1.0,137.20423221588135,speech_noise_uniform_distribution.tar.gz,Torgo Reference
+WavLM,1,e2 (Dysarthric),90.76276773620287,1.0,157.7775158882141,speech_noise_uniform_distribution.tar.gz,Torgo Reference
+WavLM,1,voicecraft (Dysarthric),90.73362086138354,1.0,94.64313697814941,speech_noise_uniform_distribution.tar.gz,Torgo Reference
+WavLM,1,f5 (Dysarthric),89.67464580182553,1.0,157.75838494300842,speech_noise_uniform_distribution.tar.gz,Torgo Reference
+WavLM,1,metavoice (Dysarthric),88.0133247896018,1.0,146.2221758365631,speech_noise_uniform_distribution.tar.gz,Torgo Reference
+WavLM,1,parlertts (Dysarthric),86.99998383333946,1.0,134.53279733657837,speech_noise_uniform_distribution.tar.gz,Torgo Reference
+WavLM,1,pheme (Dysarthric),85.07969573267178,1.0,134.53652143478394,speech_noise_uniform_distribution.tar.gz,Torgo Reference
+WavLM,1,hierspeechpp (Dysarthric),84.98217290108757,1.0,152.83295798301697,speech_noise_uniform_distribution.tar.gz,Torgo Reference
+WavLM,1,fish (Dysarthric),84.79078628117988,1.0,155.88825368881226,speech_noise_uniform_distribution.tar.gz,Torgo Reference
+WavLM,1,amphion_valle (Dysarthric),84.41074365476251,1.0,158.1967203617096,speech_noise_uniform_distribution.tar.gz,Torgo Reference
+WavLM,1,speecht5 (Dysarthric),84.1563595903102,1.0,118.98909616470337,speech_noise_all_ones.tar.gz,Torgo Reference
+WavLM,1,xtts (Dysarthric),81.91627811341058,1.0,75.2171413898468,speech_noise_uniform_distribution.tar.gz,Torgo Reference
+WavLM,1,tortoise (Dysarthric),79.9701677128031,1.0,102.45866847038269,speech_noise_uniform_distribution.tar.gz,Torgo Reference
+WavLM,1,whisperspeech (Dysarthric),79.44872638102663,1.0,75.32980227470398,speech_noise_uniform_distribution.tar.gz,Torgo Reference
+WavLM,1,amphion_ns2 (Dysarthric),77.55078369624034,1.0,160.3457543849945,speech_noise_uniform_distribution.tar.gz,Torgo Reference
+WavLM,1,bark (Dysarthric),77.29422367929782,1.0,160.33986020088196,speech_noise_uniform_distribution.tar.gz,Torgo Reference
+WavLM,1,styletts2 (Dysarthric),76.30141275790324,1.0,118.96556377410889,speech_noise_uniform_distribution.tar.gz,Torgo Reference
+WavLM,1,openvoice (Dysarthric),74.7110639583703,1.0,130.6332790851593,speech_noise_uniform_distribution.tar.gz,Torgo Reference
+WavLM,1,gpt-sovits (Dysarthric),69.88020887146618,1.0,143.41680073738098,speech_noise_all_ones.tar.gz,Torgo Reference
+Allosaurus,2,Torgo Test,91.2229972181224,1.0,0.163618803024292,speech_noise_uniform_distribution.tar.gz,Torgo Reference
+Allosaurus,2,speecht5 (Dysarthric),83.06267533822728,1.0,0.17867183685302734,speech_noise_uniform_distribution.tar.gz,Torgo Reference
+Allosaurus,2,hierspeechpp (Dysarthric),76.43880133440399,1.0,0.1920318603515625,speech_noise_uniform_distribution.tar.gz,Torgo Reference
+Allosaurus,2,amphion_valle (Dysarthric),76.33742193902388,1.0,0.24076390266418457,speech_noise_uniform_distribution.tar.gz,Torgo Reference
+Allosaurus,2,e2 (Dysarthric),76.3060807751049,1.0,0.21677851676940918,speech_noise_uniform_distribution.tar.gz,Torgo Reference
+Allosaurus,2,f5 (Dysarthric),76.0403139955351,1.0,0.19035935401916504,speech_noise_uniform_distribution.tar.gz,Torgo Reference
+Allosaurus,2,bark (Dysarthric),74.81674147681402,1.0,0.21406245231628418,speech_noise_uniform_distribution.tar.gz,Torgo Reference
+Allosaurus,2,voicecraft (Dysarthric),73.71533846082498,1.0,1.8074088096618652,speech_noise_uniform_distribution.tar.gz,Torgo Reference
+Allosaurus,2,metavoice (Dysarthric),70.29331321954633,1.0,0.1887660026550293,speech_noise_uniform_distribution.tar.gz,Torgo Reference
+Allosaurus,2,parlertts (Dysarthric),69.7081824811209,1.0,0.17931890487670898,speech_noise_uniform_distribution.tar.gz,Torgo Reference
+Allosaurus,2,fish (Dysarthric),69.5749429931204,1.0,0.1922292709350586,speech_noise_uniform_distribution.tar.gz,Torgo Reference
+Allosaurus,2,pheme (Dysarthric),67.4602473729199,1.0,0.1870715618133545,speech_noise_uniform_distribution.tar.gz,Torgo Reference
+Allosaurus,2,xtts (Dysarthric),66.9571314631357,1.0,2.7688260078430176,speech_noise_uniform_distribution.tar.gz,Torgo Reference
+Allosaurus,2,whisperspeech (Dysarthric),64.98038800838673,1.0,2.9117186069488525,speech_noise_uniform_distribution.tar.gz,Torgo Reference
+Allosaurus,2,styletts2 (Dysarthric),64.4284914620148,1.0,0.17339777946472168,speech_noise_uniform_distribution.tar.gz,Torgo Reference
+Allosaurus,2,gpt-sovits (Dysarthric),63.8524042936806,1.0,0.20313239097595215,speech_noise_uniform_distribution.tar.gz,Torgo Reference
+Allosaurus,2,tortoise (Dysarthric),63.35806584320777,1.0,0.18038678169250488,speech_noise_uniform_distribution.tar.gz,Torgo Reference
+Allosaurus,2,amphion_ns2 (Dysarthric),62.22937524156556,1.0,0.21149468421936035,speech_noise_uniform_distribution.tar.gz,Torgo Reference
+Allosaurus,2,openvoice (Dysarthric),59.539548622572035,1.0,0.17763113975524902,speech_noise_uniform_distribution.tar.gz,Torgo Reference
+Hubert Token,2,e2 (Dysarthric),73.30725096988407,1.0,1.361938238143921,speech_noise_normal_distribution.tar.gz,Torgo Reference
+Hubert Token,2,f5 (Dysarthric),70.70824884678048,1.0,0.969534158706665,speech_noise_normal_distribution.tar.gz,Torgo Reference
+Hubert Token,2,hierspeechpp (Dysarthric),69.69080865686263,1.0,0.15781712532043457,speech_noise_normal_distribution.tar.gz,Torgo Reference
+Hubert Token,2,speecht5 (Dysarthric),60.127885142029335,1.0,0.2327558994293213,speech_noise_normal_distribution.tar.gz,Torgo Reference
+Hubert Token,2,voicecraft (Dysarthric),59.23944862686676,1.0,0.1688222885131836,speech_noise_normal_distribution.tar.gz,Torgo Reference
+Hubert Token,2,Torgo Test,55.2299967754884,1.0,22.068331003189087,speech_noise_normal_distribution.tar.gz,Torgo Reference
+Hubert Token,2,bark (Dysarthric),52.707383283996364,1.0,2.121917486190796,speech_noise_normal_distribution.tar.gz,Torgo Reference
+Hubert Token,2,parlertts (Dysarthric),50.91350199209634,1.0,0.1431882381439209,speech_noise_uniform_distribution.tar.gz,Torgo Reference
+Hubert Token,2,pheme (Dysarthric),49.7113269770477,1.0,0.14264559745788574,speech_noise_normal_distribution.tar.gz,Torgo Reference
+Hubert Token,2,amphion_valle (Dysarthric),45.45665177382302,1.0,2.6284120082855225,speech_noise_normal_distribution.tar.gz,Torgo Reference
+Hubert Token,2,xtts (Dysarthric),40.77150325981068,1.0,0.1453864574432373,speech_noise_uniform_distribution.tar.gz,Torgo Reference
+Hubert Token,2,fish (Dysarthric),39.92251861611988,1.0,0.24039244651794434,speech_noise_normal_distribution.tar.gz,Torgo Reference
+Hubert Token,2,styletts2 (Dysarthric),37.42323245059015,1.0,0.1944277286529541,speech_noise_uniform_distribution.tar.gz,Torgo Reference
+Hubert Token,2,whisperspeech (Dysarthric),33.74429766910458,1.0,0.1447150707244873,speech_noise_normal_distribution.tar.gz,Torgo Reference
+Hubert Token,2,openvoice (Dysarthric),33.66476904511842,1.0,0.11646699905395508,speech_noise_normal_distribution.tar.gz,Torgo Reference
+Hubert Token,2,tortoise (Dysarthric),32.284868984335006,1.0,0.1956644058227539,speech_noise_normal_distribution.tar.gz,Torgo Reference
+Hubert Token,2,amphion_ns2 (Dysarthric),31.9883050819098,1.0,5.98416805267334,speech_noise_normal_distribution.tar.gz,Torgo Reference
+Hubert Token,2,metavoice (Dysarthric),27.79292779188147,1.0,0.13750362396240234,speech_noise_uniform_distribution.tar.gz,Torgo Reference
+Hubert Token,2,gpt-sovits (Dysarthric),27.527355328738214,1.0,0.16799497604370117,speech_noise_uniform_distribution.tar.gz,Torgo Reference
+Hubert Token SR,2,hierspeechpp (Dysarthric),82.78282552930514,1.0,0.14171385765075684,speech_noise_normal_distribution.tar.gz,Torgo Reference
+Hubert Token SR,2,speecht5 (Dysarthric),79.75718426011382,1.0,0.05743098258972168,speech_noise_normal_distribution.tar.gz,Torgo Reference
+Hubert Token SR,2,e2 (Dysarthric),79.70204299765469,1.0,0.15328145027160645,speech_noise_normal_distribution.tar.gz,Torgo Reference
+Hubert Token SR,2,Torgo Test,76.16675615597514,1.0,0.09634828567504883,speech_noise_normal_distribution.tar.gz,Torgo Reference
+Hubert Token SR,2,f5 (Dysarthric),71.87180799498094,1.0,0.13136863708496094,speech_noise_normal_distribution.tar.gz,Torgo Reference
+Hubert Token SR,2,bark (Dysarthric),66.31163780816061,1.0,0.1559462547302246,speech_noise_normal_distribution.tar.gz,Torgo Reference
+Hubert Token SR,2,pheme (Dysarthric),49.39540242187688,1.0,0.06809306144714355,speech_noise_normal_distribution.tar.gz,Torgo Reference
+Hubert Token SR,2,voicecraft (Dysarthric),49.19566717141236,1.0,0.06403112411499023,speech_noise_normal_distribution.tar.gz,Torgo Reference
+Hubert Token SR,2,xtts (Dysarthric),48.76101929582567,1.0,0.06335926055908203,speech_noise_normal_distribution.tar.gz,Torgo Reference
+Hubert Token SR,2,styletts2 (Dysarthric),47.5164874004963,1.0,0.05899524688720703,speech_noise_normal_distribution.tar.gz,Torgo Reference
+Hubert Token SR,2,amphion_valle (Dysarthric),40.56530086226953,1.0,0.15648841857910156,speech_noise_normal_distribution.tar.gz,Torgo Reference
+Hubert Token SR,2,fish (Dysarthric),38.66589102511973,1.0,0.0954437255859375,speech_noise_normal_distribution.tar.gz,Torgo Reference
+Hubert Token SR,2,parlertts (Dysarthric),31.50484062591311,1.0,0.07091808319091797,speech_noise_normal_distribution.tar.gz,Torgo Reference
+Hubert Token SR,2,whisperspeech (Dysarthric),26.88523071131621,1.0,0.07004380226135254,speech_noise_normal_distribution.tar.gz,Torgo Reference
+Hubert Token SR,2,tortoise (Dysarthric),22.85736548088166,1.0,0.059923410415649414,speech_noise_normal_distribution.tar.gz,Torgo Reference
+Hubert Token SR,2,openvoice (Dysarthric),17.895069860406963,1.0,0.08190250396728516,speech_noise_uniform_distribution.tar.gz,Torgo Reference
+Hubert Token SR,2,amphion_ns2 (Dysarthric),17.42638650315131,1.0,0.12221431732177734,speech_noise_uniform_distribution.tar.gz,Torgo Reference
+Hubert Token SR,2,metavoice (Dysarthric),11.054984612469672,1.0,0.10110116004943848,speech_noise_uniform_distribution.tar.gz,Torgo Reference
+Hubert Token SR,2,gpt-sovits (Dysarthric),10.604860330965886,1.0,0.10910201072692871,speech_noise_uniform_distribution.tar.gz,Torgo Reference
+MPM,2,Torgo Test,98.54827246647179,1.0,17.950937032699585,speech_noise_normal_distribution.tar.gz,Torgo Reference
+MPM,2,e2 (Dysarthric),96.02249839273043,1.0,16.76094079017639,speech_noise_normal_distribution.tar.gz,Torgo Reference
+MPM,2,voicecraft (Dysarthric),95.6871777780269,1.0,8.41110372543335,speech_noise_normal_distribution.tar.gz,Torgo Reference
+MPM,2,f5 (Dysarthric),93.17725705455209,1.0,15.455142498016357,speech_noise_normal_distribution.tar.gz,Torgo Reference
+MPM,2,gpt-sovits (Dysarthric),93.06723322829879,1.0,14.349109411239624,speech_noise_normal_distribution.tar.gz,Torgo Reference
+MPM,2,pheme (Dysarthric),91.43316691603621,1.0,13.08305811882019,speech_noise_normal_distribution.tar.gz,Torgo Reference
+MPM,2,bark (Dysarthric),91.10644866959336,1.0,17.6842360496521,speech_noise_normal_distribution.tar.gz,Torgo Reference
+MPM,2,xtts (Dysarthric),90.5035713563915,1.0,8.34253978729248,speech_noise_normal_distribution.tar.gz,Torgo Reference
+MPM,2,amphion_valle (Dysarthric),90.25025866113202,1.0,13.605259895324707,speech_noise_normal_distribution.tar.gz,Torgo Reference
+MPM,2,whisperspeech (Dysarthric),89.91441748936738,1.0,8.346284866333008,speech_noise_normal_distribution.tar.gz,Torgo Reference
+MPM,2,speecht5 (Dysarthric),89.79609946781235,1.0,12.358688116073608,speech_noise_normal_distribution.tar.gz,Torgo Reference
+MPM,2,metavoice (Dysarthric),89.14674253562251,1.0,14.217331171035767,speech_noise_normal_distribution.tar.gz,Torgo Reference
+MPM,2,fish (Dysarthric),89.13095771944108,1.0,14.864021062850952,speech_noise_normal_distribution.tar.gz,Torgo Reference
+MPM,2,hierspeechpp (Dysarthric),88.64169118079745,1.0,14.039307355880737,speech_noise_normal_distribution.tar.gz,Torgo Reference
+MPM,2,styletts2 (Dysarthric),88.42545432557472,1.0,9.348264694213867,speech_noise_normal_distribution.tar.gz,Torgo Reference
+MPM,2,parlertts (Dysarthric),88.4243235979092,1.0,13.238215208053589,speech_noise_normal_distribution.tar.gz,Torgo Reference
+MPM,2,openvoice (Dysarthric),88.16289317915069,1.0,12.667595386505127,speech_noise_normal_distribution.tar.gz,Torgo Reference
+MPM,2,tortoise (Dysarthric),86.99840914897317,1.0,9.41981840133667,speech_noise_normal_distribution.tar.gz,Torgo Reference
+MPM,2,amphion_ns2 (Dysarthric),85.81463762054925,1.0,13.27596640586853,speech_noise_normal_distribution.tar.gz,Torgo Reference
+Pitch,2,speecht5 (Dysarthric),94.07897775676042,1.0,3.526818037033081,speech_noise_all_ones.tar.gz,Torgo Reference
+Pitch,2,f5 (Dysarthric),93.78847088604947,1.0,0.4056692123413086,speech_noise_all_ones.tar.gz,Torgo Reference
+Pitch,2,Torgo Test,92.71873207708194,1.0,0.8031320571899414,speech_noise_all_ones.tar.gz,Torgo Reference
+Pitch,2,gpt-sovits (Dysarthric),90.05833121115568,1.0,0.2542083263397217,speech_noise_all_ones.tar.gz,Torgo Reference
+Pitch,2,voicecraft (Dysarthric),87.46408491278817,1.0,3.4644172191619873,speech_noise_all_ones.tar.gz,Torgo Reference
+Pitch,2,xtts (Dysarthric),85.53923292219235,1.0,3.457970142364502,speech_noise_all_ones.tar.gz,Torgo Reference
+Pitch,2,tortoise (Dysarthric),84.86053660942376,1.0,3.244483232498169,speech_noise_all_ones.tar.gz,Torgo Reference
+Pitch,2,whisperspeech (Dysarthric),84.13837254112674,1.0,3.4216394424438477,speech_noise_all_ones.tar.gz,Torgo Reference
+Pitch,2,metavoice (Dysarthric),83.14126536476725,1.0,0.36446166038513184,speech_noise_all_ones.tar.gz,Torgo Reference
+Pitch,2,e2 (Dysarthric),83.0946082414605,1.0,0.7995946407318115,speech_noise_all_ones.tar.gz,Torgo Reference
+Pitch,2,amphion_valle (Dysarthric),82.58860807431303,1.0,0.6990277767181396,speech_noise_all_ones.tar.gz,Torgo Reference
+Pitch,2,openvoice (Dysarthric),82.48965218276973,1.0,1.6307852268218994,speech_noise_all_ones.tar.gz,Torgo Reference
+Pitch,2,fish (Dysarthric),81.58956468124298,1.0,0.3576078414916992,speech_noise_all_ones.tar.gz,Torgo Reference
+Pitch,2,hierspeechpp (Dysarthric),79.43295374505782,1.0,1.7162001132965088,speech_noise_all_ones.tar.gz,Torgo Reference
+Pitch,2,pheme (Dysarthric),77.44293720607816,1.0,3.2464146614074707,speech_noise_all_ones.tar.gz,Torgo Reference
+Pitch,2,styletts2 (Dysarthric),76.83334919108657,1.0,3.4765384197235107,speech_noise_all_ones.tar.gz,Torgo Reference
+Pitch,2,amphion_ns2 (Dysarthric),75.03265088212984,1.0,0.6843602657318115,speech_noise_all_ones.tar.gz,Torgo Reference
+Pitch,2,parlertts (Dysarthric),70.51027209124713,1.0,3.0676209926605225,speech_noise_all_ones.tar.gz,Torgo Reference
+Pitch,2,bark (Dysarthric),68.08543022340658,1.0,0.8545637130737305,speech_noise_normal_distribution.tar.gz,Torgo Reference
+VoiceFixer,3,Torgo Test,78.07272480112313,1.0,1.4789447784423828,speech_noise_normal_distribution.tar.gz,Torgo Reference
+VoiceFixer,3,pheme (Dysarthric),71.40763494432237,1.0,0.1975078582763672,speech_noise_normal_distribution.tar.gz,Torgo Reference
+VoiceFixer,3,amphion_ns2 (Dysarthric),71.38131537650469,1.0,1.9867992401123047,speech_noise_normal_distribution.tar.gz,Torgo Reference
+VoiceFixer,3,tortoise (Dysarthric),64.08393672769195,1.0,1.553314208984375,speech_noise_normal_distribution.tar.gz,Torgo Reference
+VoiceFixer,3,e2 (Dysarthric),64.03379133931175,1.0,0.4512946605682373,speech_noise_normal_distribution.tar.gz,Torgo Reference
+VoiceFixer,3,voicecraft (Dysarthric),63.26788676064313,1.0,1.6418240070343018,speech_noise_normal_distribution.tar.gz,Torgo Reference
+VoiceFixer,3,gpt-sovits (Dysarthric),62.95718209660189,1.0,0.18606233596801758,speech_noise_normal_distribution.tar.gz,Torgo Reference
+VoiceFixer,3,f5 (Dysarthric),61.07231384283364,1.0,0.34903812408447266,speech_noise_normal_distribution.tar.gz,Torgo Reference
+VoiceFixer,3,openvoice (Dysarthric),59.78975067203012,1.0,0.17313051223754883,speech_noise_normal_distribution.tar.gz,Torgo Reference
+VoiceFixer,3,speecht5 (Dysarthric),59.61487456480376,1.0,0.2038283348083496,speech_noise_normal_distribution.tar.gz,Torgo Reference
+VoiceFixer,3,metavoice (Dysarthric),59.52776842123808,1.0,0.17226433753967285,speech_noise_normal_distribution.tar.gz,Torgo Reference
+VoiceFixer,3,whisperspeech (Dysarthric),58.24271695291658,1.0,1.6485042572021484,speech_noise_normal_distribution.tar.gz,Torgo Reference
+VoiceFixer,3,styletts2 (Dysarthric),58.10114920925632,1.0,1.4768974781036377,speech_noise_normal_distribution.tar.gz,Torgo Reference
+VoiceFixer,3,fish (Dysarthric),57.88657046989759,1.0,0.21685218811035156,speech_noise_normal_distribution.tar.gz,Torgo Reference
+VoiceFixer,3,amphion_valle (Dysarthric),56.21393036039846,1.0,0.6390926837921143,speech_noise_normal_distribution.tar.gz,Torgo Reference
+VoiceFixer,3,xtts (Dysarthric),55.60174618995749,1.0,1.652845859527588,speech_noise_normal_distribution.tar.gz,Torgo Reference
+VoiceFixer,3,hierspeechpp (Dysarthric),54.23980407116405,1.0,0.17427730560302734,speech_noise_normal_distribution.tar.gz,Torgo Reference
+VoiceFixer,3,parlertts (Dysarthric),51.24621832472065,1.0,0.19627928733825684,speech_noise_normal_distribution.tar.gz,Torgo Reference
+VoiceFixer,3,bark (Dysarthric),40.81899743501518,1.0,0.6323995590209961,speech_noise_normal_distribution.tar.gz,Torgo Reference
+Wada SNR,3,Torgo Test,94.01844869097454,1.0,1.4148855209350586,speech_noise_all_zeros.tar.gz,Torgo Reference
+Wada SNR,3,e2 (Dysarthric),89.83966976603706,1.0,1.6066679954528809,speech_noise_all_zeros.tar.gz,Torgo Reference
+Wada SNR,3,voicecraft (Dysarthric),81.87939320189177,1.0,0.6564061641693115,speech_noise_all_zeros.tar.gz,Torgo Reference
+Wada SNR,3,f5 (Dysarthric),77.97876562150883,1.0,0.3758869171142578,speech_noise_all_zeros.tar.gz,Torgo Reference
+Wada SNR,3,xtts (Dysarthric),73.985992616364,1.0,25.79218363761902,speech_noise_all_zeros.tar.gz,Torgo Reference
+Wada SNR,3,fish (Dysarthric),73.29200490416862,1.0,0.3664364814758301,speech_noise_all_zeros.tar.gz,Torgo Reference
+Wada SNR,3,metavoice (Dysarthric),73.22001064949188,1.0,0.19312405586242676,speech_noise_all_zeros.tar.gz,Torgo Reference
+Wada SNR,3,speecht5 (Dysarthric),70.63091128573942,1.0,0.6586148738861084,speech_noise_all_zeros.tar.gz,Torgo Reference
+Wada SNR,3,hierspeechpp (Dysarthric),64.15802759603369,1.0,0.27924013137817383,speech_noise_all_zeros.tar.gz,Torgo Reference
+Wada SNR,3,parlertts (Dysarthric),63.142243779640694,1.0,0.17720746994018555,speech_noise_all_zeros.tar.gz,Torgo Reference
+Wada SNR,3,whisperspeech (Dysarthric),55.38664674904835,1.0,19.930015087127686,speech_noise_all_zeros.tar.gz,Torgo Reference
+Wada SNR,3,pheme (Dysarthric),52.83283216790468,1.0,0.20021748542785645,speech_noise_all_zeros.tar.gz,Torgo Reference
+Wada SNR,3,bark (Dysarthric),50.06911518808306,1.0,1.6227202415466309,speech_noise_all_zeros.tar.gz,Torgo Reference
+Wada SNR,3,tortoise (Dysarthric),46.23437044079228,1.0,2.335164785385132,speech_noise_all_zeros.tar.gz,Torgo Reference
+Wada SNR,3,amphion_valle (Dysarthric),46.21072332831923,1.0,1.6105549335479736,speech_noise_all_zeros.tar.gz,Torgo Reference
+Wada SNR,3,styletts2 (Dysarthric),39.472440366387275,1.0,8.441513299942017,speech_noise_all_zeros.tar.gz,Torgo Reference
+Wada SNR,3,openvoice (Dysarthric),28.93240208072062,1.0,0.19410109519958496,speech_noise_all_zeros.tar.gz,Torgo Reference
+Wada SNR,3,gpt-sovits (Dysarthric),28.700722573915726,1.0,0.35430288314819336,speech_noise_all_zeros.tar.gz,Torgo Reference
+Wada SNR,3,amphion_ns2 (Dysarthric),20.650924645118813,1.0,1.6504724025726318,speech_noise_all_zeros.tar.gz,Torgo Reference
+DVector,4,Torgo Test,97.41165807543649,1.0,5.892126083374023,speech_noise_all_ones.tar.gz,Torgo Reference
+DVector,4,e2 (Dysarthric),94.54153524218349,1.0,11.468615770339966,speech_noise_all_ones.tar.gz,Torgo Reference
+DVector,4,voicecraft (Dysarthric),91.91233593615468,1.0,37.93085289001465,speech_noise_all_ones.tar.gz,Torgo Reference
+DVector,4,f5 (Dysarthric),91.60136983015043,1.0,11.39928650856018,speech_noise_all_ones.tar.gz,Torgo Reference
+DVector,4,tortoise (Dysarthric),86.24195876698401,1.0,35.50249481201172,speech_noise_all_ones.tar.gz,Torgo Reference
+DVector,4,amphion_valle (Dysarthric),84.51315045403359,1.0,8.517283916473389,speech_noise_all_ones.tar.gz,Torgo Reference
+DVector,4,pheme (Dysarthric),83.88753358148561,1.0,12.833486557006836,speech_noise_all_ones.tar.gz,Torgo Reference
+DVector,4,bark (Dysarthric),83.71417293562617,1.0,8.545306921005249,speech_noise_uniform_distribution.tar.gz,Torgo Reference
+DVector,4,parlertts (Dysarthric),82.66453602259773,1.0,13.986680269241333,speech_noise_all_ones.tar.gz,Torgo Reference
+DVector,4,metavoice (Dysarthric),80.77772825722374,1.0,13.300065994262695,speech_noise_all_ones.tar.gz,Torgo Reference
+DVector,4,fish (Dysarthric),80.35999364161955,1.0,11.354436159133911,speech_noise_all_ones.tar.gz,Torgo Reference
+DVector,4,styletts2 (Dysarthric),79.4937270840865,1.0,28.729679346084595,speech_noise_all_zeros.tar.gz,Torgo Reference
+DVector,4,openvoice (Dysarthric),79.33529528396096,1.0,13.978489398956299,speech_noise_uniform_distribution.tar.gz,Torgo Reference
+DVector,4,gpt-sovits (Dysarthric),77.73276877400994,1.0,11.37445878982544,speech_noise_uniform_distribution.tar.gz,Torgo Reference
+DVector,4,xtts (Dysarthric),77.43220314228505,1.0,36.6539466381073,speech_noise_all_ones.tar.gz,Torgo Reference
+DVector,4,whisperspeech (Dysarthric),77.07148430078348,1.0,37.456770181655884,speech_noise_all_zeros.tar.gz,Torgo Reference
+DVector,4,hierspeechpp (Dysarthric),76.76234723211832,1.0,13.000932693481445,speech_noise_all_ones.tar.gz,Torgo Reference
+DVector,4,amphion_ns2 (Dysarthric),76.09451637816042,1.0,8.22524356842041,speech_noise_all_ones.tar.gz,Torgo Reference
+DVector,4,speecht5 (Dysarthric),73.67881900816893,1.0,24.95667791366577,speech_noise_all_zeros.tar.gz,Torgo Reference
+WeSpeaker,4,Torgo Test,83.22675643250965,1.0,14.59172248840332,speech_noise_normal_distribution.tar.gz,Torgo Reference
+WeSpeaker,4,e2 (Dysarthric),79.77436182416068,1.0,14.126416444778442,speech_noise_normal_distribution.tar.gz,Torgo Reference
+WeSpeaker,4,f5 (Dysarthric),76.46487871736566,1.0,6.6613993644714355,speech_noise_normal_distribution.tar.gz,Torgo Reference
+WeSpeaker,4,voicecraft (Dysarthric),70.85109051073485,1.0,3.8439297676086426,speech_noise_normal_distribution.tar.gz,Torgo Reference
+WeSpeaker,4,whisperspeech (Dysarthric),69.85074454822497,1.0,4.0006608963012695,speech_noise_normal_distribution.tar.gz,Torgo Reference
+WeSpeaker,4,fish (Dysarthric),69.535390322936,1.0,8.959385871887207,speech_noise_normal_distribution.tar.gz,Torgo Reference
+WeSpeaker,4,metavoice (Dysarthric),68.76203453048107,1.0,8.975435972213745,speech_noise_normal_distribution.tar.gz,Torgo Reference
+WeSpeaker,4,hierspeechpp (Dysarthric),68.60062292139826,1.0,8.667178630828857,speech_noise_normal_distribution.tar.gz,Torgo Reference
+WeSpeaker,4,xtts (Dysarthric),67.8280232813274,1.0,3.9881269931793213,speech_noise_normal_distribution.tar.gz,Torgo Reference
+WeSpeaker,4,pheme (Dysarthric),66.73726902893,1.0,14.195046663284302,speech_noise_normal_distribution.tar.gz,Torgo Reference
+WeSpeaker,4,styletts2 (Dysarthric),66.19029968023035,1.0,14.381319284439087,speech_noise_normal_distribution.tar.gz,Torgo Reference
+WeSpeaker,4,parlertts (Dysarthric),66.0076758897576,1.0,14.303123712539673,speech_noise_normal_distribution.tar.gz,Torgo Reference
+WeSpeaker,4,amphion_valle (Dysarthric),65.41253744797905,1.0,13.793464183807373,speech_noise_normal_distribution.tar.gz,Torgo Reference
+WeSpeaker,4,tortoise (Dysarthric),64.2713466041682,1.0,14.18646502494812,speech_noise_normal_distribution.tar.gz,Torgo Reference
+WeSpeaker,4,amphion_ns2 (Dysarthric),63.70800915748169,1.0,14.094771385192871,speech_noise_uniform_distribution.tar.gz,Torgo Reference
+WeSpeaker,4,gpt-sovits (Dysarthric),62.963884106101325,1.0,9.202432870864868,speech_noise_normal_distribution.tar.gz,Torgo Reference
+WeSpeaker,4,openvoice (Dysarthric),61.41874761610493,1.0,17.24693775177002,speech_noise_normal_distribution.tar.gz,Torgo Reference
+WeSpeaker,4,speecht5 (Dysarthric),59.00151680817238,1.0,14.274517297744751,speech_noise_normal_distribution.tar.gz,Torgo Reference
+WeSpeaker,4,bark (Dysarthric),53.75223379550487,1.0,14.081849575042725,speech_noise_uniform_distribution.tar.gz,Torgo Reference
+Wav2Vec2 Activations,6,Torgo Test,97.36974812260723,1.0,151.60704946517944,speech_noise_uniform_distribution.tar.gz,Torgo Reference
+Wav2Vec2 Activations,6,e2 (Dysarthric),94.52139557596858,1.0,147.1419689655304,speech_noise_uniform_distribution.tar.gz,Torgo Reference
+Wav2Vec2 Activations,6,f5 (Dysarthric),94.27056651325722,1.0,147.15220880508423,speech_noise_uniform_distribution.tar.gz,Torgo Reference
+Wav2Vec2 Activations,6,speecht5 (Dysarthric),92.68432300733788,1.0,142.50243735313416,speech_noise_uniform_distribution.tar.gz,Torgo Reference
+Wav2Vec2 Activations,6,hierspeechpp (Dysarthric),91.8136173468459,1.0,144.56817626953125,speech_noise_uniform_distribution.tar.gz,Torgo Reference
+Wav2Vec2 Activations,6,pheme (Dysarthric),90.70586117526184,1.0,142.338223695755,speech_noise_uniform_distribution.tar.gz,Torgo Reference
+Wav2Vec2 Activations,6,voicecraft (Dysarthric),89.80812642770059,1.0,136.74007153511047,speech_noise_uniform_distribution.tar.gz,Torgo Reference
+Wav2Vec2 Activations,6,xtts (Dysarthric),88.65819055298302,1.0,116.21069884300232,speech_noise_uniform_distribution.tar.gz,Torgo Reference
+Wav2Vec2 Activations,6,bark (Dysarthric),88.1516860717779,1.0,144.60008764266968,speech_noise_uniform_distribution.tar.gz,Torgo Reference
+Wav2Vec2 Activations,6,styletts2 (Dysarthric),87.16242910536259,1.0,136.80207443237305,speech_noise_uniform_distribution.tar.gz,Torgo Reference
+Wav2Vec2 Activations,6,tortoise (Dysarthric),85.61691772988067,1.0,121.24469923973083,speech_noise_uniform_distribution.tar.gz,Torgo Reference
+Wav2Vec2 Activations,6,openvoice (Dysarthric),81.45290149042754,1.0,127.88490462303162,speech_noise_uniform_distribution.tar.gz,Torgo Reference
+Wav2Vec2 Activations,6,fish (Dysarthric),80.29598707857548,1.0,130.5103349685669,speech_noise_uniform_distribution.tar.gz,Torgo Reference
+Wav2Vec2 Activations,6,whisperspeech (Dysarthric),78.45655152277213,1.0,159.94934034347534,speech_noise_uniform_distribution.tar.gz,Torgo Reference
+Wav2Vec2 Activations,6,parlertts (Dysarthric),76.96295840128084,1.0,143.09777164459229,speech_noise_uniform_distribution.tar.gz,Torgo Reference
+Wav2Vec2 Activations,6,gpt-sovits (Dysarthric),76.3457978483501,1.0,147.14160537719727,speech_noise_uniform_distribution.tar.gz,Torgo Reference
+Wav2Vec2 Activations,6,amphion_ns2 (Dysarthric),74.68115942873659,1.0,125.3081750869751,speech_noise_uniform_distribution.tar.gz,Torgo Reference
+Wav2Vec2 Activations,6,metavoice (Dysarthric),65.75068675583182,1.0,144.57663130760193,speech_noise_uniform_distribution.tar.gz,Torgo Reference
+Wav2Vec2 Activations,6,amphion_valle (Dysarthric),50.045872838472285,1.0,124.82843112945557,speech_noise_uniform_distribution.tar.gz,Torgo Reference
+Wav2Vec2 WER,6,Torgo Test,86.16708673519449,1.0,1.233459234237671,speech_noise_all_ones.tar.gz,Torgo Reference
+Wav2Vec2 WER,6,f5 (Dysarthric),43.339307237183554,1.0,0.028255224227905273,speech_noise_all_ones.tar.gz,Torgo Reference
+Wav2Vec2 WER,6,amphion_valle (Dysarthric),43.00209836798884,1.0,0.30291152000427246,speech_noise_all_ones.tar.gz,Torgo Reference
+Wav2Vec2 WER,6,e2 (Dysarthric),42.649480603954736,1.0,0.15377449989318848,speech_noise_all_ones.tar.gz,Torgo Reference
+Wav2Vec2 WER,6,fish (Dysarthric),42.45045290513343,1.0,0.030486583709716797,speech_noise_all_ones.tar.gz,Torgo Reference
+Wav2Vec2 WER,6,voicecraft (Dysarthric),41.15030458102572,1.0,0.03579235076904297,speech_noise_all_ones.tar.gz,Torgo Reference
+Wav2Vec2 WER,6,xtts (Dysarthric),40.539413350466305,1.0,0.027906417846679688,speech_noise_all_ones.tar.gz,Torgo Reference
+Wav2Vec2 WER,6,styletts2 (Dysarthric),40.48625759913034,1.0,0.03396463394165039,speech_noise_all_ones.tar.gz,Torgo Reference
+Wav2Vec2 WER,6,amphion_ns2 (Dysarthric),40.31052526208947,1.0,0.36528658866882324,speech_noise_all_ones.tar.gz,Torgo Reference
+Wav2Vec2 WER,6,gpt-sovits (Dysarthric),40.30066963363407,1.0,0.03327059745788574,speech_noise_all_ones.tar.gz,Torgo Reference
+Wav2Vec2 WER,6,speecht5 (Dysarthric),40.0030484037469,1.0,0.028745174407958984,speech_noise_all_ones.tar.gz,Torgo Reference
+Wav2Vec2 WER,6,openvoice (Dysarthric),39.99523515513918,1.0,0.0259096622467041,speech_noise_all_ones.tar.gz,Torgo Reference
+Wav2Vec2 WER,6,whisperspeech (Dysarthric),39.96001240047963,1.0,0.02657341957092285,speech_noise_all_ones.tar.gz,Torgo Reference
+Wav2Vec2 WER,6,tortoise (Dysarthric),39.79965761651128,1.0,0.03373384475708008,speech_noise_all_ones.tar.gz,Torgo Reference
+Wav2Vec2 WER,6,bark (Dysarthric),39.74659103972009,1.0,0.22569799423217773,speech_noise_all_ones.tar.gz,Torgo Reference
+Wav2Vec2 WER,6,hierspeechpp (Dysarthric),39.548847485157914,1.0,0.03376626968383789,speech_noise_all_ones.tar.gz,Torgo Reference
+Wav2Vec2 WER,6,metavoice (Dysarthric),39.27475475521863,1.0,0.02700638771057129,speech_noise_all_ones.tar.gz,Torgo Reference
+Wav2Vec2 WER,6,pheme (Dysarthric),38.11338277849076,1.0,0.02789783477783203,speech_noise_all_ones.tar.gz,Torgo Reference
+Wav2Vec2 WER,6,parlertts (Dysarthric),32.13890756339903,1.0,0.033629417419433594,speech_noise_all_ones.tar.gz,Torgo Reference
+Whisper WER,6,amphion_valle (Dysarthric),61.06633168598897,1.0,0.2681584358215332,speech_noise_all_ones.tar.gz,Torgo Reference
+Whisper WER,6,bark (Dysarthric),22.405489110474605,1.0,0.23239660263061523,speech_noise_all_ones.tar.gz,Torgo Reference
+Whisper WER,6,Torgo Test,14.896698911410864,1.0,0.46377134323120117,speech_noise_all_ones.tar.gz,Torgo Reference
+Whisper WER,6,f5 (Dysarthric),12.088265234240069,1.0,0.09569931030273438,speech_noise_all_ones.tar.gz,Torgo Reference
+Whisper WER,6,e2 (Dysarthric),11.943260593152976,1.0,0.09554100036621094,speech_noise_all_ones.tar.gz,Torgo Reference
+Whisper WER,6,fish (Dysarthric),11.919178762777912,1.0,0.16129517555236816,speech_noise_all_ones.tar.gz,Torgo Reference
+Whisper WER,6,voicecraft (Dysarthric),11.908611914951152,1.0,0.542778491973877,speech_noise_all_ones.tar.gz,Torgo Reference
+Whisper WER,6,tortoise (Dysarthric),10.5256203908163,1.0,0.5155766010284424,speech_noise_all_ones.tar.gz,Torgo Reference
+Whisper WER,6,amphion_ns2 (Dysarthric),10.484863194107156,1.0,0.2687034606933594,speech_noise_all_ones.tar.gz,Torgo Reference
+Whisper WER,6,xtts (Dysarthric),10.34446551045436,1.0,0.3239459991455078,speech_noise_all_ones.tar.gz,Torgo Reference
+Whisper WER,6,styletts2 (Dysarthric),10.31291230738452,1.0,0.5473423004150391,speech_noise_all_ones.tar.gz,Torgo Reference
+Whisper WER,6,whisperspeech (Dysarthric),10.213109395832925,1.0,0.3337881565093994,speech_noise_all_ones.tar.gz,Torgo Reference
+Whisper WER,6,openvoice (Dysarthric),10.163831428163181,1.0,0.0669865608215332,speech_noise_all_ones.tar.gz,Torgo Reference
+Whisper WER,6,hierspeechpp (Dysarthric),10.035201309701755,1.0,0.22416114807128906,speech_noise_all_ones.tar.gz,Torgo Reference
+Whisper WER,6,speecht5 (Dysarthric),9.983084370961341,1.0,0.31432199478149414,speech_noise_all_ones.tar.gz,Torgo Reference
+Whisper WER,6,gpt-sovits (Dysarthric),9.601206100071986,1.0,0.2317819595336914,speech_noise_all_ones.tar.gz,Torgo Reference
+Whisper WER,6,metavoice (Dysarthric),9.532353731643406,1.0,0.1653575897216797,speech_noise_all_ones.tar.gz,Torgo Reference
+Whisper WER,6,pheme (Dysarthric),9.478659313484576,1.0,0.06553316116333008,speech_noise_all_ones.tar.gz,Torgo Reference
+Whisper WER,6,parlertts (Dysarthric),6.327436989001221,1.0,0.07797503471374512,speech_noise_all_ones.tar.gz,Torgo Reference
