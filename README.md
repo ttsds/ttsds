@@ -17,6 +17,12 @@ For other details, see our paper: https://arxiv.org/abs/2407.12707
 pip install ttsds
 ```
 
+## Getting Started
+
+To get started with using TTSDS for your own data, see [examples/getting_started](https://github.com/ttsds/ttsds/tree/main/examples/getting_started).
+
+## Miscellaneous
+
 ### Requirements
 
 - Python 3.9+
