@@ -3,7 +3,6 @@ import pickle
 import hashlib
 import os
 import warnings
-from concurrent.futures import ThreadPoolExecutor, as_completed
 from subprocess import run
 from pathlib import Path
 from time import time
@@ -65,6 +64,7 @@ from ttsds.benchmarks.prosody.allosaurus import (
 )
 from ttsds.benchmarks.speaker.wespeaker import WeSpeakerBenchmark
 from ttsds.benchmarks.speaker.dvector import DVectorBenchmark
+from ttsds.benchmarks.benchmark import BenchmarkCategory
 from ttsds.util.dataset import Dataset, TarDataset
 from ttsds.util.cache import CACHE_DIR
 
@@ -135,14 +135,26 @@ class BenchmarkSuite:
         reference_datasets: List[Dataset],
         noise_datasets: List[Dataset] = NOISE_DATASETS,
         benchmarks: Dict[str, "Benchmark"] = BENCHMARKS,
+        category_weights: Dict[BenchmarkCategory, float] = {
+            BenchmarkCategory.SPEAKER: 0.2,
+            BenchmarkCategory.INTELLIGIBILITY: 0.2,
+            BenchmarkCategory.PROSODY: 0.2,
+            BenchmarkCategory.GENERIC: 0.2,
+            BenchmarkCategory.ENVIRONMENT: 0.0,
+        },
         skip_errors: bool = False,
         write_to_file: str = None,
-        multiprocessing: bool = False,
-        n_processes: int = cpu_count(),
         benchmark_kwargs: dict = {},
         device: str = "cpu",
         cache_dir: Optional[str] = None,
+        include_environment: bool = False,
     ):
+        if not include_environment:
+            benchmarks = {
+                k: v
+                for k, v in benchmarks.items()
+                if v.category != BenchmarkCategory.ENVIRONMENT
+            }
         if (
             "hubert_token" not in benchmark_kwargs
             or "cluster_datasets" not in benchmark_kwargs["hubert_token"]
@@ -181,13 +193,10 @@ class BenchmarkSuite:
                 "reference_dataset",
             ]
         )
+        self.category_weights = category_weights
         self.skip_errors = skip_errors
         self.noise_datasets = noise_datasets
         self.reference_datasets = reference_datasets
-        self.multiprocessing = multiprocessing
-        self.n_processes = (
-            n_processes if multiprocessing else 1
-        )  # Force 1 process if multiprocessing is disabled
         self.cache_dir = cache_dir or os.getenv(
             "TTSDS_CACHE_DIR", os.path.expanduser("~/.ttsds_cache")
         )
@@ -197,7 +206,6 @@ class BenchmarkSuite:
         self._progress = None
         self._progress_table = None
         self._main_task = None
-        self._benchmark_progress = {}  # Track progress per benchmark
         self._live = None
         self._layout = None
         if self.write_to_file is not None and Path(self.write_to_file).exists():
@@ -254,16 +262,11 @@ class BenchmarkSuite:
 
         # Initialize benchmark progress tracking
         for benchmark in sorted(self.benchmarks.values(), key=lambda x: x.name):
-            self._benchmark_progress[benchmark.name] = {
-                "completed": 0,
-                "total": len(self.datasets),
-                "category": benchmark.category.name,
-            }
             self._progress_table.add_row(
                 benchmark.name,
                 benchmark.category.name,
                 "0",
-                str(len(self.datasets)),
+                str(total_tasks),
                 "[yellow]0%[/yellow]",
             )
 
@@ -398,55 +401,6 @@ class BenchmarkSuite:
             else:
                 raise e
 
-    def _run_benchmark_batch(self, tasks: List[tuple]) -> List[dict]:
-        """Run a batch of benchmarks in parallel using threads."""
-        if not self.multiprocessing:
-            # If multiprocessing is disabled, run sequentially
-            results = []
-            for benchmark, dataset in tasks:
-                try:
-                    result = self._run_benchmark(benchmark, dataset)
-                    results.append(result)
-                except Exception as e:
-                    if self.skip_errors:
-                        console = Console()
-                        console.print(
-                            f"[red]Error in {benchmark.name} on {dataset.name}: {str(e)}[/red]"
-                        )
-                    else:
-                        raise e
-            return results
-
-        console = Console()
-        results = []
-
-        # Create a thread pool with the specified number of workers
-        with ThreadPoolExecutor(max_workers=self.n_processes) as executor:
-            # Submit all tasks to the thread pool
-            future_to_task = {
-                executor.submit(self._run_benchmark, benchmark, dataset): (
-                    benchmark,
-                    dataset,
-                )
-                for benchmark, dataset in tasks
-            }
-
-            # Process completed tasks as they finish
-            for future in as_completed(future_to_task):
-                benchmark, dataset = future_to_task[future]
-                try:
-                    result = future.result()
-                    results.append(result)
-                except Exception as e:
-                    if self.skip_errors:
-                        console.print(
-                            f"[red]Error in {benchmark.name} on {dataset.name}: {str(e)}[/red]"
-                        )
-                    else:
-                        raise e
-
-        return results
-
     def run(self) -> pd.DataFrame:
         console = Console()
         tasks = []
@@ -477,21 +431,10 @@ class BenchmarkSuite:
             return self.database
 
         try:
-            # Process tasks in batches to manage memory
-            batch_size = 1  # Default to sequential processing
-            if self.multiprocessing:
-                batch_size = max(1, num_tasks // (self.n_processes * 2))
-
-            for i in range(0, len(tasks), batch_size):
-                batch = tasks[i : i + batch_size]
-                if self.multiprocessing:
-                    console.print(
-                        f"[blue]Running batch {i//batch_size + 1}/{(num_tasks + batch_size - 1)//batch_size} with {self.n_processes} threads[/blue]"
-                    )
-                batch_results = self._run_benchmark_batch(batch)
-
-                for result in batch_results:
-                    self._update_database(result)
+            # Process tasks sequentially
+            for benchmark, dataset in tasks:
+                result = self._run_benchmark(benchmark, dataset)
+                self._update_database(result)
 
         finally:
             self._stop_progress()
@@ -515,8 +458,7 @@ class BenchmarkSuite:
         # Update progress display after database update
         self._update_progress()
 
-    @staticmethod
-    def aggregate_df(df: pd.DataFrame) -> pd.DataFrame:
+    def aggregate_df(self, df: pd.DataFrame) -> pd.DataFrame:
         def concat_text(x):
             return ", ".join(x)
 
@@ -542,8 +484,41 @@ class BenchmarkSuite:
         df.columns = [x[0] for x in df.columns.ravel()]
         # drop the benchmark_name column
         df = df.drop("benchmark_name", axis=1)
+        # calculate the weighted score for each dataset and add as rows with the OVERALL category
+        unique_datasets = df["dataset"].unique()
+        sc_scores = []
+        sc_times = []
+        sc_noisedatasets = []
+        sc_references = []
+        sc_categories = []
+        for dataset in unique_datasets:
+            df_dataset = df[df["dataset"] == dataset]
+            score = 0
+            for category in self.category_weights.keys():
+                score += (
+                    df_dataset[df_dataset["benchmark_category"] == category][
+                        "score"
+                    ].mean()
+                    * self.category_weights[category]
+                )
+            sc_scores.append(score)
+            sc_times.append(df_dataset["time_taken"].sum())
+            sc_noisedatasets.append(None)
+            sc_references.append(None)
+            sc_categories.append("OVERALL")
+        df_overall = pd.DataFrame(
+            {
+                "score": sc_scores,
+                "time_taken": sc_times,
+                "noise_dataset": sc_noisedatasets,
+                "reference_dataset": sc_references,
+                "benchmark_category": sc_categories,
+                "benchmark_name": [dataset for dataset in unique_datasets],
+            }
+        )
+        df = pd.concat([df, df_overall], ignore_index=True)
         return df
 
     def get_aggregated_results(self) -> pd.DataFrame:
         df = self.database.copy()
-        return BenchmarkSuite.aggregate_df(df)
+        return self.aggregate_df(df)
