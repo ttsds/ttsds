@@ -1,46 +1,129 @@
-# ttsds
+# TTSDS - Text-to-Speech Distribution Score
 
 [![PyPI - Version](https://img.shields.io/pypi/v/ttsds.svg)](https://pypi.org/project/ttsds)
 [![Hugginface Space](https://img.shields.io/badge/%F0%9F%A4%97-ttsds%2Fbenchmark-blue)](https://huggingface.co/spaces/ttsds/benchmark)
 
-As many recent Text-to-Speech (TTS) models have shown, synthetic audio can be close to real human speech. However, traditional evaluation methods for TTS systems need an update to keep pace with these new developments. Our TTSDS benchmark assesses the quality of synthetic speech by considering factors like prosody, speaker identity, and intelligibility. By comparing these factors with both real speech and noise datasets, we can better understand how close synthetic speech is to human speech.
+TTSDS is a comprehensive benchmark for evaluating the quality of synthetic speech in Text-to-Speech (TTS) systems. It assesses multiple aspects of speech quality including prosody, speaker identity, and intelligibility by comparing synthetic speech with both real speech and noise datasets.
 
-For the current benchmark results, see https://huggingface.co/spaces/ttsds/benchmark.
+## Features
 
-For other details, see our paper: https://arxiv.org/abs/2407.12707
+- **Multi-dimensional Evaluation**: Assess speech quality across different categories:
+  - Prosody (e.g., pitch, speaking rate)
+  - Speaker Identity (e.g., speaker verification)
+  - Intelligibility (e.g., speech recognition)
+  - Generic Features (e.g., embeddings)
+  - Environment (e.g., noise robustness)
+
+- **Weighted Scoring**: Customizable weights for different evaluation categories
+- **Progress Tracking**: Real-time progress display with detailed statistics
+- **Caching**: Efficient caching of intermediate results
+- **Error Handling**: Robust error handling with optional skipping of failed benchmarks
 
 ## Installation
 
-### Pip
+### System Requirements
 
-```console
+```bash
+# Required system packages
+sudo apt-get install ffmpeg automake autoconf unzip sox gfortran subversion libtool
+```
+
+### Python Installation
+
+```bash
+# Basic installation
 pip install ttsds
 ```
 
-## Getting Started
+### Optional: Fairseq Installation
 
-To get started with using TTSDS for your own data, see [examples/getting_started](https://github.com/ttsds/ttsds/tree/main/examples/getting_started).
+If you encounter dependency conflicts with fairseq, use this fork:
+```bash
+pip install git+https://github.com/MiniXC/fairseq-noconf
+```
 
-## Miscellaneous
+## Usage
 
-### Requirements
+### Basic Example
 
-- Python 3.9+
-- System packages: ``ffmpeg automake autoconf unzip sox gfortran subversion libtool``
-- On some systems, the fairseq installation may fail due to conflicting dependencies. In this case, you can install this fork of fairseq https://github.com/MiniXC/fairseq-noconf
-- If you want to use the Environment VoiceRestore benchmark, you need to install the VoiceRestore package using the following command: ``pip install git+https://github.com/MiniXC/voicerestore-pip``.
+```python
+from ttsds import BenchmarkSuite
+from ttsds.util.dataset import Dataset
 
-### Caching
+# Initialize datasets
+datasets = [
+    Dataset("path/to/your/dataset", name="your_dataset")
+]
+reference_datasets = [
+    Dataset("path/to/reference/dataset", name="reference")
+]
 
-Please set ``TTSDS_CACHE_DIR`` environment variable to a directory where you want to cache the downloaded models and data.
+# Create benchmark suite
+suite = BenchmarkSuite(
+    datasets=datasets,
+    reference_datasets=reference_datasets,
+    write_to_file="results.csv",  # Optional: save results to CSV
+    skip_errors=True,  # Optional: skip failed benchmarks
+    include_environment=False,  # Optional: exclude environment benchmarks
+)
 
-[![Website](https://ttsdsbenchmark.com/logo-dark.png)](https://ttsdsbenchmark.com)
+# Run benchmarks
+results = suite.run()
 
-## License
+# Get aggregated results with weighted scores
+aggregated = suite.get_aggregated_results()
+print(aggregated)
+```
 
-`ttsds` is distributed under the terms of the [MIT](https://spdx.org/licenses/MIT.html) license.
+### Custom Category Weights
+
+```python
+from ttsds.benchmarks.benchmark import BenchmarkCategory
+
+suite = BenchmarkSuite(
+    datasets=datasets,
+    reference_datasets=reference_datasets,
+)
+```
+
+### Progress Display
+
+The benchmark suite provides a real-time progress display showing:
+- Overall progress
+- Per-benchmark completion status
+- Estimated time remaining
+- Error messages (if any)
+
+## Configuration
+
+### Environment Variables
+
+```bash
+# Set cache directory (default: ~/.cache/ttsds)
+export TTSDS_CACHE_DIR=/path/to/cache
+```
+
+### Benchmark Categories
+
+- **Speaker**: Evaluates speaker identity preservation
+- **Intelligibility**: Measures speech recognition performance
+- **Prosody**: Assesses speech rhythm and intonation
+- **Generic**: General speech quality metrics
+- **Environment**: Noise robustness evaluation - this is excluded by default, set `include_environment=True` to include it.
+
+## Results
+
+The benchmark results include:
+- Individual benchmark scores
+- Category-wise aggregated scores
+- Overall weighted score
+- Time taken for each benchmark
+- Reference and noise dataset information
+
+Results can be saved to a CSV file for further analysis.
 
 ## Citation
+
 ```bibtex
 @misc{minixhofer2024ttsdstexttospeechdistribution,
       title={TTSDS -- Text-to-Speech Distribution Score}, 
@@ -52,3 +135,13 @@ Please set ``TTSDS_CACHE_DIR`` environment variable to a directory where you wan
       url={https://arxiv.org/abs/2407.12707}, 
 }
 ```
+
+## License
+
+`ttsds` is distributed under the terms of the [MIT](https://spdx.org/licenses/MIT.html) license.
+
+## Links
+
+- [Paper](https://arxiv.org/abs/2407.12707)
+- [HuggingFace Space](https://huggingface.co/spaces/ttsds/benchmark)
+- [Website](https://ttsdsbenchmark.com)
