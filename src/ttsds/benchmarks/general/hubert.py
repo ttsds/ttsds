@@ -3,10 +3,15 @@ from typing import Union
 import numpy as np
 import torch
 from transformers import Wav2Vec2Processor, HubertModel
-from tqdm import tqdm
+
 import librosa
 
-from ttsds.benchmarks.benchmark import Benchmark, BenchmarkCategory, BenchmarkDimension
+from ttsds.benchmarks.benchmark import (
+    Benchmark,
+    BenchmarkCategory,
+    BenchmarkDimension,
+    DeviceSupport,
+)
 from ttsds.util.dataset import Dataset
 
 
@@ -22,17 +27,29 @@ class HubertBenchmark(Benchmark):
     ):
         super().__init__(
             name="Hubert",
-            category=BenchmarkCategory.OVERALL,
+            category=BenchmarkCategory.GENERIC,
             dimension=BenchmarkDimension.N_DIMENSIONAL,
             description="Hubert hidden states.",
             hubert_model=hubert_model,
             hubert_layer=hubert_layer,
+            supported_devices=[DeviceSupport.CPU, DeviceSupport.GPU],
         )
         self.processor = Wav2Vec2Processor.from_pretrained(
             "facebook/hubert-large-ls960-ft"
         )
         self.model = HubertModel.from_pretrained(hubert_model)
         self.model_layer = hubert_layer
+        self.device = "cpu"
+
+    def _to_device(self, device: str):
+        """
+        Move the model to the given device.
+
+        Args:
+            device (str): The device to move the model to.
+        """
+        self.model.to(device)
+        self.device = device
 
     def get_embedding(self, wav, sr) -> np.ndarray:
         """
@@ -50,6 +67,7 @@ class HubertBenchmark(Benchmark):
         input_values = self.processor(
             wav, return_tensors="pt", sampling_rate=sr
         ).input_values
+        input_values = input_values.to(self.device)
         with torch.no_grad():
             features = self.model(input_values, output_hidden_states=True).hidden_states
         if isinstance(self.model_layer, int):
@@ -73,11 +91,7 @@ class HubertBenchmark(Benchmark):
         Returns:
             np.ndarray: The distribution of the Hubert benchmark.
         """
-        wavs = [
-            wav
-            for wav, _ in tqdm(dataset, desc=f"loading wavs for {self.name} {dataset}")
-        ]
         embeddings = []
-        for wav in tqdm(wavs):
+        for wav, _ in dataset.iter_with_progress(self):
             embeddings.append(self.get_embedding(wav, dataset.sample_rate))
         return np.vstack(embeddings)

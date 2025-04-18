@@ -2,7 +2,7 @@ import tempfile
 import os
 
 import wespeaker
-from tqdm import tqdm
+
 import numpy as np
 import librosa
 import soundfile as sf
@@ -50,7 +50,7 @@ class WeSpeakerBenchmark(Benchmark):
             np.ndarray: The distribution of the WeSpeaker benchmark.
         """
         embeddings = []
-        for wav, _ in tqdm(dataset, desc=f"computing embeddings for {self.name}"):
+        for wav, _ in dataset.iter_with_progress(self):
             if dataset.sample_rate != 16000:
                 wav = librosa.resample(
                     wav, orig_sr=dataset.sample_rate, target_sr=16000

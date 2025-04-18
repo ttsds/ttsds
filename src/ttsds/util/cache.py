@@ -55,17 +55,17 @@ def load_cache(name: str) -> np.ndarray:
     Returns:
         np.ndarray: The cached numpy array.
     """
-    global lock
-    if lock is None:
-        m = multiprocessing.Manager()
-        lock = m.Lock()
-    with lock:
-        cache_file = CACHE_DIR / f"{name}.npy"
-        try:
-            return np.load(cache_file)
-        except Exception as e:
-            print(f"Failed to load cache {cache_file}: {e}")
-            return None
+    # global lock
+    # if lock is None:
+    #     m = multiprocessing.Manager()
+    #     lock = m.Lock()
+    # with lock:
+    cache_file = CACHE_DIR / f"{name}.npy"
+    try:
+        return np.load(cache_file, allow_pickle=True)
+    except Exception as e:
+        print(f"Failed to load cache {cache_file}: {e}")
+        raise e
 
 
 def check_cache(name: str) -> bool:

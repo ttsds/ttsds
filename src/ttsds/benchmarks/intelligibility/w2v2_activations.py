@@ -1,12 +1,17 @@
 import re
 
 from transformers import Wav2Vec2Processor, Wav2Vec2Model
-from tqdm import tqdm
+
 import torch
 import numpy as np
 import librosa
 
-from ttsds.benchmarks.benchmark import Benchmark, BenchmarkCategory, BenchmarkDimension, DeviceSupport
+from ttsds.benchmarks.benchmark import (
+    Benchmark,
+    BenchmarkCategory,
+    BenchmarkDimension,
+    DeviceSupport,
+)
 from ttsds.util.dataset import Dataset
 
 
@@ -50,11 +55,11 @@ class Wav2Vec2ActivationsBenchmark(Benchmark):
             dataset (Dataset): The dataset to extract activations from.
 
         Returns:
-            np.ndarray: The extracted activations of shape (n, m), 
+            np.ndarray: The extracted activations of shape (n, m),
                         where n is the number of samples and m is the feature dimension.
         """
         activations = []
-        for wav, _ in tqdm(dataset, desc=f"Extracting activations for {self.name}"):
+        for wav, _ in dataset.iter_with_progress(self):
             if dataset.sample_rate != 16000:
                 wav = librosa.resample(
                     wav, orig_sr=dataset.sample_rate, target_sr=16000

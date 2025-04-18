@@ -1,4 +1,3 @@
-from tqdm import tqdm
 import numpy as np
 
 from ttsds.util.measures import PitchMeasure
@@ -33,8 +32,8 @@ class PitchBenchmark(Benchmark):
             np.ndarray: The distribution of the pitch benchmark.
         """
         pitches = []
-        for wav, _ in tqdm(dataset, desc=f"computing pitches for {self.name}"):
-            pitch = self.pitch_measure(wav, np.array([1000]))["measure"]
+        for wav, _ in dataset.iter_with_progress(self):
+            pitch = np.mean(self.pitch_measure(wav, np.array([1000]))["measure"])
             pitches.append(pitch)
-        pitches = np.concatenate(pitches)
+        pitches = np.array(pitches)
         return pitches

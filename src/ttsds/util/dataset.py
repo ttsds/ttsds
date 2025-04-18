@@ -7,14 +7,21 @@ from copy import deepcopy
 import hashlib
 from pathlib import Path
 import tarfile
-from typing import Tuple, List, Dict, Union
+from typing import Tuple, List, Dict, Union, Optional
 import pickle
 import gzip
 
 import numpy as np
 import librosa
-from multiprocessing import cpu_count
-from concurrent.futures import ThreadPoolExecutor
+from rich.progress import (
+    Progress,
+    SpinnerColumn,
+    TextColumn,
+    BarColumn,
+    TaskProgressColumn,
+    TimeRemainingColumn,
+)
+from rich.console import Console
 
 from ttsds.util.cache import cache, check_cache, load_cache, hash_md5
 
@@ -24,7 +31,7 @@ class Dataset(ABC):
     Abstract class for a dataset.
     """
 
-    def __init__(self, name, sample_rate: int = 22050, has_text: bool = True):
+    def __init__(self, name, sample_rate: int = 22050, has_text: bool = False):
         self.sample_rate = sample_rate
         self.wavs = []
         self.has_text = has_text
@@ -36,6 +43,65 @@ class Dataset(ABC):
         }
         self.name = name
         self.indices = None
+        self._progress: Optional[Progress] = None
+        self._progress_task = None
+
+    def _setup_progress(self, total: int, description: str = "Processing dataset"):
+        """Setup progress tracking for dataset iteration."""
+        if self._progress is None:
+            self._progress = Progress(
+                SpinnerColumn(),
+                TextColumn("[progress.description]{task.description}"),
+                BarColumn(),
+                TaskProgressColumn(),
+                TimeRemainingColumn(),
+                console=Console(),
+                refresh_per_second=1,
+            )
+            self._progress.start()
+            self._progress_task = self._progress.add_task(description, total=total)
+
+    def _update_progress(self, advance: int = 1):
+        """Update the progress bar."""
+        if self._progress and self._progress_task is not None:
+            self._progress.update(self._progress_task, advance=advance)
+
+    def _stop_progress(self):
+        """Stop and cleanup the progress bar."""
+        if self._progress:
+            self._progress.stop()
+            self._progress = None
+            self._progress_task = None
+
+    def __enter__(self):
+        """Context manager entry."""
+        return self
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        """Context manager exit."""
+        self._stop_progress()
+
+    def iter_with_progress(self, benchmark: "Benchmark"):
+        """Iterate over the dataset with a progress bar."""
+        # e.g. LibriTTS -> PROSODY -> MPM (with different colors for different categories)
+        if benchmark.category.name == "PROSODY":
+            color = "cyan"
+        elif benchmark.category.name == "SPEAKER":
+            color = "green"
+        elif benchmark.category.name == "ENVIRONMENT":
+            color = "blue"
+        elif benchmark.category.name == "INTELLIGIBILITY":
+            color = "magenta"
+        elif benchmark.category.name == "GENERIC":
+            color = "yellow"
+        description = f"{self.name} -> {benchmark.category.name} -> {benchmark.name}"
+        self._setup_progress(len(self), description)
+        try:
+            for i in range(len(self)):
+                yield self[i]
+                self._update_progress()
+        finally:
+            self._stop_progress()
 
     @abstractmethod
     def __len__(self) -> int:
@@ -88,7 +154,7 @@ class DirectoryDataset(Dataset):
         self,
         root_dir: str = None,
         sample_rate: int = 22050,
-        has_text: bool = True,
+        has_text: bool = False,
         text_suffix: str = ".txt",
         name: str = None,
     ):
@@ -140,7 +206,7 @@ class DirectoryDataset(Dataset):
         audio = audio / (np.max(np.abs(audio)) + 1e-6)
         if self.has_text:
             return audio, text
-        return audio
+        return audio, None
 
     def __hash__(self) -> int:
         h = hashlib.md5()
@@ -165,7 +231,7 @@ class TarDataset(Dataset):
         self,
         root_tar: str = None,
         sample_rate: int = 22050,
-        has_text: bool = True,
+        has_text: bool = False,
         text_suffix: str = ".txt",
         path_prefix: str = None,
         name: str = None,
@@ -233,7 +299,7 @@ class TarDataset(Dataset):
             audio, _ = librosa.effects.trim(audio)
         if self.has_text:
             return audio, text
-        return audio
+        return audio, None
 
     def __hash__(self) -> int:
         h = hashlib.md5()
@@ -256,7 +322,7 @@ class WavListDataset(Dataset):
     def __init__(
         self,
         sample_rate: int = 22050,
-        has_text: bool = True,
+        has_text: bool = False,
         wavs: List[Path] = None,
         texts: List[Path] = None,
         name: str = None,
@@ -297,7 +363,7 @@ class WavListDataset(Dataset):
         audio = audio / (np.max(np.abs(audio)) + 1e-6)
         if self.has_text:
             return audio, text
-        return audio
+        return audio, None
 
     def __hash__(self) -> int:
         h = hashlib.md5()
@@ -319,8 +385,6 @@ class DataDistribution:
         dataset: Dataset = None,
         benchmarks: Dict[str, "Benchmark"] = None,
         name: str = None,
-        multiprocessing: bool = False,
-        n_processes: int = 1,
     ):
         if name is not None:
             self.name = name
@@ -328,35 +392,21 @@ class DataDistribution:
             self.name = dataset.name
         self.benchmarks = benchmarks
         self.benchmark_results = {}
-        self.multiprocessing = multiprocessing
-        self.n_processes = n_processes
         if dataset is not None:
             self.dataset = dataset
             self.run()
 
     def run(self):
-        if not self.multiprocessing:
-            for benchmark in self.benchmarks:
-                print(f"Running {benchmark} on {self.dataset.root_dir}")
-                bench = self.benchmarks[benchmark]
-                dist = bench.get_distribution(self.dataset)
-                if bench.dimension.name == "N_DIMENSIONAL":
-                    # compute mu and sigma and store as tuple
-                    mu = np.mean(dist, axis=0)
-                    sigma = np.cov(dist, rowvar=False)
-                    dist = (mu, sigma)
-                self.benchmark_results[benchmark] = dist
-        else:
-            benchmark_key_values = list(self.benchmarks.items())
-            values = list(self.benchmarks.values())
-            keys = list(self.benchmarks.keys())
-            print(
-                f"Running {len(values)} benchmarks on {self.dataset.root_dir} using {self.n_processes} processes"
-            )
-            with ThreadPoolExecutor(max_workers=self.n_processes) as executor:
-                results = list(executor.map(self._run_benchmark, values))
-            for i, benchmark in enumerate(keys):
-                self.benchmark_results[benchmark] = results[i]
+        for benchmark in self.benchmarks:
+            print(f"Running {benchmark} on {self.dataset.root_dir}")
+            bench = self.benchmarks[benchmark]
+            dist = bench.get_distribution(self.dataset)
+            if bench.dimension.name == "N_DIMENSIONAL":
+                # compute mu and sigma and store as tuple
+                mu = np.mean(dist, axis=0)
+                sigma = np.cov(dist, rowvar=False)
+                dist = (mu, sigma)
+            self.benchmark_results[benchmark] = dist
 
     def _run_benchmark(self, benchmark: "Benchmark"):
         dist = benchmark.get_distribution(self.dataset)

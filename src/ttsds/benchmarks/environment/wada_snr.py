@@ -1,5 +1,5 @@
 import numpy as np
-from tqdm import tqdm
+
 
 from ttsds.benchmarks.benchmark import Benchmark, BenchmarkCategory, BenchmarkDimension
 from ttsds.util.dataset import Dataset
@@ -174,7 +174,7 @@ def wada_snr(wav):
         ) * (db_vals[wav_snr_idx + 1] - db_vals[wav_snr_idx])
 
     # Calculate SNR
-    dEng = sum(wav ** 2)
+    dEng = sum(wav**2)
     dFactor = 10 ** (wav_snr / 10)
     dNoiseEng = dEng / (1 + dFactor)  # Noise energy
     dSigEng = dEng * dFactor / (1 + dFactor)  # Signal energy
@@ -215,7 +215,7 @@ class WadaSNRBenchmark(Benchmark):
             float: The Signal-to-Noise Ratio (SNR) distribution of the Wada SNR model.
         """
         snrs = []
-        for wav, _ in tqdm(dataset, desc=f"computing snr for {self.name}"):
+        for wav, _ in dataset.iter_with_progress(self):
             # calculate for each 3 seconds, with a 1 second step
             win = self.window_size * dataset.sample_rate
             step = self.step_size * dataset.sample_rate

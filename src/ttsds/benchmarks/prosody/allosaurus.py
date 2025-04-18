@@ -1,61 +1,57 @@
 import tempfile
 
-from tqdm import tqdm
+
 import numpy as np
 from allosaurus.app import read_recognizer
 import soundfile as sf
 
 
-from ttsds.benchmarks.benchmark import Benchmark, BenchmarkCategory, BenchmarkDimension
+from ttsds.benchmarks.benchmark import (
+    Benchmark,
+    BenchmarkCategory,
+    BenchmarkDimension,
+    DeviceSupport,
+)
 from ttsds.util.dataset import Dataset
 
 
-class AllosaurusBenchmark(Benchmark):
+class AllosaurusSRBenchmark(Benchmark):
     """
-    Benchmark class for the allosaurus benchmark.
+    Benchmark class for the Allosaurus speaking rate benchmark.
     """
 
     def __init__(
         self,
     ):
         super().__init__(
-            name="Allosaurus",
+            name="Allosaurus SR",
             category=BenchmarkCategory.PROSODY,
             dimension=BenchmarkDimension.ONE_DIMENSIONAL,
-            description="The phone length of Allosaurus.",
+            description="Uses Allosaurus phone durations to calculate speaking rate.",
             version="0.0.1",
         )
         self.model = read_recognizer()
 
     def _get_distribution(self, dataset: Dataset) -> np.ndarray:
         """
-        Get the distribution of the pitch benchmark.
+        Get the distribution of the speaking rate benchmark.
 
         Args:
             dataset (Dataset): The dataset to get the distribution from.
 
         Returns:
-            np.ndarray: The distribution of the pitch benchmark.
+            np.ndarray: The distribution of the speaking rate benchmark.
         """
-        durations = []
-        for wav, _ in tqdm(
-            dataset, desc=f"computing allosaurus phone durations for {self.name}"
-        ):
+        speaking_rates = []
+        for wav, _ in dataset.iter_with_progress(self):
             with tempfile.NamedTemporaryFile(suffix=".wav") as f:
                 sf.write(f.name, wav, dataset.sample_rate)
                 result = self.model.recognize(f.name, timestamp=True)
                 if len(result.strip()) == 0:
-                    durations.append(0)
+                    speaking_rates.append(0)
                 else:
-                    start_times = [
-                        float(x.split()[0]) for x in result.strip().split("\n")
-                    ]
-                    # calculate time between start times
-                    diff = np.diff(start_times)
-                    if len(diff) == 0:
-                        durations.append(0)
-                    else:
-                        durations.append(
-                            float(len(diff)) / (len(wav) / dataset.sample_rate)
-                        )
-        return np.array(durations)
+                    # Count the number of phones and divide by audio duration
+                    num_phones = len(result.strip().split("\n"))
+                    audio_duration = len(wav) / dataset.sample_rate
+                    speaking_rates.append(num_phones / audio_duration)
+        return np.array(speaking_rates)

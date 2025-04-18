@@ -28,6 +28,7 @@ To get started with using TTSDS for your own data, see [examples/getting_started
 - Python 3.9+
 - System packages: ``ffmpeg automake autoconf unzip sox gfortran subversion libtool``
 - On some systems, the fairseq installation may fail due to conflicting dependencies. In this case, you can install this fork of fairseq https://github.com/MiniXC/fairseq-noconf
+- If you want to use the Environment VoiceRestore benchmark, you need to install the VoiceRestore package using the following command: ``pip install git+https://github.com/MiniXC/voicerestore-pip``.
 
 ### Caching
 

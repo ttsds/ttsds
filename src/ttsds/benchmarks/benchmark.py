@@ -5,14 +5,10 @@ This file contains the Benchmark abstract class.
 from abc import ABC, abstractmethod
 from enum import Enum
 import hashlib
-import importlib.resources
 import json
 from typing import List, Union, Optional
-from functools import lru_cache
-from pathlib import Path
 
 import numpy as np
-from tqdm.contrib.concurrent import process_map
 
 from ttsds.util.dataset import Dataset, DataDistribution
 from ttsds.util.cache import cache, load_cache, check_cache, hash_md5
@@ -24,14 +20,11 @@ class BenchmarkCategory(Enum):
     Enum class for the different categories of benchmarks.
     """
 
-    OVERALL = 1
+    GENERIC = 1
     PROSODY = 2
     ENVIRONMENT = 3
     SPEAKER = 4
-    PHONETICS = 5
-    INTELLIGIBILITY = 6
-    TRAINABILITY = 7
-    EXTERNAL = 8
+    INTELLIGIBILITY = 5
 
 
 class BenchmarkDimension(Enum):
@@ -41,6 +34,7 @@ class BenchmarkDimension(Enum):
 
     ONE_DIMENSIONAL = 1
     N_DIMENSIONAL = 2
+
 
 class DeviceSupport(Enum):
     """
@@ -161,7 +155,6 @@ class Benchmark(ABC):
         h.update(json.dumps(kwargs_str, sort_keys=True).encode())
         return int(h.hexdigest(), 16)
 
-    @lru_cache(maxsize=None)
     def compute_distance(
         self,
         one_dataset: Union[Dataset, DataDistribution],
@@ -203,19 +196,12 @@ class Benchmark(ABC):
         closest_noise_idx = np.argmin(noise_scores)
         closest_dataset_idx = np.argmin(dataset_scores)
 
-        print(f"Closest noise dataset: {noise_datasets[closest_noise_idx].name}")
-        print(
-            f"Closest reference dataset: {reference_datasets[closest_dataset_idx].name}"
-        )
-
         noise_score = np.min(noise_scores)
         dataset_score = np.min(dataset_scores)
         combined_score = dataset_score + noise_score
         score = (noise_score / combined_score) * 100
-        # TODO: compute confidence interval
         return (
             score,
-            1.0,
             (
                 noise_datasets[closest_noise_idx].name,
                 reference_datasets[closest_dataset_idx].name,

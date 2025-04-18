@@ -4,7 +4,6 @@ import os
 import numpy as np
 import pyworld as pw
 import librosa
-import torch
 
 
 class Measure(ABC):
@@ -129,7 +128,7 @@ class EnergyMeasure(Measure):
         self.hop_length = hop_length
 
     def compute(self, audio, durations, silence_mask=None):
-        energy_overall = np.sum(audio ** 2) / len(audio)
+        energy_overall = np.sum(audio**2) / len(audio)
         energy = librosa.feature.rms(
             y=audio,
             frame_length=self.win_length,

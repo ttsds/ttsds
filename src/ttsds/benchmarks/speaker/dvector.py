@@ -6,7 +6,7 @@ import torch.nn as nn
 import torchaudio
 from torchaudio.sox_effects import apply_effects_tensor
 from torchaudio.transforms import MelSpectrogram
-from tqdm import tqdm
+
 import numpy as np
 
 with importlib.resources.path("ttsds", "data") as dp:
@@ -139,7 +139,7 @@ class DVectorBenchmark(Benchmark):
             np.ndarray: The distribution of the DVector benchmark.
         """
         embeddings = []
-        for wav, _ in tqdm(dataset, desc=f"computing embeddings for {self.name}"):
+        for wav, _ in dataset.iter_with_progress(self):
             window_length = int(self.window_duration * dataset.sample_rate)
             hop_length = int(self.window_step * dataset.sample_rate)
             utt_embeddings = []

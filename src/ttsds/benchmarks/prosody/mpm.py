@@ -1,7 +1,7 @@
 import torch
 import numpy as np
 import librosa
-from tqdm import tqdm
+
 
 from ttsds.util.mpm import MaskedProsodyModel
 from ttsds.util.measures import (
@@ -72,9 +72,7 @@ class MPMBenchmark(Benchmark):
             np.ndarray: The distribution of the MPM benchmark.
         """
         embeddings = []
-        for wav, _ in tqdm(
-            dataset, desc="loading masked prosody model representations"
-        ):
+        for wav, _ in dataset.iter_with_progress(self):
             if dataset.sample_rate != 22050:
                 wav = librosa.resample(
                     wav, orig_sr=dataset.sample_rate, target_sr=22050
