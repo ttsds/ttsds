@@ -75,6 +75,8 @@ aggregated = suite.get_aggregated_results()
 print(aggregated)
 ```
 
+The datasets should be directories containing wav files. Since this is a distributional score, the wav files do not need to include the same content, and the number of files can vary between datasets. However, results are best when the speaker identities are the same.
+
 ### Custom Category Weights
 
 ```python
