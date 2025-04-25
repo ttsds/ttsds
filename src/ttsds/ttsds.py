@@ -149,12 +149,6 @@ class BenchmarkSuite:
         cache_dir: Optional[str] = None,
         include_environment: bool = False,
     ):
-        if not include_environment:
-            benchmarks = {
-                k: v
-                for k, v in benchmarks.items()
-                if v.category != BenchmarkCategory.ENVIRONMENT
-            }
         if (
             "hubert_token" not in benchmark_kwargs
             or "cluster_datasets" not in benchmark_kwargs["hubert_token"]
@@ -176,6 +170,12 @@ class BenchmarkSuite:
         self.benchmarks = {
             k: v(**benchmark_kwargs.get(k, {})) for k, v in benchmarks.items()
         }
+        if not include_environment:
+            self.benchmarks = {
+                k: v
+                for k, v in self.benchmarks.items()
+                if v.category != BenchmarkCategory.ENVIRONMENT
+            }
         # if gpu is available, move the benchmarks that support it to the gpu
         for benchmark in self.benchmarks.values():
             if DeviceSupport.GPU in benchmark.supported_devices and device == "cuda":
@@ -462,62 +462,95 @@ class BenchmarkSuite:
         def concat_text(x):
             return ", ".join(x)
 
-        df = (
-            df.groupby(
-                [
-                    "benchmark_category",
-                    "dataset",
-                ]
-            )
-            .agg(
-                {
-                    "score": ["mean", "std"],
-                    "time_taken": ["sum"],
-                    "noise_dataset": [concat_text],
-                    "reference_dataset": [concat_text],
-                    "benchmark_name": [concat_text],
-                }
-            )
-            .reset_index()
-        )
-        # remove multiindex
-        df.columns = [x[0] for x in df.columns.ravel()]
-        # drop the benchmark_name column
-        df = df.drop("benchmark_name", axis=1)
-        # calculate the weighted score for each dataset and add as rows with the OVERALL category
-        unique_datasets = df["dataset"].unique()
-        sc_scores = []
-        sc_times = []
-        sc_noisedatasets = []
-        sc_references = []
-        sc_categories = []
-        for dataset in unique_datasets:
-            df_dataset = df[df["dataset"] == dataset]
-            score = 0
-            for category in self.category_weights.keys():
-                score += (
-                    df_dataset[df_dataset["benchmark_category"] == category][
-                        "score"
-                    ].mean()
-                    * self.category_weights[category]
-                )
-            sc_scores.append(score)
-            sc_times.append(df_dataset["time_taken"].sum())
-            sc_noisedatasets.append(None)
-            sc_references.append(None)
-            sc_categories.append("OVERALL")
-        df_overall = pd.DataFrame(
+        # First aggregate the benchmark results
+        df_agg = df.groupby(
+            [
+                "benchmark_category",
+                "dataset",
+            ]
+        ).agg(
             {
-                "score": sc_scores,
-                "time_taken": sc_times,
-                "noise_dataset": sc_noisedatasets,
-                "reference_dataset": sc_references,
-                "benchmark_category": sc_categories,
-                "benchmark_name": [dataset for dataset in unique_datasets],
+                "score": ["mean", "std"],
+                "time_taken": ["sum"],
+                "noise_dataset": [concat_text],
+                "reference_dataset": [concat_text],
+                "benchmark_name": [concat_text],
             }
         )
-        df = pd.concat([df, df_overall], ignore_index=True)
-        return df
+
+        # Flatten the multiindex columns
+        df_agg.columns = [
+            f"{col[0]}_{col[1]}" if col[1] else col[0] for col in df_agg.columns
+        ]
+
+        # Reset index to ensure unique indices
+        df_agg = df_agg.reset_index()
+
+        # Calculate weighted scores for each dataset
+        unique_datasets = df_agg["dataset"].unique()
+        overall_data = []
+
+        for dataset in unique_datasets:
+            df_dataset = df_agg[df_agg["dataset"] == dataset]
+            weighted_score = 0
+            total_time = 0
+
+            for category in self.category_weights.keys():
+                category_data = df_dataset[
+                    df_dataset["benchmark_category"] == category.name
+                ]
+                if not category_data.empty:
+                    weighted_score += (
+                        category_data["score_mean"].iloc[0]  # Use mean score
+                        * self.category_weights[category]
+                    )
+                    total_time += category_data["time_taken_sum"].iloc[
+                        0
+                    ]  # Use sum of time
+
+            overall_data.append(
+                {
+                    "benchmark_category": "OVERALL",
+                    "dataset": dataset,
+                    "score_mean": weighted_score,
+                    "score_std": 0,  # No standard deviation for overall score
+                    "time_taken_sum": total_time,
+                    "noise_dataset": None,
+                    "reference_dataset": None,
+                }
+            )
+
+        # Create the overall DataFrame
+        df_overall = pd.DataFrame(overall_data)
+
+        # Ensure both DataFrames have the same columns in the same order
+        columns = [
+            "benchmark_category",
+            "dataset",
+            "score_mean",
+            "score_std",
+            "time_taken_sum",
+            "noise_dataset",
+            "reference_dataset",
+        ]
+
+        # Reorder columns and ensure they exist
+        for col in columns:
+            if col not in df_agg.columns:
+                df_agg[col] = None
+            if col not in df_overall.columns:
+                df_overall[col] = None
+
+        df_agg = df_agg[columns]
+        df_overall = df_overall[columns]
+
+        # Concatenate and sort the results
+        df_final = pd.concat([df_agg, df_overall], ignore_index=True)
+        df_final = df_final.sort_values(
+            ["benchmark_category", "score_mean"], ascending=False
+        )
+
+        return df_final
 
     def get_aggregated_results(self) -> pd.DataFrame:
         df = self.database.copy()
