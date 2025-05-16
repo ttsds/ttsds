@@ -1,7 +1,6 @@
 # TTSDS - Text-to-Speech Distribution Score
 
 [![PyPI - Version](https://img.shields.io/pypi/v/ttsds.svg)](https://pypi.org/project/ttsds)
-[![Hugginface Space](https://img.shields.io/badge/%F0%9F%A4%97-ttsds%2Fbenchmark-blue)](https://huggingface.co/spaces/ttsds/benchmark)
 
 TTSDS is a comprehensive benchmark for evaluating the quality of synthetic speech in Text-to-Speech (TTS) systems. It assesses multiple aspects of speech quality including prosody, speaker identity, and intelligibility by comparing synthetic speech with both real speech and noise datasets.
 
