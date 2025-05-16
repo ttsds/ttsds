@@ -9,8 +9,8 @@ from torchaudio.transforms import MelSpectrogram
 
 import numpy as np
 
-with importlib.resources.path("ttsds", "data") as dp:
-    dvector_pt = dp / "dvector" / "dvector.pt"
+with importlib.resources.path("ttsds", "dvector") as dp:
+    dvector_pt = dp / "dvector.pt"
 
 # wav_tensor, sample_rate = torchaudio.load("example.wav")
 # mel_tensor = wav2mel(wav_tensor, sample_rate)  # shape: (frames, mel_dim)

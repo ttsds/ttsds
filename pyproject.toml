@@ -55,7 +55,13 @@ path = "src/ttsds/__about__.py"
 [tool.hatch.build.targets.sdist]
 include = ["src/ttsds"]
 exclude = [
-  "src/ttsds/data/*.pkl.gz"
+  "src/ttsds/data"
+]
+
+[tool.hatch.build.targets.wheel]
+include = ["src/ttsds"]
+exclude = [
+  "src/ttsds/data"
 ]
 
 

@@ -5,6 +5,13 @@
 
 TTSDS is a comprehensive benchmark for evaluating the quality of synthetic speech in Text-to-Speech (TTS) systems. It assesses multiple aspects of speech quality including prosody, speaker identity, and intelligibility by comparing synthetic speech with both real speech and noise datasets.
 
+## Version 2.1.0
+
+We are excited to release TTSDS 2.1.0!
+TTSDS2 is multilingual and updated quarterly, with a new dataset every time: you can view the results at https://ttsdsbenchmark.com#leaderboard.
+
+
+
 ## Features
 
 - **Multi-dimensional Evaluation**: Assess speech quality across different categories:
