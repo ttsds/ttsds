@@ -150,15 +150,13 @@ Results can be saved to a CSV file for further analysis.
 ## Citation
 
 ```bibtex
-@misc{minixhofer2024ttsdstexttospeechdistribution,
-      title={TTSDS -- Text-to-Speech Distribution Score}, 
-      author={Christoph Minixhofer and Ondřej Klejch and Peter Bell},
-      year={2024},
-      eprint={2407.12707},
-      archivePrefix={arXiv},
-      primaryClass={eess.AS},
-      url={https://arxiv.org/abs/2407.12707}, 
+@inproceedings{minixhofer2024ttsds,
+  title={TTSDS-Text-to-Speech Distribution Score},
+  author={Minixhofer, Christoph and Klejch, Ond{\v{r}}ej and Bell, Peter},
+  booktitle={SLT},
+  year={2024},
 }
+
 ```
 
 ## License
