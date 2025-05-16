@@ -2,7 +2,7 @@ from typing import Union
 
 import numpy as np
 import torch
-from transformers import Wav2Vec2Processor, Wav2Vec2Model
+from transformers import Wav2Vec2Processor, HubertModel
 
 import librosa
 
@@ -15,31 +15,30 @@ from ttsds.benchmarks.benchmark import (
 from ttsds.util.dataset import Dataset
 
 
-class Wav2Vec2Benchmark(Benchmark):
+class MHubert147Benchmark(Benchmark):
     """
-    Benchmark class for the Wav2Vec2 benchmark.
+    Benchmark class for the Hubert benchmark.
     """
 
     def __init__(
         self,
-        wav2vec2_model: str = "facebook/wav2vec2-base",
-        wav2vec2_layer: Union[int, str] = 8,
+        hubert_model: str = "utter-project/mHuBERT-147",
+        hubert_layer: Union[int, str] = 7,
     ):
         super().__init__(
-            name="Wav2Vec2",
+            name="mHuBERT-147",
             category=BenchmarkCategory.GENERIC,
             dimension=BenchmarkDimension.N_DIMENSIONAL,
-            description="Wav2Vec2 hidden states.",
-            wav2vec2_model=wav2vec2_model,
-            wav2vec2_layer=wav2vec2_layer,
-            version="1.0.0",
+            description="Hubert hidden states.",
+            hubert_model=hubert_model,
+            hubert_layer=hubert_layer,
             supported_devices=[DeviceSupport.CPU, DeviceSupport.GPU],
         )
         self.processor = Wav2Vec2Processor.from_pretrained(
-            "facebook/wav2vec2-base-960h"
+            "facebook/hubert-large-ls960-ft"
         )
-        self.model = Wav2Vec2Model.from_pretrained(wav2vec2_model)
-        self.model_layer = wav2vec2_layer
+        self.model = HubertModel.from_pretrained(hubert_model)
+        self.model_layer = hubert_layer
         self.device = "cpu"
 
     def _to_device(self, device: str):
@@ -84,13 +83,13 @@ class Wav2Vec2Benchmark(Benchmark):
 
     def _get_distribution(self, dataset: Dataset) -> np.ndarray:
         """
-        Get the distribution of the Wav2Vec2 benchmark.
+        Get the distribution of the Hubert benchmark.
 
         Args:
             dataset (DirectoryDataset): The dataset to get the distribution from.
 
         Returns:
-            np.ndarray: The distribution of the Wav2Vec2 benchmark.
+            np.ndarray: The distribution of the Hubert benchmark.
         """
         embeddings = []
         for wav, _ in dataset.iter_with_progress(self):

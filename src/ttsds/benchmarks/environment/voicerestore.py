@@ -31,6 +31,7 @@ class VoiceRestoreBenchmark(Benchmark):
             supported_devices=[DeviceSupport.CPU, DeviceSupport.GPU],
         )
         self.vr = ShortAudioRestorer()
+        self.device = "cpu"
 
     def _to_device(self, device: str):
         """

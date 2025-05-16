@@ -15,21 +15,21 @@ from ttsds.benchmarks.benchmark import (
 from ttsds.util.dataset import Dataset
 
 
-class Wav2Vec2Benchmark(Benchmark):
+class Wav2Vec2XLSRBenchmark(Benchmark):
     """
     Benchmark class for the Wav2Vec2 benchmark.
     """
 
     def __init__(
         self,
-        wav2vec2_model: str = "facebook/wav2vec2-base",
+        wav2vec2_model: str = "facebook/wav2vec2-large-xlsr-53",
         wav2vec2_layer: Union[int, str] = 8,
     ):
         super().__init__(
-            name="Wav2Vec2",
+            name="Wav2Vec2-XLSR-53",
             category=BenchmarkCategory.GENERIC,
             dimension=BenchmarkDimension.N_DIMENSIONAL,
-            description="Wav2Vec2 hidden states.",
+            description="Wav2Vec2-XLSR-53 hidden states.",
             wav2vec2_model=wav2vec2_model,
             wav2vec2_layer=wav2vec2_layer,
             version="1.0.0",

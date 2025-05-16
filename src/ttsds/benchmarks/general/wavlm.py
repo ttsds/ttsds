@@ -39,6 +39,7 @@ class WavLMBenchmark(Benchmark):
         )
         self.model = WavLMModel.from_pretrained(wavlm_model)
         self.model_layer = wavlm_layer
+        self.device = "cpu"
 
     def _to_device(self, device: str):
         """

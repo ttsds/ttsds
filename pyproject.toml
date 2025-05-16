@@ -41,6 +41,7 @@ dependencies = [
   "transformers>=4.0.0",
   "voicerestore-fork>=0.1.0",
   "wespeaker-unofficial>=0.0.1",
+  "phonemizer>=3.0.0",
 ]
 
 [project.urls]

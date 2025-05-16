@@ -143,6 +143,12 @@ class Dataset(ABC):
         self.sample_params = {"n": n, "seed": seed}
         return self
 
+    def __repr__(self) -> str:
+        sample_info = ""
+        if self.sample_params["n"] is not None:
+            sample_info = f", samples={self.sample_params['n']} (seed={self.sample_params['seed']})"
+        return f"{self.name}{sample_info}"
+
 
 class DirectoryDataset(Dataset):
     """
@@ -218,7 +224,10 @@ class DirectoryDataset(Dataset):
         return int(h.hexdigest(), 16)
 
     def __repr__(self) -> str:
-        return f"({self.root_dir.name})"
+        sample_info = ""
+        if self.sample_params["n"] is not None:
+            sample_info = f", samples={self.sample_params['n']} (seed={self.sample_params['seed']})"
+        return f"({self.root_dir.name}{sample_info})"
 
 
 class TarDataset(Dataset):
@@ -311,7 +320,10 @@ class TarDataset(Dataset):
         return int(h.hexdigest(), 16)
 
     def __repr__(self) -> str:
-        return f"({Path(self.root_tar).name})"
+        sample_info = ""
+        if self.sample_params["n"] is not None:
+            sample_info = f", samples={self.sample_params['n']} (seed={self.sample_params['seed']})"
+        return f"({Path(self.root_tar).name}{sample_info})"
 
 
 class WavListDataset(Dataset):
@@ -371,12 +383,16 @@ class WavListDataset(Dataset):
         h.update(str(self.sample_params["n"]).encode())
         h.update(str(self.sample_params["seed"]).encode())
         h.update(str(self.wavs).encode())
-        h.update(str(self.texts).encode())
+        if self.has_text:
+            h.update(str(self.texts).encode())
         h.update(str(self.has_text).encode())
         return int(h.hexdigest(), 16)
 
     def __repr__(self) -> str:
-        return f"({self.name})"
+        sample_info = ""
+        if self.sample_params["n"] is not None:
+            sample_info = f", samples={self.sample_params['n']} (seed={self.sample_params['seed']})"
+        return f"({self.name}{sample_info})"
 
 
 class DataDistribution:
@@ -437,3 +453,6 @@ class DataDistribution:
             name = name.split(".")[0]
         obj.name = name
         return obj
+
+    def __repr__(self) -> str:
+        return self.dataset.__repr__()

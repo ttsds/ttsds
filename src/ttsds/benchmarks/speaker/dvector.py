@@ -140,6 +140,7 @@ class DVectorBenchmark(Benchmark):
         """
         embeddings = []
         for wav, _ in dataset.iter_with_progress(self):
+            print(wav)
             window_length = int(self.window_duration * dataset.sample_rate)
             hop_length = int(self.window_step * dataset.sample_rate)
             utt_embeddings = []

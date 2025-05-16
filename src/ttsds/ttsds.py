@@ -7,6 +7,8 @@ from subprocess import run
 from pathlib import Path
 from time import time
 from sklearn.exceptions import ConvergenceWarning
+from multiprocessing import cpu_count
+from concurrent.futures import ThreadPoolExecutor
 
 # Suppress specific (annoying) warnings
 warnings.filterwarnings("ignore", category=UserWarning, module="pyannote.audio.core.io")
@@ -46,18 +48,29 @@ from ttsds.benchmarks.benchmark import DeviceSupport
 from ttsds.benchmarks.environment.voicerestore import VoiceRestoreBenchmark
 from ttsds.benchmarks.environment.wada_snr import WadaSNRBenchmark
 from ttsds.benchmarks.general.hubert import HubertBenchmark
+from ttsds.benchmarks.general.mhubert import MHubert147Benchmark
 from ttsds.benchmarks.general.wav2vec2 import Wav2Vec2Benchmark
+from ttsds.benchmarks.general.wav2vec2_xlsr import Wav2Vec2XLSRBenchmark
 from ttsds.benchmarks.general.wavlm import WavLMBenchmark
 from ttsds.benchmarks.intelligibility.w2v2_activations import (
     Wav2Vec2ActivationsBenchmark,
 )
+from ttsds.benchmarks.intelligibility.w2v2_xlsr_activations import (
+    Wav2Vec2XLSRActivationsBenchmark,
+)
 from ttsds.benchmarks.intelligibility.whisper_activations import (
     WhisperActivationsBenchmark,
+)
+from ttsds.benchmarks.intelligibility.mwhisper_activations import (
+    MWhisperActivationsBenchmark,
 )
 from ttsds.benchmarks.prosody.mpm import MPMBenchmark
 from ttsds.benchmarks.prosody.pitch import PitchBenchmark
 from ttsds.benchmarks.prosody.hubert_token import (
     HubertTokenSRBenchmark,
+)
+from ttsds.benchmarks.prosody.mhubert_token import (
+    MHubert147TokenSRBenchmark,
 )
 from ttsds.benchmarks.prosody.allosaurus import (
     AllosaurusSRBenchmark,
@@ -90,6 +103,27 @@ BENCHMARKS = {
     # intelligibility
     "wav2vec2_activations": Wav2Vec2ActivationsBenchmark,
     "whisper_activations": WhisperActivationsBenchmark,
+}
+
+BENCHMARKS_ML = {
+    # generic
+    "mhubert": MHubert147Benchmark,
+    "wav2vec2_xlsr": Wav2Vec2XLSRBenchmark,
+    "wavlm": WavLMBenchmark,
+    # prosody
+    "mpm": MPMBenchmark,
+    "pitch": PitchBenchmark,
+    "hubert_token_sr": MHubert147TokenSRBenchmark,
+    "allosaurus_sr": AllosaurusSRBenchmark,
+    # speaker
+    "wespeaker": WeSpeakerBenchmark,
+    "dvector": DVectorBenchmark,
+    # environment
+    "voicerestore": VoiceRestoreBenchmark,
+    "wada_snr": WadaSNRBenchmark,
+    # intelligibility
+    "wav2vec2_activations": Wav2Vec2XLSRActivationsBenchmark,
+    "whisper_activations": MWhisperActivationsBenchmark,
 }
 
 
@@ -128,6 +162,22 @@ NOISE_DATASETS = [
 
 
 class BenchmarkSuite:
+    """
+    A suite for running multiple benchmarks on multiple datasets.
+
+    This class manages the execution of benchmarks, tracks progress, and
+    computes aggregate scores. It supports parallel computation of distances
+    for improved performance.
+
+    Examples:
+        # Basic usage
+        suite = BenchmarkSuite(datasets, reference_datasets)
+        results = suite.run()
+
+        # With parallel computation
+        suite = BenchmarkSuite(datasets, reference_datasets, n_workers=4)
+        results = suite.run()
+    """
 
     def __init__(
         self,
@@ -148,7 +198,12 @@ class BenchmarkSuite:
         device: str = "cpu",
         cache_dir: Optional[str] = None,
         include_environment: bool = False,
+        multilingual: bool = False,
+        n_workers: int = cpu_count(),
     ):
+        if multilingual and benchmarks == BENCHMARKS:
+            benchmarks = BENCHMARKS_ML
+            print("Using multilingual benchmarks")
         if (
             "hubert_token" not in benchmark_kwargs
             or "cluster_datasets" not in benchmark_kwargs["hubert_token"]
@@ -180,6 +235,8 @@ class BenchmarkSuite:
         for benchmark in self.benchmarks.values():
             if DeviceSupport.GPU in benchmark.supported_devices and device == "cuda":
                 benchmark.to_device(device)
+            # Set the logger for each benchmark
+            benchmark.set_logger(self.log_message)
         self.datasets = datasets
         self.datasets = sorted(self.datasets, key=lambda x: x.name)
         self.database = pd.DataFrame(
@@ -201,6 +258,7 @@ class BenchmarkSuite:
             "TTSDS_CACHE_DIR", os.path.expanduser("~/.ttsds_cache")
         )
         self.write_to_file = write_to_file
+        self.n_workers = n_workers
         os.makedirs(self.cache_dir, exist_ok=True)
         self._setup_caching()
         self._progress = None
@@ -249,7 +307,9 @@ class BenchmarkSuite:
         # Create layout
         self._layout = Layout()
         self._layout.split_column(
-            Layout(name="table", size=20), Layout(name="progress", size=3)
+            Layout(name="table", size=20),
+            Layout(name="progress", size=3),
+            Layout(name="log", size=10),  # Add a new section for log messages
         )
 
         # Create the progress table
@@ -283,11 +343,21 @@ class BenchmarkSuite:
             "[cyan]Running benchmarks...", total=total_tasks
         )
 
+        # Initialize log storage
+        self._log_messages = []
+
+        # Initialize log panel with empty text
+        log_panel = Panel("", title="Log Messages", border_style="green")
+
         # Update layout with components
         self._layout["table"].update(
             Panel(self._progress_table, title="Benchmark Progress", border_style="blue")
         )
         self._layout["progress"].update(self._progress)
+        self._layout["log"].update(log_panel)
+
+        # Store reference to log panel for updates
+        self._log_panel = log_panel
 
         # Start the live display
         self._live = Live(
@@ -340,10 +410,9 @@ class BenchmarkSuite:
 
     def _stop_progress(self):
         """Stop and cleanup the progress display."""
-        if self._live:
+        if "_live" in self.__dict__ and self._live:
             # Clear the live display
             self._live.stop()
-            self._live = None
 
             # Clear the console to remove the progress display
             console = Console()
@@ -355,23 +424,70 @@ class BenchmarkSuite:
             console.print(f"[green]Completed {completed}/{total} benchmarks[/green]")
 
         # Clean up other components
-        if self._progress:
+        if "_progress" in self.__dict__ and self._progress:
             self._progress.stop()
             self._progress = None
         self._progress_table = None
         self._main_task = None
+        self._log_panel = None  # Clean up log panel reference
+        self._log_messages = []  # Clean up log messages
         self._layout = None
+
+    def log_message(self, message: str):
+        """Add a message to the log panel.
+
+        Args:
+            message: The message to add to the log panel
+        """
+        if self._live and hasattr(self, "_log_panel"):
+            # Add new message to the history
+            if not hasattr(self, "_log_messages"):
+                self._log_messages = []
+
+            # Add timestamp to message
+            from datetime import datetime
+
+            timestamp = datetime.now().strftime("%H:%M:%S")
+            timestamped_message = f"[{timestamp}] {message}"
+
+            # Add to message history
+            self._log_messages.append(timestamped_message)
+
+            # Keep only the last 10 messages for display
+            if len(self._log_messages) > 10:
+                self._log_messages = self._log_messages[-10:]
+
+            # Join messages for display
+            display_text = "\n".join(self._log_messages)
+
+            # Update the log panel with combined messages
+            self._log_panel.renderable = display_text
+
+            # Update the layout
+            self._layout["log"].update(self._log_panel)
 
     def _run_benchmark(self, benchmark: "Benchmark", dataset: Dataset) -> dict:
         """Run a single benchmark and return its results."""
         console = Console()
 
         try:
+            # Log starting the benchmark
+            self.log_message(
+                f"[cyan]Running {benchmark.name} on {dataset.name}...[/cyan]"
+            )
+
             start = time()
             score = benchmark.compute_score(
-                dataset, self.reference_datasets, self.noise_datasets
+                dataset,
+                self.reference_datasets,
+                self.noise_datasets,
             )
             time_taken = time() - start
+
+            # Log successful completion
+            self.log_message(
+                f"[green]Completed {benchmark.name} on {dataset.name} in {time_taken:.2f}s[/green]"
+            )
 
             result = {
                 "benchmark_name": [benchmark.name],
@@ -385,10 +501,14 @@ class BenchmarkSuite:
             return result
 
         except Exception as e:
+            # Log error
+            error_message = (
+                f"[red]Error in {benchmark.name} on {dataset.name}: {str(e)}[/red]"
+            )
+            self.log_message(error_message)
+
             if self.skip_errors:
-                console.print(
-                    f"[red]Error in {benchmark.name} on {dataset.name}: {str(e)}[/red]"
-                )
+                console.print(error_message)
                 return {
                     "benchmark_name": [benchmark.name],
                     "benchmark_category": [benchmark.category.name],
@@ -431,10 +551,29 @@ class BenchmarkSuite:
             return self.database
 
         try:
-            # Process tasks sequentially
-            for benchmark, dataset in tasks:
-                result = self._run_benchmark(benchmark, dataset)
-                self._update_database(result)
+            # Process tasks in parallel using ThreadPoolExecutor
+            with ThreadPoolExecutor(max_workers=self.n_workers) as executor:
+                # Submit all tasks to the executor
+                future_to_task = {
+                    executor.submit(self._run_benchmark, benchmark, dataset): (
+                        benchmark,
+                        dataset,
+                    )
+                    for benchmark, dataset in tasks
+                }
+
+                # Process results as they complete
+                for future in future_to_task:
+                    try:
+                        result = future.result()
+                        self._update_database(result)
+                    except Exception as exc:
+                        benchmark, dataset = future_to_task[future]
+                        console.print(
+                            f"[red]Task {benchmark.name} on {dataset.name} generated an exception: {exc}[/red]"
+                        )
+                        if not self.skip_errors:
+                            raise exc
 
         finally:
             self._stop_progress()
@@ -555,3 +694,9 @@ class BenchmarkSuite:
     def get_aggregated_results(self) -> pd.DataFrame:
         df = self.database.copy()
         return self.aggregate_df(df)
+
+    def stop(self):
+        self._stop_progress()
+
+    def __del__(self):
+        self._stop_progress()
