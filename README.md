@@ -92,6 +92,23 @@ from ttsds.benchmarks.benchmark import BenchmarkCategory
 suite = BenchmarkSuite(
     datasets=datasets,
     reference_datasets=reference_datasets,
+    category_weights={
+        BenchmarkCategory.SPEAKER: 0.25,
+        BenchmarkCategory.INTELLIGIBILITY: 0.25,
+        BenchmarkCategory.PROSODY: 0.25,
+        BenchmarkCategory.GENERIC: 0.25,
+        BenchmarkCategory.ENVIRONMENT: 0.0,
+    },
+)
+```
+
+### Multilingual
+
+```python
+suite = BenchmarkSuite(
+    datasets=datasets,
+    reference_datasets=reference_datasets,
+    multilingual=True,
 )
 ```
 
