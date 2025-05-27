@@ -1,0 +1,91 @@
+site_name: TTSDS Documentation
+site_description: Text-to-Speech Distribution Score - A comprehensive benchmark for evaluating TTS systems
+site_author: Christoph Minixhofer
+repo_url: https://github.com/ttsds/ttsds
+repo_name: ttsds/ttsds
+
+theme:
+  name: material
+  features:
+    - navigation.tabs
+    - navigation.sections
+    - navigation.expand
+    - navigation.top
+    - search.highlight
+    - search.share
+    - search.suggest
+  palette:
+    - scheme: default
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+    - scheme: slate
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+
+markdown_extensions:
+  - pymdownx.highlight:
+      anchor_linenums: true
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
+  - admonition
+  - footnotes
+  - meta
+  - toc:
+      permalink: true
+
+plugins:
+  - search
+  - mkdocstrings:
+      default_handler: python
+      handlers:
+        python:
+          selection:
+            docstring_style: google
+          rendering:
+            show_source: true
+            show_root_heading: true
+            show_category_heading: true
+            show_if_no_docstring: true
+            show_signature_annotations: true
+            show_signature_return_annotations: true
+            show_bases: true
+            show_submodules: true
+            heading_level: 2
+            merge_init_into_class: true
+            docstring_options:
+              trim_doctest_flags: true
+              ignore_init_summary: true
+  - gen-files:
+      scripts:
+        - docs/gen_ref_nav.py
+  - literate-nav
+  - section-index
+
+nav:
+  - Home: index.md
+  - User Guide:
+    - Installation: user-guide/installation.md
+    - Quick Start: user-guide/quickstart.md
+    - Configuration: user-guide/configuration.md
+    - Advanced Usage: user-guide/advanced.md
+  - API Reference:
+    - Benchmarks: reference/benchmarks.md
+    - Utils: reference/utils.md
+  - Contributing:
+    - Development Guide: contributing/development.md
+    - Code Style: contributing/code-style.md
+    - Testing: contributing/testing.md
+  - About:
+    - License: about/license.md
+    - Citation: about/citation.md 

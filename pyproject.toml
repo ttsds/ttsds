@@ -64,14 +64,62 @@ exclude = [
   "src/ttsds/data"
 ]
 
-
 [tool.hatch.envs.types]
 extra-dependencies = [
   "mypy>=1.0.0",
   "pytest>=6.0.0",
+  "black>=24.1.0",
+  "isort>=5.13.0",
+  "flake8>=7.0.0",
+  "pylint>=3.0.0",
+  "pre-commit>=3.6.0",
+  "mkdocs>=1.5.0",
+  "mkdocs-material>=9.5.0",
+  "mkdocstrings[python]>=0.25.0",
+  "mkdocs-gen-files>=0.5.0",
+  "mkdocs-literate-nav>=0.6.0",
+  "mkdocs-section-index>=0.3.8",
 ]
+
 [tool.hatch.envs.types.scripts]
 check = "mypy --install-types --non-interactive {args:src/ttsds tests}"
+format = "black {args:src/ttsds tests}"
+lint = "flake8 {args:src/ttsds tests}"
+sort = "isort {args:src/ttsds tests}"
+docs = "mkdocs serve"
+docs-build = "mkdocs build"
+
+[tool.black]
+line-length = 88
+target-version = ["py38"]
+include = '\.pyi?$'
+
+[tool.isort]
+profile = "black"
+multi_line_output = 3
+line_length = 88
+
+[tool.flake8]
+max-line-length = 88
+extend-ignore = "E203"
+exclude = [".git", "__pycache__", "build", "dist"]
+
+[tool.pylint.messages_control]
+disable = ["C0111", "C0103", "C0303", "W0311", "W0603", "W0621", "R0903", "R0913", "R0914"]
+
+[tool.mypy]
+python_version = "3.8"
+warn_return_any = true
+warn_unused_configs = true
+disallow_untyped_defs = true
+disallow_incomplete_defs = true
+check_untyped_defs = true
+disallow_untyped_decorators = true
+no_implicit_optional = true
+warn_redundant_casts = true
+warn_unused_ignores = true
+warn_no_return = true
+warn_unreachable = true
 
 [tool.coverage.run]
 source_pkgs = ["ttsds", "tests"]
