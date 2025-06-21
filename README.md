@@ -2,6 +2,8 @@
 
 [![PyPI - Version](https://img.shields.io/pypi/v/ttsds.svg)](https://pypi.org/project/ttsds)
 
+<img src="https://api.star-history.com/svg?repos=ttsds/ttsds&type=Date" style="width:45em">
+
 TTSDS is a comprehensive benchmark for evaluating the quality of synthetic speech in Text-to-Speech (TTS) systems. It assesses multiple aspects of speech quality including prosody, speaker identity, and intelligibility by comparing synthetic speech with both real speech and noise datasets.
 
 ## Version 2.1.0
@@ -158,6 +160,7 @@ Results can be saved to a CSV file for further analysis.
 }
 
 ```
+
 
 ## License
 
