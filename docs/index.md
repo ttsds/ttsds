@@ -46,13 +46,13 @@ TTSDS gives a more comprehensive and nuanced evaluation of synthetic speech than
 
 ```bibtex
 @inproceedings{minixhofer2024ttsds,
-  title={{TTSDS} - Text-to-Speech Distribution Score},
+  title={TTSDS - Text-to-Speech Distribution Score},
   author={Minixhofer, Christoph and Klejch, Ond{\v{r}}ej and Bell, Peter},
   booktitle={SLT},
   year={2024},
 }
 @misc{minixhofer2025ttsds2,
-      title={{TTSDS2}: Resources and Benchmark for Evaluating Human-Quality Text to Speech Systems}, 
+      title={TTSDS2: Resources and Benchmark for Evaluating Human-Quality Text to Speech Systems}, 
       author={Christoph Minixhofer and Ond{\v{r}}ej Klejch and Peter Bell},
       year={2025},
       eprint={2506.19441},
