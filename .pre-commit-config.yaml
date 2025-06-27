@@ -1,0 +1,37 @@
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.5.0
+    hooks:
+      - id: trailing-whitespace
+      - id: end-of-file-fixer
+      - id: check-yaml
+      - id: check-added-large-files
+
+  - repo: https://github.com/psf/black
+    rev: 24.2.0
+    hooks:
+      - id: black
+
+  - repo: https://github.com/pycqa/isort
+    rev: 5.13.2
+    hooks:
+      - id: isort
+        args: ["--profile", "black"]
+
+  - repo: local
+    hooks:
+      - id: tests
+        name: run tests
+        entry: python tests/run_tests.py tests/unit
+        language: system
+        pass_filenames: false
+        types: [python]
+        stages: [commit]
+
+      - id: update-badges
+        name: update test badges
+        entry: python scripts/generate_badges.py
+        language: system
+        pass_filenames: false
+        types: [python]
+        stages: [push] 

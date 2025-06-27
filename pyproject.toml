@@ -41,7 +41,7 @@ dependencies = [
   "transformers>=4.0.0",
   "voicerestore-fork>=0.1.0",
   "wespeaker-unofficial>=0.0.1",
-  "phonemizer>=3.0.0",
+  "phonemizer-fork>=3.3.0",
 ]
 
 [project.urls]
@@ -64,10 +64,11 @@ exclude = [
   "src/ttsds/data"
 ]
 
-[tool.hatch.envs.types]
-extra-dependencies = [
+[project.optional-dependencies]
+dev = [
   "mypy>=1.0.0",
   "pytest>=6.0.0",
+  "pytest-cov>=4.0.0",
   "black>=24.1.0",
   "isort>=5.13.0",
   "flake8>=7.0.0",
@@ -106,6 +107,12 @@ exclude = [".git", "__pycache__", "build", "dist"]
 
 [tool.pylint.messages_control]
 disable = ["C0111", "C0103", "C0303", "W0311", "W0603", "W0621", "R0903", "R0913", "R0914"]
+
+[tool.pytest.ini_options]
+pythonpath = "src"
+addopts = [
+    "--import-mode=importlib",
+]
 
 [tool.mypy]
 python_version = "3.8"

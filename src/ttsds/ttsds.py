@@ -47,11 +47,11 @@ from rich.layout import Layout
 from ttsds.benchmarks.benchmark import DeviceSupport
 from ttsds.benchmarks.environment.voicerestore import VoiceRestoreBenchmark
 from ttsds.benchmarks.environment.wada_snr import WadaSNRBenchmark
-from ttsds.benchmarks.general.hubert import HubertBenchmark
-from ttsds.benchmarks.general.mhubert import MHubert147Benchmark
-from ttsds.benchmarks.general.wav2vec2 import Wav2Vec2Benchmark
-from ttsds.benchmarks.general.wav2vec2_xlsr import Wav2Vec2XLSRBenchmark
-from ttsds.benchmarks.general.wavlm import WavLMBenchmark
+from ttsds.benchmarks.generic.hubert import HubertBenchmark
+from ttsds.benchmarks.generic.mhubert import MHubert147Benchmark
+from ttsds.benchmarks.generic.wav2vec2 import Wav2Vec2Benchmark
+from ttsds.benchmarks.generic.wav2vec2_xlsr import Wav2Vec2XLSRBenchmark
+from ttsds.benchmarks.generic.wavlm import WavLMBenchmark
 from ttsds.benchmarks.intelligibility.w2v2_activations import (
     Wav2Vec2ActivationsBenchmark,
 )
@@ -80,6 +80,7 @@ from ttsds.benchmarks.speaker.dvector import DVectorBenchmark
 from ttsds.benchmarks.benchmark import BenchmarkCategory
 from ttsds.util.dataset import Dataset, TarDataset
 from ttsds.util.cache import CACHE_DIR
+from ttsds.util.parallel_distances import DistanceCalculator
 
 # we do this to avoid "some weights of the model checkpoint at ... were not used when initializing" warnings
 logging.set_verbosity_error()
@@ -169,6 +170,18 @@ class BenchmarkSuite:
     computes aggregate scores. It supports parallel computation of distances
     for improved performance.
 
+    Attributes:
+        benchmarks (Dict[str, "Benchmark"]): Dictionary of benchmark instances to run
+        datasets (List[Dataset]): List of datasets to evaluate
+        reference_datasets (List[Dataset]): List of reference datasets for comparison
+        noise_datasets (List[Dataset]): List of noise datasets for normalization
+        category_weights (Dict[BenchmarkCategory, float]): Weights for each benchmark category
+        skip_errors (bool): Whether to skip errors during benchmark execution
+        write_to_file (Optional[str]): Path to write results to
+        device (str): Device to run benchmarks on ('cpu' or 'cuda')
+        cache_dir (Optional[str]): Directory to store cached results
+        n_workers (int): Number of parallel workers for distance computation
+
     Examples:
         # Basic usage
         suite = BenchmarkSuite(datasets, reference_datasets)
@@ -193,14 +206,32 @@ class BenchmarkSuite:
             BenchmarkCategory.ENVIRONMENT: 0.0,
         },
         skip_errors: bool = False,
-        write_to_file: str = None,
-        benchmark_kwargs: dict = {},
+        write_to_file: Optional[str] = None,
+        benchmark_kwargs: Dict[str, Dict[str, any]] = {},
         device: str = "cpu",
         cache_dir: Optional[str] = None,
         include_environment: bool = False,
         multilingual: bool = False,
         n_workers: int = cpu_count(),
     ):
+        """
+        Initialize the BenchmarkSuite.
+
+        Args:
+            datasets: List of datasets to evaluate
+            reference_datasets: List of reference datasets to compare against
+            noise_datasets: List of noise datasets for normalization
+            benchmarks: Dictionary of benchmark instances to run
+            category_weights: Weights for each benchmark category
+            skip_errors: Whether to skip errors during benchmark execution
+            write_to_file: Path to write results to
+            benchmark_kwargs: Additional keyword arguments for benchmarks
+            device: Device to run benchmarks on ('cpu' or 'cuda')
+            cache_dir: Directory to store cached results
+            include_environment: Whether to include environment benchmarks
+            multilingual: Whether to use multilingual benchmarks
+            n_workers: Number of parallel workers for distance computation
+        """
         if multilingual and benchmarks == BENCHMARKS:
             benchmarks = BENCHMARKS_ML
             print("Using multilingual benchmarks")
@@ -223,7 +254,8 @@ class BenchmarkSuite:
                 reference_datasets[0].sample(min(100, len(reference_datasets[0])))
             ]
         self.benchmarks = {
-            k: v(**benchmark_kwargs.get(k, {})) for k, v in benchmarks.items()
+            k: v(**benchmark_kwargs.get(k, {})) if isinstance(v, type) else v
+            for k, v in benchmarks.items()
         }
         if not include_environment:
             self.benchmarks = {
@@ -250,27 +282,32 @@ class BenchmarkSuite:
                 "reference_dataset",
             ]
         )
+        self.reference_datasets = reference_datasets
+        self.noise_datasets = noise_datasets
         self.category_weights = category_weights
         self.skip_errors = skip_errors
-        self.noise_datasets = noise_datasets
-        self.reference_datasets = reference_datasets
-        self.cache_dir = cache_dir or os.getenv(
-            "TTSDS_CACHE_DIR", os.path.expanduser("~/.ttsds_cache")
-        )
         self.write_to_file = write_to_file
-        self.n_workers = n_workers
-        os.makedirs(self.cache_dir, exist_ok=True)
-        self._setup_caching()
-        self._progress = None
-        self._progress_table = None
-        self._main_task = None
-        self._live = None
-        self._layout = None
-        if self.write_to_file is not None and Path(self.write_to_file).exists():
-            self.database = pd.read_csv(self.write_to_file)
+        self.cache_dir = cache_dir
 
-    def _setup_caching(self):
-        """Setup caching for benchmark distributions."""
+        # Create a distance calculator with n_workers
+        self.distance_calculator = DistanceCalculator(n_workers=n_workers)
+        self.n_workers = n_workers
+
+        # Live display setup for rich console output
+        self.live = None
+        self.layout = None
+        self._progress = None
+        self._progress_task = None
+        self._task_info = {}
+        self._finished_tasks = 0
+        self._total_tasks = 0
+        self._setup_caching()
+
+    def _setup_caching(self) -> None:
+        """
+        Set up caching for the benchmark suite.
+        Creates necessary directories if they don't exist.
+        """
         self.distribution_cache = {}
         self.cache_file = os.path.join(self.cache_dir, "distribution_cache.pkl")
         if os.path.exists(self.cache_file):
@@ -281,12 +318,31 @@ class BenchmarkSuite:
                 self.distribution_cache = {}
 
     def _get_cache_key(self, benchmark: "Benchmark", dataset: Dataset) -> str:
-        """Generate a unique cache key for a benchmark and dataset combination."""
+        """
+        Generate a cache key for a benchmark-dataset pair.
+
+        Args:
+            benchmark: The benchmark instance
+            dataset: The dataset instance
+
+        Returns:
+            str: The cache key string
+        """
         key_data = f"{benchmark.name}_{dataset.name}_{dataset.root_dir}"
         return hashlib.md5(key_data.encode()).hexdigest()
 
     def _get_distribution(self, benchmark: "Benchmark", dataset: Dataset) -> np.ndarray:
-        """Get distribution with caching."""
+        """
+        Get the distribution of a benchmark on a dataset.
+        Uses caching when available.
+
+        Args:
+            benchmark: The benchmark instance
+            dataset: The dataset instance
+
+        Returns:
+            np.ndarray: The distribution
+        """
         cache_key = self._get_cache_key(benchmark, dataset)
         if cache_key in self.distribution_cache:
             return self.distribution_cache[cache_key]
@@ -300,13 +356,18 @@ class BenchmarkSuite:
 
         return distribution
 
-    def _setup_progress(self, total_tasks: int):
-        """Setup the progress display with both table and progress bars."""
+    def _setup_progress(self, total_tasks: int) -> None:
+        """
+        Set up the progress tracking for the benchmark suite.
+
+        Args:
+            total_tasks: Total number of tasks to track
+        """
         console = Console()
 
         # Create layout
-        self._layout = Layout()
-        self._layout.split_column(
+        self.layout = Layout()
+        self.layout.split_column(
             Layout(name="table", size=20),
             Layout(name="progress", size=3),
             Layout(name="log", size=10),  # Add a new section for log messages
@@ -339,7 +400,7 @@ class BenchmarkSuite:
             TimeRemainingColumn(),
             console=console,
         )
-        self._main_task = self._progress.add_task(
+        self._progress_task = self._progress.add_task(
             "[cyan]Running benchmarks...", total=total_tasks
         )
 
@@ -350,29 +411,32 @@ class BenchmarkSuite:
         log_panel = Panel("", title="Log Messages", border_style="green")
 
         # Update layout with components
-        self._layout["table"].update(
+        self.layout["table"].update(
             Panel(self._progress_table, title="Benchmark Progress", border_style="blue")
         )
-        self._layout["progress"].update(self._progress)
-        self._layout["log"].update(log_panel)
+        self.layout["progress"].update(self._progress)
+        self.layout["log"].update(log_panel)
 
         # Store reference to log panel for updates
         self._log_panel = log_panel
 
         # Start the live display
-        self._live = Live(
-            self._layout,
+        self.live = Live(
+            self.layout,
             console=console,
             refresh_per_second=4,  # Limit refresh rate to reduce flickering
             vertical_overflow="visible",
         )
-        self._live.start()
+        self.live.start()
 
-    def _update_progress(self):
-        """Update the progress display based on the current database state."""
+    def _update_progress(self) -> None:
+        """
+        Update the progress display with current task information.
+        Updates the rich live display with benchmark status.
+        """
         if self._progress and self._progress_table:
             # Update main progress
-            self._progress.advance(self._main_task)
+            self._progress.advance(self._progress_task)
 
             # Rebuild the table from scratch
             new_table = Table(show_header=True, header_style="bold magenta")
@@ -403,16 +467,18 @@ class BenchmarkSuite:
                 )
 
             # Update the layout with the new table
-            self._layout["table"].update(
+            self.layout["table"].update(
                 Panel(new_table, title="Benchmark Progress", border_style="blue")
             )
-            self._layout["progress"].update(self._progress)
+            self.layout["progress"].update(self._progress)
 
-    def _stop_progress(self):
-        """Stop and cleanup the progress display."""
-        if "_live" in self.__dict__ and self._live:
+    def _stop_progress(self) -> None:
+        """
+        Stop the progress tracking and clean up resources.
+        """
+        if hasattr(self, "live") and self.live:
             # Clear the live display
-            self._live.stop()
+            self.live.stop()
 
             # Clear the console to remove the progress display
             console = Console()
@@ -424,22 +490,24 @@ class BenchmarkSuite:
             console.print(f"[green]Completed {completed}/{total} benchmarks[/green]")
 
         # Clean up other components
-        if "_progress" in self.__dict__ and self._progress:
+        if hasattr(self, "_progress") and self._progress:
             self._progress.stop()
             self._progress = None
         self._progress_table = None
-        self._main_task = None
+        self._progress_task = None
         self._log_panel = None  # Clean up log panel reference
-        self._log_messages = []  # Clean up log messages
-        self._layout = None
+        if hasattr(self, "_log_messages"):
+            self._log_messages = []  # Clean up log messages
+        self.layout = None
 
-    def log_message(self, message: str):
-        """Add a message to the log panel.
+    def log_message(self, message: str) -> None:
+        """
+        Log a message to the console.
 
         Args:
-            message: The message to add to the log panel
+            message: The message to log
         """
-        if self._live and hasattr(self, "_log_panel"):
+        if self.live and hasattr(self, "_log_panel"):
             # Add new message to the history
             if not hasattr(self, "_log_messages"):
                 self._log_messages = []
@@ -464,10 +532,21 @@ class BenchmarkSuite:
             self._log_panel.renderable = display_text
 
             # Update the layout
-            self._layout["log"].update(self._log_panel)
+            self.layout["log"].update(self._log_panel)
 
-    def _run_benchmark(self, benchmark: "Benchmark", dataset: Dataset) -> dict:
-        """Run a single benchmark and return its results."""
+    def _run_benchmark(
+        self, benchmark: "Benchmark", dataset: Dataset
+    ) -> Dict[str, any]:
+        """
+        Run a benchmark on a dataset.
+
+        Args:
+            benchmark: The benchmark to run
+            dataset: The dataset to evaluate
+
+        Returns:
+            Dict[str, any]: Result data including scores and timing information
+        """
         console = Console()
 
         try:
@@ -522,6 +601,15 @@ class BenchmarkSuite:
                 raise e
 
     def run(self) -> pd.DataFrame:
+        """
+        Run all benchmarks on all datasets.
+
+        This method runs all configured benchmarks on all datasets, computes scores
+        by comparing with reference datasets, and normalizes scores using noise datasets.
+
+        Returns:
+            pd.DataFrame: DataFrame containing benchmark results
+        """
         console = Console()
         tasks = []
         num_tasks = 0
@@ -544,7 +632,7 @@ class BenchmarkSuite:
 
         if num_tasks > len(tasks):
             for i in range(num_tasks - len(tasks)):
-                self._progress.advance(self._main_task)
+                self._progress.advance(self._progress_task)
 
         if not tasks:
             console.print("[green]All benchmarks have already been run![/green]")
@@ -580,8 +668,13 @@ class BenchmarkSuite:
 
         return self.database
 
-    def _update_database(self, result: dict) -> None:
-        """Helper method to update the database with new results."""
+    def _update_database(self, result: Dict[str, any]) -> None:
+        """
+        Update the results database with a new benchmark result.
+
+        Args:
+            result: Benchmark result data to add to the database
+        """
         self.database = pd.concat(
             [self.database, pd.DataFrame(result)],
             ignore_index=True,
@@ -598,6 +691,16 @@ class BenchmarkSuite:
         self._update_progress()
 
     def aggregate_df(self, df: pd.DataFrame) -> pd.DataFrame:
+        """
+        Aggregate benchmark results by category and dataset.
+
+        Args:
+            df: DataFrame containing benchmark results
+
+        Returns:
+            pd.DataFrame: Aggregated results
+        """
+
         def concat_text(x):
             return ", ".join(x)
 
@@ -692,11 +795,29 @@ class BenchmarkSuite:
         return df_final
 
     def get_aggregated_results(self) -> pd.DataFrame:
+        """
+        Get the aggregated results from the current database.
+
+        Returns:
+            pd.DataFrame: Aggregated benchmark results
+        """
         df = self.database.copy()
         return self.aggregate_df(df)
 
-    def stop(self):
+    def stop(self) -> None:
+        """
+        Stop the benchmark suite and clean up resources.
+        """
         self._stop_progress()
 
-    def __del__(self):
+    def __del__(self) -> None:
+        """
+        Clean up resources when the benchmark suite is deleted.
+        """
         self._stop_progress()
+
+    def _setup_layout(self) -> None:
+        """
+        Set up the layout for the progress display.
+        """
+        pass  # This will be implemented when the suite is run

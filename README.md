@@ -1,6 +1,6 @@
 # TTSDS - Text-to-Speech Distribution Score
 
-[![PyPI - Version](https://img.shields.io/pypi/v/ttsds.svg)](https://pypi.org/project/ttsds)
+[![PyPI - Version](https://img.shields.io/pypi/v/ttsds.svg)](https://pypi.org/project/ttsds) [![Tests](https://raw.githubusercontent.com/ttsds/ttsds/main/docs/assets/img/tests.svg)](https://github.com/ttsds/ttsds/actions) [![Coverage](https://raw.githubusercontent.com/ttsds/ttsds/main/docs/assets/img/coverage.svg)](https://github.com/ttsds/ttsds/actions)
 
 TTSDS is a comprehensive benchmark for evaluating the quality of synthetic speech in Text-to-Speech (TTS) systems. It assesses multiple aspects of speech quality including prosody, speaker identity, and intelligibility by comparing synthetic speech with both real speech and noise datasets.
 
@@ -46,6 +46,19 @@ pip install ttsds
 If you encounter dependency conflicts with fairseq, use this fork:
 ```bash
 pip install git+https://github.com/MiniXC/fairseq-noconf
+```
+
+### Development Installation
+
+For development, install with the dev extras:
+
+```bash
+# Clone the repository
+git clone https://github.com/ttsds/ttsds.git
+cd ttsds
+
+# Install with development dependencies
+pip install -e ".[dev]"
 ```
 
 ## Usage
@@ -146,6 +159,43 @@ The benchmark results include:
 - Reference and noise dataset information
 
 Results can be saved to a CSV file for further analysis.
+
+## Development
+
+### Running Tests
+
+TTSDS includes a comprehensive test suite covering its functionality:
+
+```bash
+# Run all tests
+cd ttsds
+./tests/run_tests.py
+
+# Run specific test modules or classes
+./tests/run_tests.py tests/unit/benchmarks/test_benchmark.py
+./tests/run_tests.py tests/unit/test_ttsds.py::test_benchmark_suite_init
+
+# Run with coverage report
+./tests/run_tests.py --cov-report=html
+```
+
+The test suite uses pytest and includes:
+- Unit tests for individual components
+- Integration tests for the full system
+- Test coverage reporting
+
+### Documentation
+
+The API documentation is automatically generated from docstrings using mkdocstrings:
+
+```bash
+# Build the documentation
+pip install -e ".[dev]"
+mkdocs build
+
+# Serve the documentation locally
+mkdocs serve
+```
 
 ## Citation
 

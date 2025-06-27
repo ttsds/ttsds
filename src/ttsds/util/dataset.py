@@ -1,5 +1,12 @@
 """
-The `DirectoryDataset` class is a dataset class for a directory containing wav files and corresponding text files.
+Dataset classes for handling audio data from different sources.
+
+This module provides a set of classes for working with audio datasets:
+- Dataset: Abstract base class for all dataset types
+- DirectoryDataset: Dataset from a directory of WAV files
+- TarDataset: Dataset from a TAR archive containing WAV files
+- WavListDataset: Dataset from explicit lists of WAV and text files
+- DataDistribution: Helper class to compute distributions across datasets
 """
 
 from abc import ABC, abstractmethod
@@ -7,7 +14,7 @@ from copy import deepcopy
 import hashlib
 from pathlib import Path
 import tarfile
-from typing import Tuple, List, Dict, Union, Optional
+from typing import Tuple, List, Dict, Union, Optional, Any, Iterator, TypeVar, cast
 import pickle
 import gzip
 
@@ -25,29 +32,62 @@ from rich.console import Console
 
 from ttsds.util.cache import cache, check_cache, load_cache, hash_md5
 
+# Type variable for self-referencing return types
+T = TypeVar("T", bound="Dataset")
+
 
 class Dataset(ABC):
     """
-    Abstract class for a dataset.
+    Abstract base class for all dataset types.
+
+    This class defines the interface that all dataset implementations must follow
+    and provides common functionality for dataset operations.
+
+    Attributes:
+        sample_rate (int): Sampling rate for audio in Hz
+        wavs (List[Any]): List of audio file references
+        has_text (bool): Whether this dataset has associated text
+        texts (List[Any]): List of text file references (if has_text is True)
+        sample_params (Dict[str, Any]): Parameters used for sampling
+        name (str): Name of the dataset
+        indices (Optional[np.ndarray]): Indices for sampling subset of data
+        _progress (Optional[Progress]): Progress bar for dataset iteration
+        _progress_task: Task ID for the progress bar
     """
 
-    def __init__(self, name, sample_rate: int = 22050, has_text: bool = False):
+    def __init__(self, name: str, sample_rate: int = 22050, has_text: bool = False):
+        """
+        Initialize a dataset.
+
+        Args:
+            name: Name of the dataset
+            sample_rate: Sampling rate for audio in Hz
+            has_text: Whether this dataset has associated text
+        """
         self.sample_rate = sample_rate
-        self.wavs = []
+        self.wavs: List[Any] = []
         self.has_text = has_text
         if has_text:
-            self.texts = []
-        self.sample_params = {
+            self.texts: List[Any] = []
+        self.sample_params: Dict[str, Optional[int]] = {
             "n": None,
             "seed": None,
         }
         self.name = name
-        self.indices = None
+        self.indices: Optional[np.ndarray] = None
         self._progress: Optional[Progress] = None
         self._progress_task = None
 
-    def _setup_progress(self, total: int, description: str = "Processing dataset"):
-        """Setup progress tracking for dataset iteration."""
+    def _setup_progress(
+        self, total: int, description: str = "Processing dataset"
+    ) -> None:
+        """
+        Setup progress tracking for dataset iteration.
+
+        Args:
+            total: Total number of items to process
+            description: Description for the progress bar
+        """
         if self._progress is None:
             self._progress = Progress(
                 SpinnerColumn(),
@@ -61,28 +101,57 @@ class Dataset(ABC):
             self._progress.start()
             self._progress_task = self._progress.add_task(description, total=total)
 
-    def _update_progress(self, advance: int = 1):
-        """Update the progress bar."""
+    def _update_progress(self, advance: int = 1) -> None:
+        """
+        Update the progress bar.
+
+        Args:
+            advance: Number of steps to advance
+        """
         if self._progress and self._progress_task is not None:
             self._progress.update(self._progress_task, advance=advance)
 
-    def _stop_progress(self):
-        """Stop and cleanup the progress bar."""
+    def _stop_progress(self) -> None:
+        """
+        Stop and cleanup the progress bar.
+        """
         if self._progress:
             self._progress.stop()
             self._progress = None
             self._progress_task = None
 
-    def __enter__(self):
-        """Context manager entry."""
+    def __enter__(self) -> "Dataset":
+        """
+        Context manager entry.
+
+        Returns:
+            self: The dataset instance
+        """
         return self
 
-    def __exit__(self, exc_type, exc_val, exc_tb):
-        """Context manager exit."""
+    def __exit__(self, exc_type: Any, exc_val: Any, exc_tb: Any) -> None:
+        """
+        Context manager exit.
+
+        Args:
+            exc_type: Exception type if an exception was raised
+            exc_val: Exception value if an exception was raised
+            exc_tb: Exception traceback if an exception was raised
+        """
         self._stop_progress()
 
-    def iter_with_progress(self, benchmark: "Benchmark"):
-        """Iterate over the dataset with a progress bar."""
+    def iter_with_progress(
+        self, benchmark: "Benchmark"
+    ) -> Iterator[Tuple[np.ndarray, Optional[str]]]:
+        """
+        Iterate over the dataset with a progress bar.
+
+        Args:
+            benchmark: The benchmark being run on this dataset
+
+        Yields:
+            Tuple containing audio data and optional text
+        """
         # e.g. LibriTTS -> PROSODY -> MPM (with different colors for different categories)
         if benchmark.category.name == "PROSODY":
             color = "cyan"
@@ -114,29 +183,30 @@ class Dataset(ABC):
         raise NotImplementedError
 
     @abstractmethod
-    def __getitem__(self, idx: int) -> Union[Tuple[np.ndarray, str], np.ndarray]:
+    def __getitem__(self, idx: int) -> Tuple[np.ndarray, Optional[str]]:
         """
         Get a sample from the dataset.
 
         Args:
-            idx (int): The index of the sample.
+            idx: The index of the sample.
 
         Returns:
-            Tuple[np.ndarray, str]: The audio and text of the sample.
-            np.ndarray: The audio of the sample, if the dataset does not have text.
+            Tuple containing:
+                - np.ndarray: The audio data
+                - Optional[str]: The text of the sample (None if has_text is False)
         """
         raise NotImplementedError
 
-    def sample(self, n: int, seed: int = 42) -> "DirectoryDataset":
+    def sample(self, n: int, seed: int = 42) -> T:
         """
         Sample n samples from the dataset.
 
         Args:
-            n (int): The number of samples to sample.
-            seed (int): The seed for the random number generator.
+            n: The number of samples to sample.
+            seed: The seed for the random number generator.
 
         Returns:
-            DirectoryDataset: A sampled dataset.
+            A new dataset containing only the sampled items
         """
         rng = np.random.default_rng(seed)
         self.indices = rng.choice(len(self), size=n, replace=False)
@@ -144,6 +214,12 @@ class Dataset(ABC):
         return self
 
     def __repr__(self) -> str:
+        """
+        String representation of the dataset.
+
+        Returns:
+            str: String representation including name and sample info
+        """
         sample_info = ""
         if self.sample_params["n"] is not None:
             sample_info = f", samples={self.sample_params['n']} (seed={self.sample_params['seed']})"
@@ -152,21 +228,41 @@ class Dataset(ABC):
 
 class DirectoryDataset(Dataset):
     """
-    A dataset class for a directory containing
-    with wav files and corresponding text files.
+    A dataset class for a directory containing WAV files and corresponding text files.
+
+    This dataset loads audio data from WAV files in a directory and optionally
+    the corresponding text from matching text files.
+
+    Attributes:
+        root_dir (Path): Root directory containing the audio files
     """
 
     def __init__(
         self,
-        root_dir: str = None,
+        root_dir: Optional[str] = None,
         sample_rate: int = 22050,
         has_text: bool = False,
         text_suffix: str = ".txt",
-        name: str = None,
+        name: Optional[str] = None,
     ):
+        """
+        Initialize a directory dataset.
+
+        Args:
+            root_dir: Path to the directory containing WAV files
+            sample_rate: Sampling rate for audio in Hz
+            has_text: Whether to load text files
+            text_suffix: Suffix for text files
+            name: Optional name for the dataset (defaults to directory name)
+
+        Raises:
+            ValueError: If root_dir is None
+        """
         if name is not None:
             super().__init__(name, sample_rate, has_text)
         else:
+            if root_dir is None:
+                raise ValueError("root_dir must be provided.")
             super().__init__(Path(root_dir).name, sample_rate, has_text)
         if root_dir is None:
             raise ValueError("root_dir must be provided.")
@@ -183,11 +279,28 @@ class DirectoryDataset(Dataset):
             self.texts = texts
 
     def __len__(self) -> int:
+        """
+        Get the number of samples in the dataset.
+
+        Returns:
+            int: Number of samples
+        """
         if self.indices is not None:
             return len(self.indices)
         return len(self.wavs)
 
-    def __getitem__(self, idx: int) -> Tuple[np.ndarray, str]:
+    def __getitem__(self, idx: int) -> Tuple[np.ndarray, Optional[str]]:
+        """
+        Get a sample from the dataset.
+
+        Args:
+            idx: Index of the sample
+
+        Returns:
+            Tuple containing:
+                - np.ndarray: Audio data
+                - Optional[str]: Text data (None if has_text is False)
+        """
         if self.indices is not None:
             idx = self.indices[idx]
         wav, sr = self.wavs[idx], self.sample_rate
@@ -215,6 +328,12 @@ class DirectoryDataset(Dataset):
         return audio, None
 
     def __hash__(self) -> int:
+        """
+        Compute a hash value for the dataset.
+
+        Returns:
+            int: Hash value
+        """
         h = hashlib.md5()
         h.update(str(self.__class__).encode())
         h.update(str(self.root_dir).encode())
@@ -224,6 +343,12 @@ class DirectoryDataset(Dataset):
         return int(h.hexdigest(), 16)
 
     def __repr__(self) -> str:
+        """
+        String representation of the directory dataset.
+
+        Returns:
+            str: String representation
+        """
         sample_info = ""
         if self.sample_params["n"] is not None:
             sample_info = f", samples={self.sample_params['n']} (seed={self.sample_params['seed']})"
@@ -232,19 +357,39 @@ class DirectoryDataset(Dataset):
 
 class TarDataset(Dataset):
     """
-    A dataset class for a tar file containing
-    with wav files and corresponding text files.
+    A dataset class for a TAR archive containing WAV files and corresponding text files.
+
+    This dataset loads audio data from WAV files in a TAR archive and optionally
+    the corresponding text from matching text files within the archive.
+
+    Attributes:
+        root_tar (str): Path to the TAR archive
+        path_prefix (Optional[str]): Prefix for paths within the archive
     """
 
     def __init__(
         self,
-        root_tar: str = None,
+        root_tar: Optional[str] = None,
         sample_rate: int = 22050,
         has_text: bool = False,
         text_suffix: str = ".txt",
-        path_prefix: str = None,
-        name: str = None,
+        path_prefix: Optional[str] = None,
+        name: Optional[str] = None,
     ):
+        """
+        Initialize a TAR archive dataset.
+
+        Args:
+            root_tar: Path to the TAR archive
+            sample_rate: Sampling rate for audio in Hz
+            has_text: Whether to load text files
+            text_suffix: Suffix for text files
+            path_prefix: Prefix for paths within the archive
+            name: Optional name for the dataset
+
+        Raises:
+            ValueError: If root_tar is None
+        """
         if name is not None:
             super().__init__(name, sample_rate, has_text)
         else:

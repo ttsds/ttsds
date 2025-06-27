@@ -1,10 +1,10 @@
 ---
 description: 
-globs: 
+globs: **/*.py, src/**/*.py, tests/**/*.py
 alwaysApply: false
 ---
 ---
-description: Python best practices and patterns for modern software development with Flask and SQLite
+description: 
 globs: **/*.py, src/**/*.py, tests/**/*.py
 ---
 

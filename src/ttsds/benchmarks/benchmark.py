@@ -1,12 +1,16 @@
 """
-This file contains the Benchmark abstract class.
+This file contains the Benchmark abstract class and related enumerations.
+
+The Benchmark class serves as the base for all benchmark implementations,
+providing common functionality for distribution calculation, distance computation,
+and score normalization.
 """
 
 from abc import ABC, abstractmethod
 from enum import Enum
 import hashlib
 import json
-from typing import List, Union, Optional, Dict, Tuple
+from typing import List, Union, Optional, Dict, Tuple, Callable, Any
 
 import numpy as np
 
@@ -19,6 +23,15 @@ from ttsds.util.parallel_distances import DistanceCalculator
 class BenchmarkCategory(Enum):
     """
     Enum class for the different categories of benchmarks.
+
+    Categories help organize benchmarks by their primary purpose or function.
+
+    Attributes:
+        GENERIC: General purpose benchmarks
+        PROSODY: Benchmarks focused on speech prosody characteristics
+        ENVIRONMENT: Benchmarks related to environmental factors or conditions
+        SPEAKER: Benchmarks for speaker identification or verification
+        INTELLIGIBILITY: Benchmarks related to speech intelligibility
     """
 
     GENERIC = 1
@@ -31,6 +44,12 @@ class BenchmarkCategory(Enum):
 class BenchmarkDimension(Enum):
     """
     Enum class for the different dimensions of benchmarks.
+
+    Dimensions define the shape of data produced by the benchmark.
+
+    Attributes:
+        ONE_DIMENSIONAL: The benchmark produces a 1D array of values
+        N_DIMENSIONAL: The benchmark produces a multi-dimensional array (or matrix)
     """
 
     ONE_DIMENSIONAL = 1
@@ -40,6 +59,12 @@ class BenchmarkDimension(Enum):
 class DeviceSupport(Enum):
     """
     Enum class for the different device support of benchmarks.
+
+    Defines what compute devices a benchmark can utilize.
+
+    Attributes:
+        CPU: The benchmark can run on CPU
+        GPU: The benchmark can run on GPU
     """
 
     CPU = 1
@@ -49,6 +74,21 @@ class DeviceSupport(Enum):
 class Benchmark(ABC):
     """
     Abstract class for a benchmark.
+
+    A benchmark is a method to evaluate some aspect of a dataset of audio samples.
+    Each benchmark produces a distribution of values that can be compared
+    between datasets to measure similarity or quality.
+
+    Attributes:
+        name (str): Name of the benchmark
+        key (str): Normalized key for the benchmark
+        category (BenchmarkCategory): Category this benchmark belongs to
+        dimension (BenchmarkDimension): Data dimension produced by the benchmark
+        description (str): Description of what the benchmark measures
+        version (Optional[str]): Version identifier for the benchmark
+        supported_devices (List[DeviceSupport]): Compute devices supported by this benchmark
+        device (str): Current device the benchmark is running on
+        logger (Optional[Callable[[str], None]]): Function to log messages
     """
 
     def __init__(
@@ -59,8 +99,20 @@ class Benchmark(ABC):
         description: str,
         version: Optional[str] = None,
         supported_devices: List[DeviceSupport] = [DeviceSupport.CPU],
-        **kwargs,
+        **kwargs: Any,
     ):
+        """
+        Initialize a benchmark.
+
+        Args:
+            name: Name of the benchmark
+            category: Category this benchmark belongs to
+            dimension: Data dimension produced by the benchmark
+            description: Description of what the benchmark measures
+            version: Version identifier for the benchmark
+            supported_devices: Compute devices supported by this benchmark
+            **kwargs: Additional parameters for the benchmark
+        """
         self.name = name
         self.key = name.lower().replace(" ", "_")
         self.category = category
@@ -72,17 +124,17 @@ class Benchmark(ABC):
         self.device = "cpu"
         self.logger = None  # Will be set by BenchmarkSuite
 
-    def log(self, message: str):
+    def log(self, message: str) -> None:
         """
         Log a message using the suite's logger if available.
 
         Args:
-            message (str): The message to log
+            message: The message to log
         """
         if self.logger:
             self.logger(f"[{self.category.name}] [{self.name}] {message}")
 
-    def set_logger(self, logger_func):
+    def set_logger(self, logger_func: Callable[[str], None]) -> None:
         """
         Set the logger function for this benchmark.
 
@@ -93,12 +145,23 @@ class Benchmark(ABC):
 
     def get_distribution(self, dataset: Union[Dataset, DataDistribution]) -> np.ndarray:
         """
-        Abstract method to get the distribution of the benchmark.
-        If the benchmark is one-dimensional, the method should return a
+        Get the distribution of the benchmark for a dataset.
+
+        This method handles caching of distributions and delegates to
+        the implementation-specific _get_distribution method.
+
+        If the benchmark is one-dimensional, the method returns a
         numpy array with the values of the benchmark for each sample in the dataset.
-        If the benchmark is n-dimensional, the method should return a numpy array
-        with the values of the benchmark for each sample in the dataset, where each
-        row corresponds to a sample and each column corresponds to a dimension of the benchmark.
+
+        If the benchmark is n-dimensional, the method returns a tuple of
+        (mean, covariance) representing the distribution.
+
+        Args:
+            dataset: The dataset to compute the distribution for
+
+        Returns:
+            np.ndarray: For one-dimensional benchmarks, an array of values
+            Tuple[np.ndarray, np.ndarray]: For n-dimensional benchmarks, (mean, covariance)
         """
         ds_hash = hash_md5(dataset)
         benchmark_hash = hash_md5(self)
@@ -158,15 +221,35 @@ class Benchmark(ABC):
         return distribution
 
     @abstractmethod
-    def _get_distribution(self, dataset: Dataset) -> np.ndarray:
+    def _get_distribution(
+        self, dataset: Dataset
+    ) -> Union[np.ndarray, Tuple[np.ndarray, np.ndarray]]:
         """
         Abstract method to get the distribution of the benchmark.
+
+        This method must be implemented by all benchmark subclasses.
+
+        Args:
+            dataset: The dataset to compute the distribution for
+
+        Returns:
+            np.ndarray: For one-dimensional benchmarks, an array of values
+            Tuple[np.ndarray, np.ndarray]: For n-dimensional benchmarks, (mean, covariance)
+
+        Raises:
+            NotImplementedError: If the subclass does not implement this method
         """
         raise NotImplementedError
 
-    def to_device(self, device: str):
+    def to_device(self, device: str) -> None:
         """
         Move the benchmark to a device.
+
+        Args:
+            device: The device to move to ("cpu" or "cuda")
+
+        Raises:
+            ValueError: If the device is not supported or invalid
         """
         if device not in ["cpu", "cuda"]:
             raise ValueError("Invalid device")
@@ -175,19 +258,46 @@ class Benchmark(ABC):
                 raise ValueError("Benchmark does not support CUDA")
         self._to_device(device)
 
-    def _to_device(self, device: str):
+    def _to_device(self, device: str) -> None:
         """
         Abstract method to move the benchmark to a device.
+
+        This method should be implemented by benchmarks that support
+        running on different devices.
+
+        Args:
+            device: The device to move to ("cpu" or "cuda")
         """
         raise NotImplementedError
 
     def __str__(self) -> str:
+        """
+        String representation of the benchmark.
+
+        Returns:
+            str: String representation in format "Category/Name"
+        """
         return f"{self.category.name}/{self.name}"
 
-    def __repr__(self):
-        return f"{self.category.name}/{self.name}"
+    def __repr__(self) -> str:
+        """
+        Representation of the benchmark.
+
+        Returns:
+            str: String representation including category, name and version
+        """
+        version_str = f", version='{self.version}'" if self.version else ""
+        return f"{self.category.name}/{self.name}{version_str}"
 
     def __hash__(self) -> int:
+        """
+        Compute a hash value for the benchmark.
+
+        Used for caching and comparison.
+
+        Returns:
+            int: Hash value
+        """
         h = hashlib.md5()
         h.update(self.name.encode())
         h.update(self.category.name.encode())
@@ -211,6 +321,9 @@ class Benchmark(ABC):
     ) -> float:
         """
         Compute the distance between the distributions of the benchmark in two datasets.
+
+        For one-dimensional benchmarks, this uses Wasserstein distance.
+        For n-dimensional benchmarks, this uses Frechet distance.
 
         Args:
             one_dataset: First dataset
@@ -248,18 +361,19 @@ class Benchmark(ABC):
         noise_datasets: List[Dataset],
     ) -> Tuple[float, Tuple[str, str]]:
         """
-        Compute the score of the benchmark on a dataset using parallel computation.
+        Compute a normalized score for a dataset.
+
+        The score is normalized by comparing with reference datasets and noise datasets.
+        A higher score indicates higher similarity to the reference datasets.
 
         Args:
-            dataset: The dataset to compute the score for
-            reference_datasets: List of reference datasets
-            noise_datasets: List of noise datasets
-            n_workers: Number of worker processes to use (default: auto)
+            dataset: The dataset to score
+            reference_datasets: List of reference datasets to compare against
+            noise_datasets: List of noise datasets for normalization
 
         Returns:
-            Tuple containing:
-                - score (float): The computed score
-                - Tuple of (closest_noise_name, closest_reference_name)
+            float: The normalized score (0.0 to 1.0)
+            Tuple[str, str]: The reference and noise dataset names used for normalization
         """
         # Create a distance calculator with logging
         distance_calculator = DistanceCalculator(logger=self.log)

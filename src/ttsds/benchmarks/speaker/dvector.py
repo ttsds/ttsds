@@ -104,7 +104,23 @@ class LogMelspectrogram(nn.Module):
 
 class DVectorBenchmark(Benchmark):
     """
-    Benchmark class for the DVector benchmark.
+    Benchmark class for evaluating speaker identity using the DVector model.
+
+    This benchmark extracts speaker embeddings from audio samples using a pretrained
+    DVector model. DVector is a speaker verification system that can distinguish
+    between different speakers by creating a compact representation (embedding)
+    of the speaker's voice characteristics.
+
+    The benchmark extracts embeddings from sliding windows of audio and can either
+    use the mean embedding per utterance or measure the standard deviation of
+    embeddings across windows in an utterance, depending on the `measure_std` parameter.
+
+    Attributes:
+        wav2mel (Wav2Mel): Mel spectrogram extractor.
+        dvector (torch.jit.ScriptModule): Pretrained DVector model.
+        window_duration (float): Duration of each window in seconds.
+        window_step (float): Step size between consecutive windows in seconds.
+        measure_std (bool): Whether to measure standard deviation of embeddings across windows.
     """
 
     def __init__(
@@ -113,11 +129,26 @@ class DVectorBenchmark(Benchmark):
         window_step: float = 0.5,
         measure_std: bool = False,
     ):
+        """
+        Initialize the DVector benchmark.
+
+        Args:
+            window_duration: Duration of each window in seconds for processing speech.
+                Longer windows capture more context but require more computation.
+                Default is 1.0 second.
+            window_step: Step size between consecutive windows in seconds.
+                Smaller step sizes result in more overlapping windows and more embeddings.
+                Default is 0.5 second.
+            measure_std: If True, calculate the standard deviation of embeddings
+                across windows in an utterance, which measures speaker consistency.
+                If False, return all embeddings from all windows.
+                Default is False.
+        """
         super().__init__(
             name="DVector",
             category=BenchmarkCategory.SPEAKER,
             dimension=BenchmarkDimension.N_DIMENSIONAL,
-            description="The speaker embeddings using DVector.",
+            description="Speaker embeddings using DVector for speaker verification.",
             window_duration=window_duration,
             window_step=window_step,
             measure_std=measure_std,
@@ -128,19 +159,25 @@ class DVectorBenchmark(Benchmark):
         self.window_step = window_step
         self.measure_std = measure_std
 
-    def _get_distribution(self, dataset: Dataset) -> np.ndarray:
+    def _get_distribution(self, dataset: Dataset) -> tuple[np.ndarray, np.ndarray]:
         """
-        Get the distribution of the DVector benchmark.
+        Extract DVector embeddings from audio samples in the dataset.
+
+        This method processes each audio sample in the dataset, extracting
+        sliding windows and computing DVector embeddings for each window.
+        Depending on the configuration, it either returns all embeddings
+        or computes the standard deviation of embeddings across windows.
 
         Args:
-            dataset (Dataset): The dataset to get the distribution from.
+            dataset: The dataset containing audio samples to process.
 
         Returns:
-            np.ndarray: The distribution of the DVector benchmark.
+            tuple[np.ndarray, np.ndarray]: A tuple containing:
+                - Mean of embeddings across all samples
+                - Covariance matrix of embeddings
         """
         embeddings = []
         for wav, _ in dataset.iter_with_progress(self):
-            print(wav)
             window_length = int(self.window_duration * dataset.sample_rate)
             hop_length = int(self.window_step * dataset.sample_rate)
             utt_embeddings = []
@@ -158,5 +195,10 @@ class DVectorBenchmark(Benchmark):
                 embeddings.append(utt_embeddings)
             elif len(utt_embeddings) > 0 and not self.measure_std:
                 embeddings.extend(utt_embeddings)
+
+        # Convert to numpy array and calculate mean and covariance
         embeddings = np.vstack(embeddings)
-        return embeddings
+        mean = np.mean(embeddings, axis=0)
+        cov = np.cov(embeddings, rowvar=False)
+
+        return mean, cov

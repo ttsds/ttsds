@@ -1,14 +1,33 @@
 """
 This module contains functions to calculate distribution distances.
+
+These distance metrics are used to measure the similarity between distributions
+produced by benchmarks across different datasets.
 """
+
+from typing import Tuple, Union
 
 import numpy as np
 from scipy import linalg
 
 
-def wasserstein_distance(x, y):
+def wasserstein_distance(x: np.ndarray, y: np.ndarray) -> float:
     """
-    See: https://en.wikipedia.org/wiki/Wasserstein_metric
+    Calculate the 2-Wasserstein distance between two 1D distributions.
+
+    This implementation uses the sorted samples approach for empirical distributions.
+    To ensure stability, it runs multiple times with different random subsamples
+    when the distributions have different sizes.
+
+    Args:
+        x: First distribution samples
+        y: Second distribution samples
+
+    Returns:
+        float: The Wasserstein distance between the distributions
+
+    Reference:
+        https://en.wikipedia.org/wiki/Wasserstein_metric
     """
     means = []
     np.random.seed(0)
@@ -23,7 +42,28 @@ def wasserstein_distance(x, y):
     return np.mean(means)
 
 
-def frechet_distance(x, y, eps=1e-6):
+def frechet_distance(
+    x: Union[np.ndarray, Tuple[np.ndarray, np.ndarray]],
+    y: Union[np.ndarray, Tuple[np.ndarray, np.ndarray]],
+    eps: float = 1e-6,
+) -> float:
+    """
+    Calculate the Fréchet distance between two multivariate Gaussian distributions.
+
+    The Fréchet distance (also known as Wasserstein-2 distance) measures the
+    similarity between two probability distributions over a feature space.
+
+    Args:
+        x: First distribution (either samples or tuple of (mean, covariance))
+        y: Second distribution (either samples or tuple of (mean, covariance))
+        eps: Small epsilon to add to covariance matrices in case of numerical instability
+
+    Returns:
+        float: The Fréchet distance between the distributions
+
+    Raises:
+        AssertionError: If distributions have incompatible dimensions
+    """
     if isinstance(x, tuple):
         mu1, sigma1 = x
     else:
@@ -72,17 +112,32 @@ def frechet_distance(x, y, eps=1e-6):
 
     result = diff.dot(diff) + np.trace(sigma1) + np.trace(sigma2) - 2 * tr_covmean
 
-    return result
+    return float(result)
 
 
-def frechet_distance_fast(x, y, eps=1e-6):
+def frechet_distance_fast(
+    x: Union[np.ndarray, Tuple[np.ndarray, np.ndarray]],
+    y: Union[np.ndarray, Tuple[np.ndarray, np.ndarray]],
+    eps: float = 1e-6,
+) -> float:
     """
-    Faster implementation of Frechet distance using optimization techniques.
+    Faster implementation of Fréchet distance using optimization techniques.
 
     This implementation includes:
-    1. Optional caching of pre-computed statistics
-    2. Faster matrix operations
-    3. Early return for identical distributions
+    1. Early return for identical distributions
+    2. More efficient matrix operations
+    3. Direct calculation of terms
+
+    Args:
+        x: First distribution (either samples or tuple of (mean, covariance))
+        y: Second distribution (either samples or tuple of (mean, covariance))
+        eps: Small epsilon to add to covariance matrices in case of numerical instability
+
+    Returns:
+        float: The Fréchet distance between the distributions
+
+    Raises:
+        AssertionError: If distributions have incompatible dimensions
     """
     # Extract or compute mean and covariance
     if isinstance(x, tuple):
@@ -149,4 +204,4 @@ def frechet_distance_fast(x, y, eps=1e-6):
     # Compute final result
     result = squared_diff + tr_sigma1 + tr_sigma2 - 2 * tr_covmean
 
-    return result
+    return float(result)

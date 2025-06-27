@@ -37,7 +37,7 @@ markdown_extensions:
       custom_fences:
         - name: mermaid
           class: mermaid
-          format: !!python/name:pymdownx.superfences.fence_code_format
+          format: pymdownx.superfences.fence_code_format
   - admonition
   - footnotes
   - meta
@@ -50,22 +50,22 @@ plugins:
       default_handler: python
       handlers:
         python:
-          selection:
+          options:
             docstring_style: google
-          rendering:
             show_source: true
             show_root_heading: true
             show_category_heading: true
             show_if_no_docstring: true
             show_signature_annotations: true
-            show_signature_return_annotations: true
-            show_bases: true
-            show_submodules: true
+            show_signature: true
             heading_level: 2
             merge_init_into_class: true
             docstring_options:
               trim_doctest_flags: true
               ignore_init_summary: true
+          paths: [src]
+      watch:
+        - src/ttsds
   - gen-files:
       scripts:
         - docs/gen_ref_nav.py
@@ -80,12 +80,28 @@ nav:
     - Configuration: user-guide/configuration.md
     - Advanced Usage: user-guide/advanced.md
   - API Reference:
-    - Benchmarks: reference/benchmarks.md
-    - Utils: reference/utils.md
+    - Overview: reference/SUMMARY.md
+    - Main Module: reference/api/ttsds.md
+    - Benchmarks:
+      - Overview: reference/api/benchmarks/index.md
+      - Base: reference/api/benchmarks/benchmark.md
+      - Speaker: reference/api/benchmarks/speaker/index.md
+      - Prosody: reference/api/benchmarks/prosody/index.md
+      - Intelligibility: reference/api/benchmarks/intelligibility/index.md
+      - Generic: reference/api/benchmarks/generic/index.md
+      - Environment: reference/api/benchmarks/environment/index.md
+    - Utilities:
+      - Overview: reference/api/util/index.md
+      - Cache: reference/api/util/cache.md
+      - Dataset: reference/api/util/dataset.md
+      - Distances: reference/api/util/distances.md
+      - Measures: reference/api/util/measures.md
+      - MPM: reference/api/util/mpm.md
+      - Parallel: reference/api/util/parallel_distances.md
   - Contributing:
     - Development Guide: contributing/development.md
-    - Code Style: contributing/code-style.md
-    - Testing: contributing/testing.md
+    - Coding Style: contributing/coding_style.md
+    - Testing: testing.md
   - About:
     - License: about/license.md
     - Citation: about/citation.md 
