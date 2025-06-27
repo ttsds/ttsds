@@ -13,14 +13,14 @@ Here's a simple example to get started with TTSDS:
 
 ```python
 from ttsds import BenchmarkSuite
-from ttsds.util.dataset import Dataset
+from ttsds.util.dataset import DirectoryDataset
 
 # Initialize datasets
 datasets = [
-    Dataset("path/to/your/dataset", name="your_dataset")
+    DirectoryDataset("path/to/your/dataset", name="your_dataset")
 ]
 reference_datasets = [
-    Dataset("path/to/reference/dataset", name="reference")
+    DirectoryDataset("path/to/reference/dataset", name="reference")
 ]
 
 # Create benchmark suite

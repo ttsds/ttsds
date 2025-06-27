@@ -13,16 +13,16 @@ This example shows how to evaluate and compare multiple TTS systems:
 
 ```python
 from ttsds import BenchmarkSuite
-from ttsds.util.dataset import Dataset
+from ttsds.util.dataset import DirectoryDataset
 
 # Define reference dataset (real speech)
-reference = Dataset("path/to/real_speech", name="reference")
+reference = DirectoryDataset("path/to/real_speech", name="reference")
 
 # Define TTS system outputs
 tts_systems = [
-    Dataset("path/to/system1_output", name="system1"),
-    Dataset("path/to/system2_output", name="system2"),
-    Dataset("path/to/system3_output", name="system3"),
+    DirectoryDataset("path/to/system1_output", name="system1"),
+    DirectoryDataset("path/to/system2_output", name="system2"),
+    DirectoryDataset("path/to/system3_output", name="system3"),
 ]
 
 # Run benchmarks for each system
@@ -54,22 +54,22 @@ You can run specific benchmarks based on your needs:
 
 ```python
 from ttsds import BenchmarkSuite
-from ttsds.benchmarks.speaker import SPKBenchmark
-from ttsds.benchmarks.prosody import PitchBenchmark, DurationBenchmark
-from ttsds.benchmarks.intelligibility import STTBenchmark
+from ttsds.benchmarks.speaker import DVectorBenchmark
+from ttsds.benchmarks.prosody import PitchBenchmark, MPMBenchmark
+from ttsds.benchmarks.intelligibility import Wav2Vec2ActivationsBenchmark
 
 # Run only speaker and prosody benchmarks
 suite = BenchmarkSuite(
     datasets=datasets,
     reference_datasets=reference_datasets,
-    benchmark_classes=[SPKBenchmark, PitchBenchmark, DurationBenchmark],
+    benchmark_classes=[DVectorBenchmark, PitchBenchmark, MPMBenchmark],
 )
 
 # Or run specific benchmark names
 suite = BenchmarkSuite(
     datasets=datasets,
     reference_datasets=reference_datasets,
-    benchmark_names=["SPK", "Pitch", "Duration", "STT"],
+    benchmark_names=["dvector", "pitch", "mpm", "wav2vec2_activations"],
 )
 ```
 
@@ -146,17 +146,17 @@ For evaluating TTS systems across multiple languages:
 
 ```python
 from ttsds import BenchmarkSuite
-from ttsds.util.dataset import Dataset
+from ttsds.util.dataset import DirectoryDataset
 
 # Define reference datasets for different languages
-reference_en = Dataset("path/to/english_reference", name="reference_en")
-reference_fr = Dataset("path/to/french_reference", name="reference_fr")
-reference_de = Dataset("path/to/german_reference", name="reference_de")
+reference_en = DirectoryDataset("path/to/english_reference", name="reference_en")
+reference_fr = DirectoryDataset("path/to/french_reference", name="reference_fr")
+reference_de = DirectoryDataset("path/to/german_reference", name="reference_de")
 
 # Define TTS system outputs for different languages
-tts_en = Dataset("path/to/english_tts", name="tts_en")
-tts_fr = Dataset("path/to/french_tts", name="tts_fr")
-tts_de = Dataset("path/to/german_tts", name="tts_de")
+tts_en = DirectoryDataset("path/to/english_tts", name="tts_en")
+tts_fr = DirectoryDataset("path/to/french_tts", name="tts_fr")
+tts_de = DirectoryDataset("path/to/german_tts", name="tts_de")
 
 # Run multilingual benchmark
 suite = BenchmarkSuite(

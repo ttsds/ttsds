@@ -136,20 +136,20 @@ Test interactions between components:
 ```python
 def test_benchmark_suite_integration():
     """Test BenchmarkSuite with real benchmarks."""
-    dataset = Dataset("path/to/test_data", name="test")
-    reference = Dataset("path/to/reference", name="reference")
+    dataset = DirectoryDataset("path/to/test_data", name="test")
+    reference = DirectoryDataset("path/to/reference", name="reference")
     
     suite = BenchmarkSuite(
         datasets=[dataset],
         reference_datasets=[reference],
-        benchmark_names=["SPK", "Pitch"]
+        benchmark_names=["dvector", "pitch"]
     )
     
     results = suite.run()
     
     assert len(results) == 2
-    assert "SPK" in [r["benchmark"] for r in results]
-    assert "Pitch" in [r["benchmark"] for r in results]
+    assert "dvector" in [r["benchmark"] for r in results]
+    assert "pitch" in [r["benchmark"] for r in results]
 ```
 
 ### 3. Parametrized Tests
@@ -202,7 +202,7 @@ from unittest.mock import patch, MagicMock
 def test_feature_caching():
     """Test that features are cached properly."""
     with patch("ttsds.util.cache.save_cache") as mock_save:
-        benchmark = SPKBenchmark(cache=True)
+        benchmark = DVectorBenchmark(cache=True)
         benchmark.extract_features(["path/to/audio.wav"])
         
         # Check that the cache was saved
@@ -288,21 +288,7 @@ def test_deprecated_feature_warning():
         legacy_function()
 ```
 
-### Testing Async Functions
-
-For testing asynchronous functions:
-
-```python
-import asyncio
-
-@pytest.mark.asyncio
-async def test_async_feature_extraction():
-    """Test asynchronous feature extraction."""
-    features = await async_extract_features(["path/to/audio.wav"])
-    assert len(features) > 0
-```
-
 ## Next Steps
 
 - Review the [Development Guide](development.md) for workflow information
-- Check the [Code Style Guide](code-style.md) for coding standards 
+- Check the [Code Style Guide](code-style.md) for coding standards

@@ -13,12 +13,12 @@ The `BenchmarkSuite` class accepts several parameters to customize its behavior:
 
 ```python
 from ttsds import BenchmarkSuite
-from ttsds.util.dataset import Dataset
+from ttsds.util.dataset import DirectoryDataset
 from ttsds.benchmarks.benchmark import BenchmarkCategory
 
 suite = BenchmarkSuite(
-    datasets=[Dataset("path/to/dataset", name="my_dataset")],
-    reference_datasets=[Dataset("path/to/reference", name="reference")],
+    datasets=[DirectoryDataset("path/to/dataset", name="my_dataset")],
+    reference_datasets=[DirectoryDataset("path/to/reference", name="reference")],
     noise_datasets=None,  # Optional: for environment benchmarks
     category_weights={  # Optional: customize category importance
         BenchmarkCategory.SPEAKER: 0.25,
@@ -43,26 +43,21 @@ suite = BenchmarkSuite(
 
 ## Dataset Configuration
 
-The `Dataset` class allows you to configure how your speech datasets are loaded:
+The `DirectoryDataset` class allows you to configure how your speech datasets are loaded:
 
 ```python
-from ttsds.util.dataset import Dataset
+from ttsds.util.dataset import DirectoryDataset
 
 # Basic dataset with default settings
-dataset = Dataset("path/to/dataset", name="my_dataset")
+dataset = DirectoryDataset("path/to/dataset", name="my_dataset")
 
 # Dataset with advanced configuration
-dataset = Dataset(
-    path="path/to/dataset",
+dataset = DirectoryDataset(
+    root_dir="path/to/dataset",
     name="my_dataset",
-    extensions=[".wav", ".flac"],  # File extensions to include
-    recursive=True,  # Search subdirectories recursively
-    min_duration=1.0,  # Minimum audio duration in seconds
-    max_duration=30.0,  # Maximum audio duration in seconds
-    limit=None,  # Maximum number of files to use
-    shuffle=True,  # Shuffle the file order
-    random_seed=42,  # Random seed for shuffling
     sample_rate=16000,  # Target sample rate
+    has_text=False,  # Whether to load text files
+    text_suffix=".txt",  # Suffix for text files
 )
 ```
 
@@ -98,20 +93,20 @@ You can selectively run specific benchmarks:
 
 ```python
 # Run only specific benchmark classes
-from ttsds.benchmarks.speaker import SPKBenchmark
+from ttsds.benchmarks.speaker import DVectorBenchmark
 from ttsds.benchmarks.prosody import PitchBenchmark
 
 suite = BenchmarkSuite(
     datasets=datasets,
     reference_datasets=reference_datasets,
-    benchmark_classes=[SPKBenchmark, PitchBenchmark]
+    benchmark_classes=[DVectorBenchmark, PitchBenchmark]
 )
 
 # Or specify benchmark names
 suite = BenchmarkSuite(
     datasets=datasets,
     reference_datasets=reference_datasets,
-    benchmark_names=["SPK", "Pitch"]
+    benchmark_names=["dvector", "pitch"]
 )
 ```
 

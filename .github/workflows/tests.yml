@@ -40,6 +40,7 @@ jobs:
           file: ./coverage.xml
           
       - name: Create Pull Request for badge updates
+        id: cpr
         if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
         uses: peter-evans/create-pull-request@v5
         with:
@@ -68,5 +69,11 @@ jobs:
           # Auto-merge configuration
           committer: GitHub <noreply@github.com>
           author: github-actions <github-actions@github.com>
-          # Enable auto-merge (requires branch protection rules to allow it)
-          auto-merge: true 
+
+      - name: Enable Pull Request Automerge
+        if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main' && steps.cpr.outputs.pull-request-operation == 'created'
+        uses: peter-evans/enable-pull-request-automerge@v3
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          pull-request-number: ${{ steps.cpr.outputs.pull-request-number }}
+          merge-method: squash 

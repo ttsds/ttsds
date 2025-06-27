@@ -209,16 +209,16 @@ Example test:
 
 ```python
 import pytest
-from ttsds.benchmarks.speaker import SPKBenchmark
+from ttsds.benchmarks.speaker import DVectorBenchmark
 
-def test_spk_benchmark_initialization():
-    benchmark = SPKBenchmark(model_name="test_model")
-    assert benchmark.name == "SPK"
+def test_dvector_benchmark_initialization():
+    benchmark = DVectorBenchmark(model_name="test_model")
+    assert benchmark.name == "dvector"
     assert benchmark.category.name == "SPEAKER"
     assert benchmark.model_name == "test_model"
 
-def test_spk_benchmark_feature_extraction(sample_audio_paths):
-    benchmark = SPKBenchmark()
+def test_dvector_benchmark_feature_extraction(sample_audio_paths):
+    benchmark = DVectorBenchmark()
     features = benchmark.extract_features(sample_audio_paths)
     assert len(features) == len(sample_audio_paths)
     assert all(isinstance(f, np.ndarray) for f in features)
