@@ -14,7 +14,7 @@ TTSDS organizes benchmarks into five main categories:
 1. **Speaker**: Evaluates speaker identity preservation
 2. **Intelligibility**: Measures speech recognition performance
 3. **Prosody**: Assesses speech rhythm and intonation
-4. **Generic**: General speech quality metrics
+4. **Generic**: Self-supervised representations
 5. **Environment**: Noise robustness evaluation
 
 ## Benchmark Base Class
@@ -49,11 +49,11 @@ Evaluates speaker identity preservation using the d-vector speaker embedding mod
 from ttsds.benchmarks.speaker.wespeaker import WeSpeakerBenchmark
 ```
 
-Uses the WeSpeaker model for speaker verification.
+Uses the [WeSpeaker](https://github.com/wenet-e2e/wespeaker) model for embeddings.
 
 ### Prosody Benchmarks
 
-These benchmarks evaluate aspects of speech rhythm, intonation, and timing.
+These benchmarks evaluate aspects of pitch and duration.
 
 #### MPMBenchmark
 
@@ -61,7 +61,7 @@ These benchmarks evaluate aspects of speech rhythm, intonation, and timing.
 from ttsds.benchmarks.prosody.mpm import MPMBenchmark
 ```
 
-Evaluates pitch distribution using the McLeod Pitch Method.
+Evaluates pitch distribution using the [Masked Prosody Model](https://arxiv.org/abs/2506.02584)
 
 #### PitchBenchmark
 
@@ -69,7 +69,7 @@ Evaluates pitch distribution using the McLeod Pitch Method.
 from ttsds.benchmarks.prosody.pitch import PitchBenchmark
 ```
 
-Evaluates pitch distribution similarity.
+Evaluates pitch distribution similarity (Pitch is extracted using [PyWorld](https://github.com/JeremyCCHsu/Python-Wrapper-for-World-Vocoder))
 
 #### HubertTokenSRBenchmark
 
@@ -77,7 +77,7 @@ Evaluates pitch distribution similarity.
 from ttsds.benchmarks.prosody.hubert_token import HubertTokenSRBenchmark
 ```
 
-Uses HuBERT model tokens for speech representation.
+Uses HuBERT model tokens for speaking rate.
 
 #### MHubert147TokenSRBenchmark
 
@@ -85,7 +85,7 @@ Uses HuBERT model tokens for speech representation.
 from ttsds.benchmarks.prosody.mhubert_token import MHubert147TokenSRBenchmark
 ```
 
-Uses multilingual HuBERT model tokens for speech representation.
+Uses multilingual HuBERT model tokens for speaking rate.
 
 #### AllosaurusSRBenchmark
 
@@ -93,11 +93,11 @@ Uses multilingual HuBERT model tokens for speech representation.
 from ttsds.benchmarks.prosody.allosaurus import AllosaurusSRBenchmark
 ```
 
-Uses the Allosaurus phoneme recognizer for speech representation.
+Uses the Allosaurus phoneme recognizer for speaking rate.
 
 ### Generic Benchmarks
 
-These benchmarks evaluate general speech quality metrics.
+These benchmarks evaluate self-supervised representations.
 
 #### HubertBenchmark
 
@@ -141,7 +141,7 @@ Uses Wav2Vec 2.0 XLSR model for speech representation.
 
 ### Intelligibility Benchmarks
 
-These benchmarks evaluate how well speech can be recognized and understood.
+These benchmarks evaluate how well speech can be recognized and understood using the ASR head activations of the models.
 
 #### Wav2Vec2ActivationsBenchmark
 
@@ -185,7 +185,7 @@ These benchmarks evaluate speech robustness in various environments.
 from ttsds.benchmarks.environment.voicerestore import VoiceRestoreBenchmark
 ```
 
-Evaluates speech quality with voice restoration metrics.
+The SNR according to the difference between the original and restored speech.
 
 #### WadaSNRBenchmark
 

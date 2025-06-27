@@ -37,18 +37,25 @@ TTSDS gives a more comprehensive and nuanced evaluation of synthetic speech than
 - [Installation](user-guide/installation.md)
 - [Quick Start](user-guide/quickstart.md)
 - [Configuration](user-guide/configuration.md)
-- [API Reference](reference/benchmarks.md)
-- [Contributing Guide](contributing/development.md)
-- [Paper](https://arxiv.org/abs/2407.12707)
+- [Benchmarks](reference/benchmarks.md)
+- [Paper (TTSDS1)](https://arxiv.org/abs/2407.12707)
+- [Paper (TTSDS2)](https://arxiv.org/abs/2506.19441)
 - [Website](https://ttsdsbenchmark.com)
 
 ## Citation
 
 ```bibtex
 @inproceedings{minixhofer2024ttsds,
-  title={TTSDS-Text-to-Speech Distribution Score},
+  title={{TTSDS} - Text-to-Speech Distribution Score},
   author={Minixhofer, Christoph and Klejch, Ond{\v{r}}ej and Bell, Peter},
   booktitle={SLT},
   year={2024},
+}
+@misc{minixhofer2025ttsds2,
+      title={{TTSDS2}: Resources and Benchmark for Evaluating Human-Quality Text to Speech Systems}, 
+      author={Christoph Minixhofer and Ond{\v{r}}ej Klejch and Peter Bell},
+      year={2025},
+      eprint={2506.19441},
+      archivePrefix={arXiv},
 }
 ``` 

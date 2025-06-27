@@ -12,14 +12,14 @@ This guide explains the various configuration options available in TTSDS to cust
 The `BenchmarkSuite` class accepts several parameters to customize its behavior:
 
 ```python
-from ttsds import BenchmarkSuite
+from ttsds import BenchmarkSuite, BENCHMARKS
 from ttsds.util.dataset import DirectoryDataset
 from ttsds.benchmarks.benchmark import BenchmarkCategory
 
 suite = BenchmarkSuite(
     datasets=[DirectoryDataset("path/to/dataset", name="my_dataset")],
     reference_datasets=[DirectoryDataset("path/to/reference", name="reference")],
-    noise_datasets=None,  # Optional: for environment benchmarks
+    noise_datasets=[DirectoryDataset("path/to/noise", name="noise")],  # Optional: only if you want to use your own distractor noise
     category_weights={  # Optional: customize category importance
         BenchmarkCategory.SPEAKER: 0.25,
         BenchmarkCategory.INTELLIGIBILITY: 0.25,
@@ -27,17 +27,15 @@ suite = BenchmarkSuite(
         BenchmarkCategory.GENERIC: 0.25,
         BenchmarkCategory.ENVIRONMENT: 0.0,
     },
+    benchmarks=BENCHMARKS,
     write_to_file="results.csv",  # Optional: save results to CSV
     skip_errors=True,  # Optional: skip failed benchmarks
     include_environment=False,  # Optional: exclude environment benchmarks
-    multilingual=False,  # Optional: enable multilingual evaluation
-    benchmark_classes=None,  # Optional: specify benchmark classes to run
-    benchmark_names=None,  # Optional: specify benchmark names to run
-    progress_bar=True,  # Optional: show progress bar
-    results_folder=None,  # Optional: folder for additional result files
-    cache_folder=None,  # Optional: override default cache location
-    cache=True,  # Optional: enable or disable caching
-    num_workers=1,  # Optional: number of parallel workers
+    multilingual=False,  # Optional: enable multilingual evaluation (this uses the multilingual benchmarks from the TTSDS2 paper)
+    benchmark_kwargs=None,  # Optional: specify benchmark kwargs
+    device="cpu",  # Optional: specify device to run on
+    cache_dir="~/.ttsds_cache",  # Optional: specify cache directory
+    n_workers=1,  # Optional: number of parallel workers
 )
 ```
 
@@ -55,9 +53,8 @@ dataset = DirectoryDataset("path/to/dataset", name="my_dataset")
 dataset = DirectoryDataset(
     root_dir="path/to/dataset",
     name="my_dataset",
-    sample_rate=16000,  # Target sample rate
-    has_text=False,  # Whether to load text files
-    text_suffix=".txt",  # Suffix for text files
+    sample_rate=22050,  # Target sample rate
+    has_text=False,  # Deprecated, text is no longer used
 )
 ```
 
@@ -96,44 +93,16 @@ You can selectively run specific benchmarks:
 from ttsds.benchmarks.speaker import DVectorBenchmark
 from ttsds.benchmarks.prosody import PitchBenchmark
 
+custom_benchmarks = {
+    "dvector": DVectorBenchmark,
+    "pitch": PitchBenchmark
+}
+
 suite = BenchmarkSuite(
     datasets=datasets,
     reference_datasets=reference_datasets,
-    benchmark_classes=[DVectorBenchmark, PitchBenchmark]
+    benchmarks=custom_benchmarks
 )
-
-# Or specify benchmark names
-suite = BenchmarkSuite(
-    datasets=datasets,
-    reference_datasets=reference_datasets,
-    benchmark_names=["dvector", "pitch"]
-)
-```
-
-## Caching
-
-TTSDS uses caching to speed up repeated benchmark runs. You can configure this behavior:
-
-```python
-# Disable caching
-suite = BenchmarkSuite(
-    datasets=datasets,
-    reference_datasets=reference_datasets,
-    cache=False
-)
-
-# Specify a custom cache folder
-suite = BenchmarkSuite(
-    datasets=datasets,
-    reference_datasets=reference_datasets,
-    cache_folder="/path/to/custom/cache"
-)
-```
-
-You can also set the cache directory using an environment variable:
-
-```bash
-export TTSDS_CACHE_DIR=/path/to/cache
 ```
 
 ## Parallel Processing
@@ -145,19 +114,9 @@ To speed up benchmarking with parallel processing:
 suite = BenchmarkSuite(
     datasets=datasets,
     reference_datasets=reference_datasets,
-    num_workers=4
+    n_workers=4
 )
 ```
-
-## Environment Variables
-
-TTSDS respects the following environment variables:
-
-| Variable | Description | Default |
-|----------|-------------|---------|
-| `TTSDS_CACHE_DIR` | Directory for cached data | `~/.cache/ttsds` |
-| `TTSDS_RESULTS_DIR` | Directory for saving results | Current directory |
-| `TTSDS_NUM_WORKERS` | Number of worker processes | `1` |
 
 ## Multilingual Support
 
@@ -175,5 +134,4 @@ This enables additional language-specific benchmarks and evaluation criteria.
 
 ## Next Steps
 
-- Explore [advanced usage](advanced.md) examples
-- Learn about the [API reference](../reference/benchmarks.md) 
+- Learn about the [Benchmarks and how to create your own](../reference/benchmarks.md) 

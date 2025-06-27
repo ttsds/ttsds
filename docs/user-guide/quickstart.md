@@ -92,18 +92,6 @@ After running the benchmark, you'll get:
 2. **Category scores**: Aggregated scores for each category
 3. **Overall score**: Weighted average across all categories
 
-Here's how to interpret a sample output:
-
-```
-Overall Score: 0.85
-Category Scores:
-  - Speaker: 0.92
-  - Intelligibility: 0.88
-  - Prosody: 0.78
-  - Generic: 0.84
-  - Environment: N/A (excluded)
-```
-
 ## Saving Results
 
 You can save benchmark results to a CSV file for further analysis:
