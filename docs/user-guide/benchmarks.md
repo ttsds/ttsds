@@ -249,3 +249,14 @@ score, (noise_name, ref_name) = benchmark.compute_score(
     [noise]
 )
 print(f"DVector Benchmark Score: {score:.4f}") 
+
+
+## Quick Links
+
+- [Installation](user-guide/installation.md)
+- [Quick Start](user-guide/quickstart.md)
+- [Configuration](user-guide/configuration.md)
+- [*Benchmarks*](reference/benchmarks.md)
+- [Paper (TTSDS1)](https://arxiv.org/abs/2407.12707)
+- [Paper (TTSDS2)](https://arxiv.org/abs/2506.19441)
+- [Website](https://ttsdsbenchmark.com)

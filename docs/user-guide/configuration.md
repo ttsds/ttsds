@@ -132,6 +132,13 @@ suite = BenchmarkSuite(
 
 This enables additional language-specific benchmarks and evaluation criteria.
 
-## Next Steps
 
-- Learn about the [Benchmarks and how to create your own](../reference/benchmarks.md) 
+## Quick Links
+
+- [Installation](user-guide/installation.md)
+- [Quick Start](user-guide/quickstart.md)
+- [*Configuration*](user-guide/configuration.md)
+- [Benchmarks](reference/benchmarks.md)
+- [Paper (TTSDS1)](https://arxiv.org/abs/2407.12707)
+- [Paper (TTSDS2)](https://arxiv.org/abs/2506.19441)
+- [Website](https://ttsdsbenchmark.com)

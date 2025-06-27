@@ -104,8 +104,12 @@ suite = BenchmarkSuite(
 )
 ```
 
-## Next Steps
+## Quick Links
 
-- Learn about [advanced configuration options](configuration.md)
-- Explore the [API reference](../reference/benchmarks.md)
-- See [examples](advanced.md) of more complex use cases 
+- [Installation](user-guide/installation.md)
+- [*Quick Start*](user-guide/quickstart.md)
+- [Configuration](user-guide/configuration.md)
+- [Benchmarks](reference/benchmarks.md)
+- [Paper (TTSDS1)](https://arxiv.org/abs/2407.12707)
+- [Paper (TTSDS2)](https://arxiv.org/abs/2506.19441)
+- [Website](https://ttsdsbenchmark.com)

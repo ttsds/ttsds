@@ -80,6 +80,12 @@ If you encounter any issues during installation, please:
 1. Check the [GitHub issues](https://github.com/MiniXC/ttsds/issues) to see if your problem has been reported
 2. Open a new issue if necessary, providing detailed information about your environment and the error messages
 
-## Next Steps
+## Quick Links
 
-Once you have successfully installed TTSDS, proceed to the [Quick Start Guide](quickstart.md) to learn how to use it. 
+- [*Installation*](user-guide/installation.md)
+- [Quick Start](user-guide/quickstart.md)
+- [Configuration](user-guide/configuration.md)
+- [Benchmarks](reference/benchmarks.md)
+- [Paper (TTSDS1)](https://arxiv.org/abs/2407.12707)
+- [Paper (TTSDS2)](https://arxiv.org/abs/2506.19441)
+- [Website](https://ttsdsbenchmark.com)
