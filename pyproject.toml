@@ -42,8 +42,6 @@ dependencies = [
   "voicerestore-fork>=0.1.0",
   "wespeaker-unofficial>=0.0.1",
   "phonemizer-fork>=3.3.0",
-  "hdbscan==0.8.40",
-  "audioread==3.0.1"
 ]
 
 [project.urls]
