@@ -1,14 +1,14 @@
 # TTSDS - Text-to-Speech Distribution Score
 
-[![PyPI - Version](https://img.shields.io/pypi/v/ttsds.svg)](https://pypi.org/project/ttsds) [![Tests](https://raw.githubusercontent.com/ttsds/ttsds/main/docs/assets/img/tests.svg)](https://github.com/ttsds/ttsds/actions) [![Coverage](https://raw.githubusercontent.com/ttsds/ttsds/main/docs/assets/img/coverage.svg)](https://github.com/ttsds/ttsds/actions)
+[![PyPI - Version](https://img.shields.io/pypi/v/ttsds.svg)](https://pypi.org/project/ttsds) [![Tests](https://github.com/ttsds/ttsds/actions/workflows/tests.yml/badge.svg)](https://github.com/ttsds/ttsds/actions/workflows/tests.yml) [![Coverage](https://raw.githubusercontent.com/ttsds/ttsds/main/docs/assets/img/coverage.svg)](https://github.com/ttsds/ttsds/actions)
 
 <img src="https://api.star-history.com/svg?repos=ttsds/ttsds&type=Date" style="width:45em">
 
 TTSDS is a comprehensive benchmark for evaluating the quality of synthetic speech in Text-to-Speech (TTS) systems. It assesses multiple aspects of speech quality including prosody, speaker identity, and intelligibility by comparing synthetic speech with both real speech and noise datasets.
 
-## Version 2.1.0
+## Version 2.1.1
 
-We are excited to release TTSDS 2.1.0!
+We are excited to release TTSDS 2.1.1 - we fixed some issues with the installation in the latest update.
 TTSDS2 is multilingual and updated quarterly, with a new dataset every time: you can view the results at https://ttsdsbenchmark.com#leaderboard.
 
 
@@ -34,6 +34,17 @@ TTSDS2 is multilingual and updated quarterly, with a new dataset every time: you
 ```bash
 # Required system packages
 sudo apt-get install ffmpeg automake autoconf unzip sox gfortran subversion libtool
+```
+
+ttsds has been tested with python 3.10, 3.11, and 3.12.
+Versions 3.8 and 3.9 are not supported.
+
+### A note on numpy 2.0
+
+TTSDS has some dependencies which require numpy<2.0.0.
+Use the following command if the ttsds installation does not automatically install numpy<2.0.0:
+```bash
+pip install "numpy<2"
 ```
 
 ### Python Installation

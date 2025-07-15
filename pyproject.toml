@@ -30,7 +30,7 @@ classifiers = [
 dependencies = [
   "allosaurus",
   "jiwer",
-  # "librosa",
+  "librosa",
   "openai-whisper==20250625",
   "pandas",
   "pesq",
@@ -38,7 +38,7 @@ dependencies = [
   "pyworld",
   "rich",
   "silero-vad",
-  # "statsmodels",
+  "statsmodels",
   "torch",
   "transformers",
   "voicerestore",

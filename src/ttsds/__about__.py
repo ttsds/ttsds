@@ -8,4 +8,4 @@ This module contains package metadata used both in the PyPI package and the code
 #
 # SPDX-License-Identifier: MIT
 
-__version__ = "2.1.0"
+__version__ = "2.1.1"
