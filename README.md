@@ -37,7 +37,7 @@ sudo apt-get install ffmpeg automake autoconf unzip sox gfortran subversion libt
 ```
 
 ttsds has been tested with python 3.10, 3.11, and 3.12.
-Versions 3.8 and 3.9 are not supported.
+Versions <3.10 and >3.12 are not supported (for now).
 
 ### A note on numpy 2.0
 
