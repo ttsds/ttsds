@@ -639,24 +639,37 @@ class BenchmarkSuite:
             return self.database
 
         try:
-            # Process tasks in parallel using ThreadPoolExecutor
-            with ThreadPoolExecutor(max_workers=self.n_workers) as executor:
-                # Submit all tasks to the executor
-                future_to_task = {
-                    executor.submit(self._run_benchmark, benchmark, dataset): (
-                        benchmark,
-                        dataset,
-                    )
-                    for benchmark, dataset in tasks
-                }
+            if self.n_workers and self.n_workers > 1:
+                # Process tasks in parallel using ThreadPoolExecutor
+                with ThreadPoolExecutor(max_workers=self.n_workers) as executor:
+                    # Submit all tasks to the executor
+                    future_to_task = {
+                        executor.submit(self._run_benchmark, benchmark, dataset): (
+                            benchmark,
+                            dataset,
+                        )
+                        for benchmark, dataset in tasks
+                    }
 
-                # Process results as they complete
-                for future in future_to_task:
+                    # Process results as they complete
+                    for future in future_to_task:
+                        try:
+                            result = future.result()
+                            self._update_database(result)
+                        except Exception as exc:
+                            benchmark, dataset = future_to_task[future]
+                            console.print(
+                                f"[red]Task {benchmark.name} on {dataset.name} generated an exception: {exc}[/red]"
+                            )
+                            if not self.skip_errors:
+                                raise exc
+            else:
+                # Run tasks synchronously on the main thread
+                for benchmark, dataset in tasks:
                     try:
-                        result = future.result()
+                        result = self._run_benchmark(benchmark, dataset)
                         self._update_database(result)
                     except Exception as exc:
-                        benchmark, dataset = future_to_task[future]
                         console.print(
                             f"[red]Task {benchmark.name} on {dataset.name} generated an exception: {exc}[/red]"
                         )
