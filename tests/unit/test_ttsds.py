@@ -274,6 +274,76 @@ def test_benchmark_suite_category_weights(
         mock_init.assert_called_once()
 
 
+def test_run_uses_thread_pool_only_when_n_workers_gt_1():
+    """Test that ThreadPoolExecutor is only used when n_workers > 1."""
+    from concurrent.futures import ThreadPoolExecutor as _TPE
+
+    mock_dataset = MagicMock()
+    mock_dataset.name = "mock_ds"
+
+    suite = MagicMock(spec=BenchmarkSuite)
+    suite.benchmarks = {"mock": MockBenchmark()}
+    suite.datasets = [mock_dataset]
+    suite.database = pd.DataFrame(
+        columns=[
+            "benchmark_name",
+            "benchmark_category",
+            "dataset",
+            "score",
+            "time_taken",
+            "noise_dataset",
+            "reference_dataset",
+        ]
+    )
+    suite.skip_errors = False
+
+    # Patch helpers that interact with the terminal
+    suite._setup_progress = MagicMock()
+    suite._update_progress = MagicMock()
+    suite._stop_progress = MagicMock()
+    suite._update_database = MagicMock()
+    suite._run_benchmark = MagicMock(
+        return_value={
+            "benchmark_name": ["Mock"],
+            "benchmark_category": ["GENERIC"],
+            "dataset": ["mock_ds"],
+            "score": [0.5],
+            "time_taken": [0.01],
+            "noise_dataset": ["n"],
+            "reference_dataset": ["r"],
+        }
+    )
+
+    # --- n_workers = 1: no ThreadPoolExecutor should be created ---
+    suite.n_workers = 1
+    with patch("ttsds.ttsds.ThreadPoolExecutor") as mock_tpe:
+        BenchmarkSuite.run(suite)
+        mock_tpe.assert_not_called()
+        suite._run_benchmark.assert_called_once()
+
+    # --- n_workers = None: no ThreadPoolExecutor should be created ---
+    suite._run_benchmark.reset_mock()
+    suite.n_workers = None
+    with patch("ttsds.ttsds.ThreadPoolExecutor") as mock_tpe:
+        BenchmarkSuite.run(suite)
+        mock_tpe.assert_not_called()
+        suite._run_benchmark.assert_called_once()
+
+    # --- n_workers = 2: ThreadPoolExecutor should be created ---
+    suite._run_benchmark.reset_mock()
+    suite.n_workers = 2
+    with patch("ttsds.ttsds.ThreadPoolExecutor") as mock_tpe:
+        # Set up the context manager mock properly
+        future_mock = MagicMock()
+        future_mock.result.return_value = suite._run_benchmark.return_value
+        executor_mock = MagicMock()
+        executor_mock.submit.return_value = future_mock
+        mock_tpe.return_value.__enter__ = MagicMock(return_value=executor_mock)
+        mock_tpe.return_value.__exit__ = MagicMock(return_value=False)
+        BenchmarkSuite.run(suite)
+        mock_tpe.assert_called_once_with(max_workers=2)
+
+
 def test_benchmark_suite_skip_errors():
     """Test skipping errors during benchmark execution."""
 
