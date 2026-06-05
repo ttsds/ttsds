@@ -2,7 +2,7 @@ from typing import Union
 
 import numpy as np
 import torch
-from transformers import Wav2Vec2Processor, HubertModel
+from transformers import Wav2Vec2FeatureExtractor, HubertModel
 
 import librosa
 
@@ -34,7 +34,7 @@ class HubertBenchmark(Benchmark):
             hubert_layer=hubert_layer,
             supported_devices=[DeviceSupport.CPU, DeviceSupport.GPU],
         )
-        self.processor = Wav2Vec2Processor.from_pretrained(
+        self.processor = Wav2Vec2FeatureExtractor.from_pretrained(
             "facebook/hubert-large-ls960-ft"
         )
         self.model = HubertModel.from_pretrained(hubert_model)

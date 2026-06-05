@@ -3,7 +3,7 @@ import importlib.resources
 
 import numpy as np
 import torch
-from transformers import Wav2Vec2Processor, HubertModel
+from transformers import Wav2Vec2FeatureExtractor, HubertModel
 import librosa
 from sklearn.cluster import KMeans
 
@@ -47,7 +47,7 @@ class MHubert147TokenSRBenchmark(Benchmark):
             cluster_seed=cluster_seed,
             cluster_datasets=cluster_datasets,
         )
-        self.processor = Wav2Vec2Processor.from_pretrained(
+        self.processor = Wav2Vec2FeatureExtractor.from_pretrained(
             "facebook/hubert-large-ls960-ft"
         )
         self.model = HubertModel.from_pretrained(hubert_model)

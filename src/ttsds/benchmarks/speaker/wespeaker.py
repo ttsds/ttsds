@@ -5,7 +5,7 @@ import wespeaker
 
 import numpy as np
 import librosa
-import soundfile as sf
+import torch
 from pyannote.audio import Model, Inference
 
 
@@ -55,10 +55,14 @@ class WeSpeakerBenchmark(Benchmark):
                 wav = librosa.resample(
                     wav, orig_sr=dataset.sample_rate, target_sr=16000
                 )
-            with tempfile.NamedTemporaryFile(suffix=".wav") as f:
-                sf.write(f.name, wav, 16000)
-                embedding = self.inference(f.name)
-                embedding = [x[1] for x in embedding]
+            # Pass an in-memory dict instead of a temp file so pyannote.audio
+            # uses its waveform path and skips torchcodec/AudioDecoder, which
+            # fails to import on torchaudio 2.10.
+            waveform = torch.from_numpy(np.ascontiguousarray(wav)).float().unsqueeze(0)
+            embedding = self.inference(
+                {"waveform": waveform, "sample_rate": 16000}
+            )
+            embedding = [x[1] for x in embedding]
             if self.measure_std:
                 embedding = np.std(embedding, axis=0)
                 embeddings.append(embedding)
