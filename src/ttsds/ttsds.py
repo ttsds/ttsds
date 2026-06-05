@@ -129,15 +129,25 @@ BENCHMARKS_ML = {
 
 
 # save https://huggingface.co/datasets/ttsds/noise-reference to cache_dir/noise-reference
-if not (CACHE_DIR / "noise-reference").exists():
-    run(
-        [
-            "git",
-            "clone",
-            "https://huggingface.co/datasets/ttsds/noise-reference",
-            str(CACHE_DIR / "noise-reference"),
-        ],
-        check=True,
+# Uses huggingface_hub.snapshot_download instead of `git clone`, which would
+# only fetch LFS pointer files unless git-lfs is installed globally.
+_NOISE_REF_DIR = CACHE_DIR / "noise-reference"
+_NOISE_REF_TARS = (
+    "noise_all_ones.tar.gz",
+    "noise_all_zeros.tar.gz",
+    "noise_normal_distribution.tar.gz",
+    "noise_uniform_distribution.tar.gz",
+)
+if not all((_NOISE_REF_DIR / name).exists() for name in _NOISE_REF_TARS) or any(
+    (_NOISE_REF_DIR / name).stat().st_size < 1024 for name in _NOISE_REF_TARS
+):
+    from huggingface_hub import snapshot_download
+
+    snapshot_download(
+        repo_id="ttsds/noise-reference",
+        repo_type="dataset",
+        local_dir=str(_NOISE_REF_DIR),
+        allow_patterns=list(_NOISE_REF_TARS),
     )
 
 tar_files = Path(CACHE_DIR / "noise-reference").glob("*.tar.gz")
@@ -253,11 +263,20 @@ class BenchmarkSuite:
             benchmark_kwargs["hubert_token_sr"]["cluster_datasets"] = [
                 reference_datasets[0].sample(min(100, len(reference_datasets[0])))
             ]
+        # Drop environment benchmarks before instantiation so their (often
+        # large) model weights are not downloaded only to be filtered out a
+        # moment later.
+        if not include_environment:
+            env_keys = {"voicerestore", "wada_snr"}
+            benchmarks = {k: v for k, v in benchmarks.items() if k not in env_keys}
         self.benchmarks = {
             k: v(**benchmark_kwargs.get(k, {})) if isinstance(v, type) else v
             for k, v in benchmarks.items()
         }
         if not include_environment:
+            # Belt-and-braces: also drop any env-category benchmarks that
+            # slipped past the key filter (e.g. user-supplied dict with
+            # different keys).
             self.benchmarks = {
                 k: v
                 for k, v in self.benchmarks.items()

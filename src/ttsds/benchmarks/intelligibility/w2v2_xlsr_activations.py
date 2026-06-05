@@ -1,6 +1,6 @@
 import re
 
-from transformers import Wav2Vec2Processor, Wav2Vec2Model
+from transformers import Wav2Vec2FeatureExtractor, Wav2Vec2Model
 
 import torch
 import numpy as np
@@ -32,7 +32,7 @@ class Wav2Vec2XLSRActivationsBenchmark(Benchmark):
             wav2vec2_model=wav2vec2_model,
             supported_devices=[DeviceSupport.CPU, DeviceSupport.GPU],
         )
-        self.processor = Wav2Vec2Processor.from_pretrained(wav2vec2_model)
+        self.processor = Wav2Vec2FeatureExtractor.from_pretrained(wav2vec2_model)
         self.model = Wav2Vec2Model.from_pretrained(wav2vec2_model)
         self.model.eval()
         self.device = "cpu"

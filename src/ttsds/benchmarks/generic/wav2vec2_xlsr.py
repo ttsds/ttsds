@@ -2,7 +2,7 @@ from typing import Union
 
 import numpy as np
 import torch
-from transformers import Wav2Vec2Processor, Wav2Vec2Model
+from transformers import Wav2Vec2FeatureExtractor, Wav2Vec2Model
 
 import librosa
 
@@ -35,7 +35,7 @@ class Wav2Vec2XLSRBenchmark(Benchmark):
             version="1.0.0",
             supported_devices=[DeviceSupport.CPU, DeviceSupport.GPU],
         )
-        self.processor = Wav2Vec2Processor.from_pretrained(
+        self.processor = Wav2Vec2FeatureExtractor.from_pretrained(
             "facebook/wav2vec2-base-960h"
         )
         self.model = Wav2Vec2Model.from_pretrained(wav2vec2_model)

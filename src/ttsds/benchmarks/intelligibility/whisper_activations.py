@@ -2,7 +2,7 @@ import re
 import tempfile
 
 import torch
-from transformers import WhisperProcessor, WhisperForConditionalGeneration
+from transformers import WhisperFeatureExtractor, WhisperForConditionalGeneration
 
 import numpy as np
 import librosa
@@ -35,7 +35,9 @@ class WhisperActivationsBenchmark(Benchmark):
             supported_devices=[DeviceSupport.CPU, DeviceSupport.GPU],
             version="1.3.0",
         )
-        self.processor = WhisperProcessor.from_pretrained("openai/whisper-small.en")
+        self.processor = WhisperFeatureExtractor.from_pretrained(
+            "openai/whisper-small.en"
+        )
         self.model = WhisperForConditionalGeneration.from_pretrained(
             "openai/whisper-small.en"
         )

@@ -4,7 +4,7 @@ import tempfile
 import torch
 import torch.nn as nn
 import torchaudio
-from torchaudio.sox_effects import apply_effects_tensor
+import torchaudio.functional as AF
 from torchaudio.transforms import MelSpectrogram
 
 import numpy as np
@@ -56,7 +56,13 @@ class Wav2Mel(nn.Module):
 
 
 class SoxEffects(nn.Module):
-    """Transform waveform tensors."""
+    """Transform waveform tensors.
+
+    Pure-torch replacement for the ``apply_effects_tensor`` pipeline
+    ``[["channels", "1"], ["rate", str(sr)], ["norm", str(norm_db)]]``:
+    downmix to mono, resample to the target rate, and normalize the peak
+    amplitude to ``norm_db`` dBFS.
+    """
 
     def __init__(
         self,
@@ -66,14 +72,20 @@ class SoxEffects(nn.Module):
         sil_duration: float,
     ):
         super().__init__()
-        self.effects = [
-            ["channels", "1"],  # convert to mono
-            ["rate", f"{sample_rate}"],  # resample
-            ["norm", f"{norm_db}"],  # normalize to -3 dB
-        ]
+        self.target_sample_rate = sample_rate
+        self.norm_db = norm_db
 
     def forward(self, wav_tensor: torch.Tensor, sample_rate: int) -> torch.Tensor:
-        wav_tensor, _ = apply_effects_tensor(wav_tensor, sample_rate, self.effects)
+        if wav_tensor.dim() == 1:
+            wav_tensor = wav_tensor.unsqueeze(0)
+        if wav_tensor.shape[0] > 1:
+            wav_tensor = wav_tensor.mean(dim=0, keepdim=True)
+        if sample_rate != self.target_sample_rate:
+            wav_tensor = AF.resample(wav_tensor, sample_rate, self.target_sample_rate)
+        peak = wav_tensor.abs().max()
+        if peak > 0:
+            target = 10.0 ** (self.norm_db / 20.0)
+            wav_tensor = wav_tensor * (target / peak)
         return wav_tensor
 
 
