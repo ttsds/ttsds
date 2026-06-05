@@ -37,6 +37,11 @@ dependencies = [
   "pyannote.audio",
   "pyworld",
   "rich",
+  # Pinned lower bound: older sentencepiece releases are sdist-only and
+  # require a system libsentencepiece-dev install to build, which CI doesn't
+  # have. The resolver picks them when backtracking; this keeps it on the
+  # wheel-available path.
+  "sentencepiece>=0.2.0",
   "silero-vad",
   "statsmodels",
   "torch",
