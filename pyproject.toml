@@ -62,16 +62,19 @@ packages = ["src/ttsds"]
 path = "src/ttsds/__about__.py"
 
 [tool.hatch.build.targets.sdist]
-include = ["src/ttsds"]
+packages = ["src/ttsds"]
 exclude = [
   "src/ttsds/data"
 ]
 
 [tool.hatch.build.targets.wheel]
-include = ["src/ttsds"]
+packages = ["src/ttsds"]
 exclude = [
   "src/ttsds/data"
 ]
+
+[tool.hatch.build.targets.wheel.sources]
+src = "src"
 
 [project.optional-dependencies]
 # `voicerestore` powers the optional VoiceRestoreBenchmark (ENVIRONMENT
