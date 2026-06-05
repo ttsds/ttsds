@@ -41,7 +41,6 @@ dependencies = [
   "statsmodels",
   "torch",
   "transformers",
-  "voicerestore",
   "wespeaker-unofficial",
   "phonemizer-fork",
 ]
@@ -70,6 +69,13 @@ exclude = [
 ]
 
 [project.optional-dependencies]
+# `voicerestore` powers the optional VoiceRestoreBenchmark (ENVIRONMENT
+# category, excluded by default). It is split out because its install
+# resolution can backtrack onto an unbuildable ninja sdist on Python 3.10–3.12.
+# Install with `pip install ttsds[voicerestore]` if you need the env category.
+voicerestore = [
+  "voicerestore",
+]
 dev = [
   "mypy>=1.0.0",
   "pytest>=6.0.0",
